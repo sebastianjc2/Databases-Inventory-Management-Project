@@ -1,4 +1,5 @@
 # Team Name: SQLytes
+## Team Members
 - Eithan Capella: eithan.capella@upr.edu
 - Pedro Pagán: pedro.pagan6@upr.edu
 - Sebastian Caballero: sebastian.caballero@upr.edu
