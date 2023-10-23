@@ -1,8 +1,6 @@
-Team Name: SQLytes
-Eithan Capella
-Pedro Pagán
-Sebastian Caballero
-Sebastián Estrada
-Yariel Mercado
-
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/PF9R8Pan)
+# Team Name: SQLytes
+- Eithan Capella: eithan.capella@upr.edu
+- Pedro Pagán: pedro.pagan6@upr.edu
+- Sebastian Caballero: sebastian.caballero@upr.edu
+- Sebastián Estrada: sebastian.estrada@upr.edu
+- Yariel Mercado: yariel.mercado1@upr.edu
