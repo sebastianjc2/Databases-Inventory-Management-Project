@@ -16,12 +16,15 @@
          - `.venv` can be named anything.
          - The creation of your venv was successful if a `<.venv>` folder appears in your workspace and if `(<.venv>)` 
            appears at the beginning of your directory. Example: `(<.venv>) <username> <ProjectWorkspace>`
-      2. Change your Python Environment to the location of where your created venv resides.
+      2. Change your Python environment to the location of where your created venv resides.
       3. Run the following command to activate your venv `source <venv_name>/bin/activate`.
 2. Install the libraries used in this project by running the following command inside your venv: 
    `pip install -r requirements.txt`
+3. The required Python version for this is `Python 3.10.2` or newer. If your system-wide version of Python is older, 
+   the venv can be configured to handle independent versions of Python.
+
 If you're running this on PyCharm, it's worth knowing that PyCharm automatically sets this up for you and can also
-auto-activate your venv each time the IDE is fired up. More info on how to configure this can be easily found online. 
+auto-activate your venv each time the IDE is fired up. More info on how to configure this can be easily found online.
 
 ## Workflow Rules
 1. **ALWAYS** make a new branch for your new changes. Never make changes on the main/master branch since this can 
