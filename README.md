@@ -41,3 +41,13 @@ auto-activate your venv each time the IDE is fired up. More info on how to confi
 9. Remember to **set your line length to 120 characters** so that the source code can be consistently formatted, 
    regardless of screen size. 
 10. Ensure that any IDE, venv, or compilation specific artifacts are listed under `.gitignore`.
+
+## Credentials for Heroku DB
+* Host - ec2-34-193-110-25.compute-1.amazonaws.com
+* Database - dcfajr03gbu43b
+* User - rfuunoitsqrvhu
+* Port - 5432
+* Password - ad03f3262f921e6a03acbf5a2def6d79b298b9e3e732e33a641e359e141e69b3
+* URI - postgres://rfuunoitsqrvhu:ad03f3262f921e6a03acbf5a2def6d79b298b9e3e732e33a641e359e141e69b3@ec2-34-193-110-25.compute-1.amazonaws.com:5432/dcfajr03gbu43b
+* Heroku CLI - heroku pg:psql postgresql-acute-63860 --app sqlytes-inventory-app
+
