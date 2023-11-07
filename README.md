@@ -52,10 +52,18 @@ auto-activate your venv each time the IDE is fired up. More info on how to confi
 * Heroku CLI - heroku pg:psql postgresql-acute-63860 --app sqlytes-inventory-app
 
 ## Docker Postgres Setup
-Install Docker and follow the instructions [here](https://www.docker.com/blog/how-to-use-the-postgres-docker-official-image/).
-The following are the commands to run specific to our DB during the setup.
-- When creating a new container, run: `docker run --name sqlytes-inventory-app -e POSTGRES_PASSWORD=postgres -d postgres`.
-- After the image is created, to compose it run `docker-compose up -d`.
-- Resources: https://www.docker.com/blog/how-to-use-the-postgres-docker-official-image/ and 
- https://collabnix.com/getting-started-with-docker-and-postgresql/ and 
-https://www.commandprompt.com/education/how-to-useexecute-postgresql-query-in-docker-container/
+Install [Docker Desktop](https://docs.docker.com/desktop/).
+The following are the commands specific to our DB during the setup. It's useful to utilize the GUI to view
+console outputs when running commands. 
+- Install the Docker Postgres image via: `docker pull postgres`. Ensure that the image shows up on Docker 
+Desktop. 
+- To build the container: `docker-compose build`. 
+- To start the container: `docker-compose up -d`.
+- Access the container: `docker exec -it inventory-tracking-app-sqlytes-db-1 /bin/bash`.
+  * The argument for *-it* is the container name. View your containers using: `docker container ls`.
+- To access the DB via Bash: `psql -U docker_admin -d sqlytes-inventory-app`.
+  * You may or may not need to install the latest version of [PostgreSQL](https://www.postgresql.org/download/).
+  * Optionally, connect to a DB with a user with `\c` or `\c database`.
+  * Check the list of available DBs with `\l`. 
+  * View the tables within that DB with `\dt`. 
+- When finished, stop the current container via: `docker-compose down`.
