@@ -1,0 +1,14 @@
+services:
+  web:
+    build: .
+    ports:
+      - "80:8000"
+
+  db:
+      image: postgres
+      restart: always
+      environment:
+          - POSTGRES_DB=dcfajr03gbu43b
+          - POSTGRES_USER=rfuunoitsqrvhu
+          - POSTGRES_PASSWORD=postgres
+

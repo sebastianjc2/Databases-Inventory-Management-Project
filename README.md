@@ -51,3 +51,11 @@ auto-activate your venv each time the IDE is fired up. More info on how to confi
 * URI - postgres://rfuunoitsqrvhu:ad03f3262f921e6a03acbf5a2def6d79b298b9e3e732e33a641e359e141e69b3@ec2-34-193-110-25.compute-1.amazonaws.com:5432/dcfajr03gbu43b
 * Heroku CLI - heroku pg:psql postgresql-acute-63860 --app sqlytes-inventory-app
 
+## Docker Postgres Setup
+Install Docker and follow the instructions [here](https://www.docker.com/blog/how-to-use-the-postgres-docker-official-image/).
+The following are the commands to run specific to our DB during the setup.
+- When creating a new container, run: `docker run --name sqlytes-inventory-app -e POSTGRES_PASSWORD=postgres -d postgres`.
+- After the image is created, to compose it run `docker-compose up -d`.
+- Resources: https://www.docker.com/blog/how-to-use-the-postgres-docker-official-image/ and 
+ https://collabnix.com/getting-started-with-docker-and-postgresql/ and 
+https://www.commandprompt.com/education/how-to-useexecute-postgresql-query-in-docker-container/
