@@ -70,7 +70,7 @@ class PartHandler:
         dao = PartDAO()
         result = dao.deleteByID(pid)  # if this is null, then the part with that id doesn't exist
         if result:
-            return jsonify("Deleted"), 200
+            return jsonify(f"Deleted part with id: {pid}"), 200
         else:
             return jsonify("Not Found"), 404
 
