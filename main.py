@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 from Backend.handler.parts import PartHandler
+from Backend.handler.suppliers import SupplierHandler
 
 app = Flask(__name__)
 
@@ -35,6 +36,17 @@ def searchPartByID(pid):
         return PartHandler().updateByID(pid, data)
     elif request.method == "DELETE":  # performs delete queries
         return PartHandler().deleteByID(pid)
+    else:
+        return jsonify('Not supported'), 405
+
+
+@app.route('/suppliers', methods=['GET', 'POST'])
+def getAllSuppliers():
+    if request.method == "GET":
+        return SupplierHandler().getAllSuppliers()
+    elif request.method == "POST":  # performs insert queries
+        data = request.json
+        return SupplierHandler().insertSupplier(data)
     else:
         return jsonify('Not supported'), 405
 
