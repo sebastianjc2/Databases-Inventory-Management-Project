@@ -50,6 +50,18 @@ def getAllSuppliers():
     else:
         return jsonify('Not supported'), 405
 
+@app.route('/suppliers/<int:sid>', methods=['GET', 'PUT', 'DELETE'])
+def searchSupplierByID(sid):
+    if request.method == "GET":  # performs select-project-join queries
+        return SupplierHandler().searchByID(sid)
+    elif request.method == "PUT":  # performs update queries
+        data = request.json
+        return SupplierHandler().updateByID(sid, data)
+    elif request.method == "DELETE":  # performs delete queries
+        return SupplierHandler().deleteByID(sid)
+    else:
+        return jsonify('Not supported'), 405
+
 
 if __name__ == '__main__':
     app.run(debug=True)
