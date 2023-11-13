@@ -10,6 +10,6 @@ services:
           - POSTGRES_USER=docker_admin
           - POSTGRES_PASSWORD=postgresadmin
       ports:
-        - "5433:5432"
+        - "5432:5432"
 volumes:
   db-data:
