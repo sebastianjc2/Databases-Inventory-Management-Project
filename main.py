@@ -1,15 +1,17 @@
 from flask import Flask, jsonify, request
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
+from Backend import dbconfig as config
+# Import handlers
 from Backend.handler.parts import PartHandler
 from Backend.handler.suppliers import SupplierHandler
 
+# App initialization
 app = Flask(__name__)
-
-# apply CORS
+app.config.from_object(config)
 CORS(app)
 
 
-@app.route('/') # default route handler
+@app.route('/')  # default route handler
 def greeting():
     return 'Hello, this is the parts DB app practice'
 
@@ -50,15 +52,19 @@ def getAllSuppliers():
     else:
         return jsonify('Not supported'), 405
 
+
 @app.route('/suppliers/<int:sid>', methods=['GET', 'PUT', 'DELETE'])
 def searchSupplierByID(sid):
     if request.method == "GET":  # performs select-project-join queries
         return SupplierHandler().searchByID(sid)
+
     elif request.method == "PUT":  # performs update queries
         data = request.json
         return SupplierHandler().updateByID(sid, data)
+
     elif request.method == "DELETE":  # performs delete queries
         return SupplierHandler().deleteByID(sid)
+
     else:
         return jsonify('Not supported'), 405
 

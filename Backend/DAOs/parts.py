@@ -1,18 +1,18 @@
 from Backend.dbconfig import pg_config
 import psycopg2
 
-
 class PartDAO:
     def __init__(self):
         # host = localhost is important!. If it's in heroku it would change. Also, the port could be important too!
-        connection_url = f'host = localhost dbname={(pg_config["dbname"])} user={pg_config["user"]} password={pg_config["password"]}'
+        connection_url = (f'host = localhost dbname={(pg_config["dbname"])} '
+                          f'user={pg_config["user"]} password={pg_config["password"]}')
 
         print("Connection url:", connection_url)
         self.conn = psycopg2.connect(connection_url) # connection URL to the DB to send queries
 
     def getAllParts(self):
-        # here will be the query
-        cursor = self.conn.cursor()  # object utilized to send queries to the DB and too iterate through the results from the query
+        # object utilized to send queries to the DB and too iterate through the results from the query
+        cursor = self.conn.cursor()
         res = []
         query = "select pid, pname, pcolor, pmaterial, msrp from parts"
         cursor.execute(query)

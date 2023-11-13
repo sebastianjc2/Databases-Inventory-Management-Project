@@ -1,7 +1,6 @@
 from flask import jsonify
 from Backend.DAOs.parts import PartDAO
 
-
 class PartHandler:
     """
     this should:

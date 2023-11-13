@@ -1,10 +1,10 @@
 from Backend.dbconfig import pg_config
 import psycopg2
 
-
 class SupplierDAO:
     def __init__(self):
-        connection_url = f'host = localhost dbname={(pg_config["dbname"])} user={pg_config["user"]} password={pg_config["password"]}'
+        connection_url = (f'host = localhost dbname={(pg_config["dbname"])}'
+                          f'user={pg_config["user"]} password={pg_config["password"]}')
 
         print("Connection url:", connection_url)
         self.conn = psycopg2.connect(connection_url)  # connection URL to the DB to send queries
@@ -21,7 +21,8 @@ class SupplierDAO:
 
     def insertSupplier(self, name, country, city, street, zipcode, phone):
         cur = self.conn.cursor()
-        query = "INSERT INTO supplier(sname, scountry, scity, sstreet, szipcode, sphone) VALUES (%s, %s, %s, %s, %s, %s) returning sid;"
+        query = "INSERT INTO supplier(sname, scountry, scity, sstreet, szipcode, sphone) VALUES (%s, %s, %s, %s, %s, " \
+                "%s) returning sid; "
         cur.execute(query, (name, country, city, street, zipcode, phone))
         sid = cur.fetchone()[0]
         self.conn.commit()
@@ -44,7 +45,8 @@ class SupplierDAO:
 
     def updateByID(self, sid, name, country, city, street, zipcode, phone):
         cur = self.conn.cursor()
-        query = "UPDATE supplier SET sname = %s, scountry = %s, scity = %s, sstreet = %s, szipcode = %s, sphone = %s WHERE sid = %s;"
+        query = "UPDATE supplier SET sname = %s, scountry = %s, scity = %s, sstreet = %s, szipcode = %s, sphone = %s " \
+                "WHERE sid = %s; "
         cur.execute(query, (name, country, city, street, zipcode, phone, sid,))
         count = cur.rowcount
         self.conn.commit()

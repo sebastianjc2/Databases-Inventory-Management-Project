@@ -1,9 +1,7 @@
 from flask import jsonify
 from Backend.DAOs.suppliers import SupplierDAO
 
-
 class SupplierHandler:
-
     def mapToDict(self, tup):
         my_dict = {}
         my_dict['id'] = tup[0]
