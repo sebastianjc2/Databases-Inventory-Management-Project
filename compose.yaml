@@ -4,12 +4,12 @@ services:
       restart: always
       volumes:
           - db-data:/var/lib/postgresql/data
-          - ./sql_data:/docker-entrypoint-initdb.d
+          - ./Backend/sql_data:/docker-entrypoint-initdb.d
       environment:
           - POSTGRES_DB=sqlytes-inventory-app
           - POSTGRES_USER=docker_admin
           - POSTGRES_PASSWORD=postgresadmin
       ports:
-          - "5433:5433"
+        - "5432:5432"
 volumes:
   db-data:
