@@ -9,17 +9,20 @@
 - Yariel Mercado: yariel.mercado1@upr.edu
 
 ## Setting up a working environment
-1. Create your own virtual environment folder in the workspace where the program is going to reside.
-   This allows the project to localize the packages and versions instead of applying system-wide changes.
-   Use this as a general guide, as the setup varies based on OS. This is targeted towards macOS users.
-      1. Run the following command: `python -m venv <.venv>`
-         - `.venv` can be named anything.
-         - The creation of your venv was successful if a `<.venv>` folder appears in your workspace and if `(<.venv>)`
-           appears at the beginning of your directory. Example: `(<.venv>) <username> <ProjectWorkspace>`
-      2. Change your Python environment to the location of where your created venv resides.
-      3. Run the following command to activate your venv `source <venv_name>/bin/activate`.
+1. Create your own virtual environment folder in the workspace where the program is going to reside. This allows the project to localize the packages and versions instead of applying system-wide changes. Use this as a general guide, as the setup varies based on OS. This is targeted towards macOS users.
+   1. Run the following command: `python -m venv <.venv>`
+      - `.venv` can be named anything.
+      - The creation of your venv was successful if a `<.venv>` folder appears in your workspace and if `(<.venv>)`
+        appears at the beginning of your directory. Example: `(<.venv>) <username> <ProjectWorkspace>`
+   2. Change your Python environment to the location of where your created venv resides.
+   3. Run the following command to activate your venv:
+      ```
+      source <venv_name>/bin/activate
+      ```
 2. Install the libraries used in this project by running the following command inside your venv:
-   `pip install -r requirements.txt`
+   ```
+   pip install -r requirements.txt
+   ```
 3. The required Python version for this is `Python 3.10.2` or newer. If your system-wide version of Python is older,
    the venv can be configured to handle independent versions of Python.
 
@@ -43,27 +46,53 @@ auto-activate your venv each time the IDE is fired up. More info on how to confi
 10. Ensure that any IDE, venv, or compilation specific artifacts are listed under `.gitignore`.
 
 ## Credentials for the Database (Heroku Data)
-* Host - ec2-34-193-110-25.compute-1.amazonaws.com
-* Database - dcfajr03gbu43b
-* User - rfuunoitsqrvhu
-* Port - 5432
-* Password - ad03f3262f921e6a03acbf5a2def6d79b298b9e3e732e33a641e359e141e69b3
-* URI - postgres://rfuunoitsqrvhu:ad03f3262f921e6a03acbf5a2def6d79b298b9e3e732e33a641e359e141e69b3@ec2-34-193-110-25.compute-1.amazonaws.com:5432/dcfajr03gbu43b
-* Heroku CLI - heroku pg:psql postgresql-acute-63860 --app sqlytes-inventory-app
+- Host
+   ```
+   ec2-34-193-110-25.compute-1.amazonaws.com
+   ```
+- Database
+   ```
+   dcfajr03gbu43b
+   ```
+- User
+   ```
+   rfuunoitsqrvhu
+   ```
+- Port
+   ```
+   5432
+   ```
+- Password
+   ```
+   ad03f3262f921e6a03acbf5a2def6d79b298b9e3e732e33a641e359e141e69b3
+   ```
+- URI
+   ```
+   postgres://rfuunoitsqrvhu:ad03f3262f921e6a03acbf5a2def6d79b298b9e3e732e33a641e359e141e69b3@ec2-34-193-110-25.compute-1.amazonaws.com:5432/dcfajr03gbu43b
+   ```
+- Heroku CLI
+   ```
+   heroku pg:psql postgresql-acute-63860 --app sqlytes-inventory-app
+   ```
 
 ## Docker Postgres Setup
-Install [Docker Desktop](https://docs.docker.com/desktop/).
-The following are the commands specific to our DB during the setup. It's useful to utilize the GUI to view
-console outputs when running commands. 
-- Install the Docker Postgres image via: `docker pull postgres`. Ensure that the image shows up on Docker 
-Desktop. 
-- To build the container: `docker-compose build`. 
-- To start the container: `docker-compose up -d`.
-- Access the container: `docker exec -it inventory-tracking-app-sqlytes-db-1 /bin/bash`.
-  * The argument for *-it* is the container name. View your containers using: `docker container ls`.
-- To access the DB via Bash: `psql -U docker_admin -d sqlytes-inventory-app`.
-  * You may or may not need to install the latest version of [PostgreSQL](https://www.postgresql.org/download/).
-  * Optionally, connect to a DB with a user with `\c` or `\c database`.
-  * Check the list of available DBs with `\l`. 
-  * View the tables within that DB with `\dt`. 
+Install [Docker Desktop](https://docs.docker.com/desktop/). The following are the commands specific to our DB during the setup. It's useful to utilize the GUI to view console outputs when running commands. 
+#### Initial Setup
+```shell
+docker pull postgres # ensure it shows up on Docker Desktop
+docker-compose build # build container
+docker-compose up -d # start container
+docker exec -it inventory-tracking-app-sqlytes-db-1 /bin/bash # launch
+```
+> The argument for *-it* is the container name. View your containers using: `docker container ls`.
+
+#### Container
+Once in the container, access the DB with:
+```
+psql -U docker_admin -d sqlytes-inventory-app
+```
+- You may or may not need to install the latest version of [PostgreSQL](https://www.postgresql.org/download/).
+- Optionally, connect to a DB with a user with `\c` or `\c database`.
+- Check the list of available DBs with `\l`. 
+- View the tables within that DB with `\dt`. 
 - When finished, stop the current container via: `docker-compose down`.
