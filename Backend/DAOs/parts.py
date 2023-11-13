@@ -1,15 +1,6 @@
-from Backend.dbconfig import pg_config
-import psycopg2
+from Backend.DAOs.DAO import DAO
 
-class PartDAO:
-    def __init__(self):
-        # host = localhost is important!. If it's in heroku it would change. Also, the port could be important too!
-        connection_url = (f'host = localhost dbname={(pg_config["dbname"])} '
-                          f'user={pg_config["user"]} password={pg_config["password"]}')
-
-        print("Connection url:", connection_url)
-        self.conn = psycopg2.connect(connection_url) # connection URL to the DB to send queries
-
+class PartDAO(DAO):
     def getAllParts(self):
         # object utilized to send queries to the DB and too iterate through the results from the query
         cursor = self.conn.cursor()
