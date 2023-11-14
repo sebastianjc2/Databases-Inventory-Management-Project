@@ -82,15 +82,11 @@ Install [Docker Desktop](https://docs.docker.com/desktop/). The following are th
 docker pull postgres # ensure it shows up on Docker Desktop
 docker-compose build # build container
 docker-compose up -d # start container
-docker exec -it inventory-tracking-app-sqlytes-db-1 /bin/bash # launch
+docker exec -it inventory-tracking-app-sqlytes-db-1 psql -U docker_admin -d sqlytes-inventory-app # access container
 ```
-> The argument for *-it* is the container name. View your containers using: `docker container ls`.
+> The argument for *-it* is the container name. View your containers using: `docker container ls`. 
 
 #### Container
-Once in the container, access the DB with:
-```
-psql -U docker_admin -d sqlytes-inventory-app
-```
 - You may or may not need to install the latest version of [PostgreSQL](https://www.postgresql.org/download/).
 - Optionally, connect to a DB with a user with `\c` or `\c database`.
 - Check the list of available DBs with `\l`. 
