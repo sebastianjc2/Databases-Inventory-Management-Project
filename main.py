@@ -5,6 +5,7 @@ from Backend import dbconfig as config
 from Backend.handler.parts import PartHandler
 from Backend.handler.suppliers import SupplierHandler
 from Backend.handler.customer import CustomerHandler
+from Backend.handler.racks import RackHandler
 
 # App initialization
 app = Flask(__name__)
@@ -18,7 +19,7 @@ def greeting():
 
 
 # route to get all parts or add a part
-@app.route('/parts', methods=['GET', 'POST'])
+@app.route('/sqlytes/parts', methods=['GET', 'POST'])
 def getAllParts():
     if request.method == "GET":
         return PartHandler().getAllParts()
@@ -30,7 +31,7 @@ def getAllParts():
 
 
 # route to find a specific part
-@app.route('/parts/<int:pid>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/sqlytes/parts/<int:pid>', methods=['GET', 'PUT', 'DELETE'])
 def searchPartByID(pid):
     if request.method == "GET":  # performs select-project-join queries
         return PartHandler().searchByID(pid)
@@ -43,7 +44,7 @@ def searchPartByID(pid):
         return jsonify('Not supported'), 405
 
 
-@app.route('/suppliers', methods=['GET', 'POST'])
+@app.route('/sqlytes/suppliers', methods=['GET', 'POST'])
 def getAllSuppliers():
     if request.method == "GET":
         return SupplierHandler().getAllSuppliers()
@@ -54,7 +55,7 @@ def getAllSuppliers():
         return jsonify('Not supported'), 405
 
 
-@app.route('/suppliers/<int:sid>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/sqlytes/suppliers/<int:sid>', methods=['GET', 'PUT', 'DELETE'])
 def searchSupplierByID(sid):
     if request.method == "GET":  # performs select-project-join queries
         return SupplierHandler().searchByID(sid)
@@ -95,6 +96,28 @@ def customerById(cid):
         return jsonify("Not supported"), 405
 
 
+@app.route("/sqlytes/rack", methods=["POST", "GET"])
+def allRacks():
+    if request.method == "POST":
+        data = request.json
+        return RackHandler().addRack(data)
+    elif request.method == "GET":
+        return RackHandler().getAllRacks()
+    else:
+        return jsonify("Not supported"), 405
+
+
+@app.route("/sqlytes/rack/<int:rid>", methods=["GET", "PUT", "DELETE"])
+def rackById(rid):
+    if request.method == "GET":
+        return RackHandler().getRackByID(rid)
+    elif request.method == "PUT":
+        data = request.json
+        return RackHandler().updateByID(rid, data)
+    elif request.method == "DELETE":
+        return RackHandler().deleteByID(rid)
+    else:
+        return jsonify("Not supported"), 405
 
 
 if __name__ == '__main__':
