@@ -4,6 +4,7 @@ from Backend import dbconfig as config
 # Import handlers
 from Backend.handler.parts import PartHandler
 from Backend.handler.suppliers import SupplierHandler
+from Backend.handler.customer import CustomerHandler
 
 # App initialization
 app = Flask(__name__)
@@ -67,6 +68,33 @@ def searchSupplierByID(sid):
 
     else:
         return jsonify('Not supported'), 405
+
+
+
+@app.route("/sqlytes/customer", methods=["POST", "GET"])
+def allCustomers():
+    if request.method == "POST":
+        data = request.json
+        return CustomerHandler().addCustomer(data)
+    elif request.method == "GET":
+        return CustomerHandler().getAllCustomers()
+    else:
+        return jsonify("Not supported"), 405
+
+
+@app.route("/sqlytes/customer/<int:cid>", methods=["GET", "PUT", "DELETE"])
+def customerById(cid):
+    if request.method == "GET":
+        return CustomerHandler().getCustomerById(cid)
+    elif request.method == "PUT":
+        data = request.json
+        return CustomerHandler().modifyCustomerById(cid, data)
+    elif request.method == "DELETE":
+        return CustomerHandler().deleteCustomerById(cid)
+    else:
+        return jsonify("Not supported"), 405
+
+
 
 
 if __name__ == '__main__':
