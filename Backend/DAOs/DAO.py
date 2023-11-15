@@ -74,7 +74,7 @@ class DAO:
     def _modifyEntryByID(self, table_name: str, id_name: str, id_value: str, columns: list, values: list):
         """
         Modifies the tuple with the given id.
-        Returns the row count after the operation.
+        Returns the number of rows affected by the operation.
         """
         cursor = self.conn.cursor()
         set_statement = "SET"
@@ -82,7 +82,7 @@ class DAO:
             set_statement += f" {column} = %s,"
         query = f"UPDATE {table_name} {set_statement.rstrip(',')} WHERE {id_name} = %s;"
         cursor.execute(query, (*values, id_value))
-        count = cursor.rowcount # <--- TODO look into this
+        count = cursor.rowcount
         self.conn.commit()
         return count
     
@@ -90,11 +90,25 @@ class DAO:
     def _deleteEntryByID(self, table_name: str, id_name: str, id_value: str):
         """
         Deletes the tuple with the given id.
-        Returns the row count after the operation.
+        Returns the number of rows affected by the operation.
         """
         cursor = self.conn.cursor()
         query = f"DELETE FROM {table_name} WHERE {id_name} = %s"
         cursor.execute(query, (id_value))
-        count = cursor.rowcount # <--- TODO look into this
+        count = cursor.rowcount
         self.conn.commit()
         return count
+
+
+    def _generic_query(self, query: str, substitutions=()):
+        """
+        Executes the given query and returns the result.
+        Useful for custom queries requiring joins.
+        """
+        cursor = self.conn.cursor()
+        cursor.execute(query, substitutions)
+        res = []
+        for row in cursor:
+            print("row:", row)
+            res.append(row)
+        return res

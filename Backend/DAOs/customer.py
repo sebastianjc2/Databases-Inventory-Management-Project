@@ -28,4 +28,4 @@ class CustomerDAO(DAO):
     def deleteCustomerById(self, cid):
         return self._deleteEntryByID(table_name="customer",
                                      id_name="cid",
-                                     id_value=cid)
+                                     id_value=str(cid))

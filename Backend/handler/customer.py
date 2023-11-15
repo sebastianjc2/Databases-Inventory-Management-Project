@@ -28,8 +28,8 @@ class CustomerHandler:
 
         if fname and lname and zipcode and phone:
             dao = CustomerDAO()
-            pid = dao.addCustomer(fname, lname, zipcode, phone)
-            data["pid"] = pid
+            cid = dao.addCustomer(fname, lname, zipcode, phone)
+            data["cid"] = cid
             return jsonify(data), 201
         else:
             return jsonify("Unexpected attribute values."), 400
@@ -57,7 +57,7 @@ class CustomerHandler:
 
     def deleteCustomerById(self, cid):
         dao = CustomerDAO()
-        res = dao.deleteCustomerById(str(cid))
+        res = dao.deleteCustomerById(cid)
         if res:
             return jsonify(f'Deleted part with id: {cid}'), 200
         else:
