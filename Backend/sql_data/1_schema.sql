@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS supplier (
 CREATE TABLE IF NOT EXISTS racks (
     rid SERIAL PRIMARY KEY,
     rname VARCHAR(255) NOT NULL,
-    rcapacity VARCHAR(255) NOT NULL
+    rcapacity INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS parts (
@@ -95,4 +95,4 @@ CREATE TABLE IF NOT EXISTS transfer(
      rid INTEGER REFERENCES racks(rid),
      UNIQUE (wid, pid),
      PRIMARY KEY (wid, pid, rid)
- )
+ );

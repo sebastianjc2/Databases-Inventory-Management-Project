@@ -11,6 +11,5 @@ class DAO:
             f'host = localhost dbname={(pg_config["dbname"])} '
             f'user={pg_config["user"]} password={pg_config["password"]}'
         )
-
         print("Connection url:", connection_url)
         self.conn = psycopg2.connect(connection_url)

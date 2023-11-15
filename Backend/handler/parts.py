@@ -1,6 +1,7 @@
 from flask import jsonify
 from Backend.DAOs.parts import PartDAO
 
+
 class PartHandler:
     """
     this should:
@@ -13,7 +14,6 @@ class PartHandler:
         result = []
         result.append({'id': 2, 'name': 'tuerca','color': 'blue'})
         result.append({'id': 4, 'name': 'clavo','color': 'gray'})
-
         return jsonify(result)
 
     def mapToDict(self, tup):
@@ -31,8 +31,7 @@ class PartHandler:
     def getAllParts(self):
         dao = PartDAO()
         # data access object: design pattern that captures, in an object, the query to be sent to the DB
-
-        dbtuples = dao.getAllParts() # this should return an array of Tuples
+        dbtuples = dao.getAllParts()  # this should return an array of Tuples
 
         result = []
         # loop thru each tuple and turn them into a dictionary (serialization)

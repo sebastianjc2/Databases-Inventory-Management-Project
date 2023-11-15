@@ -1,11 +1,12 @@
-from Backend.DAOs.DAO import DAO
+from DAO import DAO
+
 
 class PartDAO(DAO):
     def getAllParts(self):
-        # object utilized to send queries to the DB and too iterate through the results from the query
+        # object utilized to send queries to the DB and to iterate through the results from the query
         cursor = self.conn.cursor()
         res = []
-        query = "select pid, pname, pcolor, pmaterial, msrp from parts"
+        query = "SELECT pid, pname, pcolor, pmaterial, msrp FROM parts"
         cursor.execute(query)
 
         for row in cursor:

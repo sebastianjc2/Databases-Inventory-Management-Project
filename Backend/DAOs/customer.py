@@ -1,4 +1,5 @@
-from Backend.DAOs.DAO import DAO
+from DAO import DAO
+
 
 class CustomerDAO(DAO):
     def getAllCustomers(self):
@@ -24,9 +25,9 @@ class CustomerDAO(DAO):
         cursor = self.conn.cursor()
         res = []
         query = """
-        select cid, cfname, clname, czipcode, cphone
-        from customer
-        where cid = %s
+        SELECT cid, cfname, clname, czipcode, cphone
+        FROM customer
+        WHERE cid = %s
         """
         cursor.execute(query, (str(cid)))
 

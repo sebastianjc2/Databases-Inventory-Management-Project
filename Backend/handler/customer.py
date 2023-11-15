@@ -11,18 +11,14 @@ class CustomerHandler:
         my_dict["Zipcode"] = tup[3]
         my_dict["Phone"] = tup[4]
         return my_dict
-    
-    
+
     def getAllCustomers(self):
         dao = CustomerDAO()
-
         dbtuples = dao.getAllCustomers()
-
         result = []
         for tup in dbtuples:
             result.append(self.mapToDict(tup))
         return jsonify(result)
-    
 
     def addCustomer(self, data):
         fname = data["FirstName"]
@@ -38,12 +34,10 @@ class CustomerHandler:
         else:
             return jsonify("Unexpected attribute values."), 400
 
-
     def getCustomerById(self, cid):
         dao = CustomerDAO()
         dbtuples = dao.getCustomerById(cid)
         return jsonify(dbtuples)
-    
 
     def modifyCustomerById(self, cid, data):
         fname = data["FirstName"]
@@ -60,7 +54,6 @@ class CustomerHandler:
                 return jsonify("Not Found"), 404
         else:
             return jsonify("Unexpected attribute values."), 400
-
 
     def deleteCustomerById(self, cid):
         dao = CustomerDAO()
