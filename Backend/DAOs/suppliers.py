@@ -1,4 +1,5 @@
-from Backend.DAOs.DAO import DAO
+from DAO import DAO
+
 
 class SupplierDAO(DAO):
     def getAllSuppliers(self):

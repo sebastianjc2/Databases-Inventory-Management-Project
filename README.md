@@ -91,4 +91,4 @@ docker exec -it inventory-tracking-app-sqlytes-db-1 psql -U docker_admin -d sqly
 - Optionally, connect to a DB with a user with `\c` or `\c database`.
 - Check the list of available DBs with `\l`. 
 - View the tables within that DB with `\dt`. 
-- When finished, stop the current container via: `docker-compose down`.
+- When finished, stop the current container via: `docker-compose down`. Add `-v` to destroy volumes. 

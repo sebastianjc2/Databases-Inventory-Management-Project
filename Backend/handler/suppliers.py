@@ -1,6 +1,7 @@
 from flask import jsonify
 from Backend.DAOs.suppliers import SupplierDAO
 
+
 class SupplierHandler:
     def mapToDict(self, tup):
         my_dict = {}
@@ -24,7 +25,6 @@ class SupplierHandler:
         return jsonify(res)
 
     def insertSupplier(self, data):
-
         name = data['name']
         country = data['country']
         city = data['city']

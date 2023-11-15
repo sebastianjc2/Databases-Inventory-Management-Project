@@ -1,12 +1,13 @@
 from Backend.DAOs.DAO import DAO
 
+
 class CustomerDAO(DAO):
     def getAllCustomers(self):
-        return self._getAllEntries(table_name="customer", 
+        return self._getAllEntries(table_name="customer",
                                    columns=("cid", "cfname", "clname", "czipcode", "cphone"))
-    
+
     def getCustomerById(self, cid):
-        return self._getEntryByID(table_name="customer", 
+        return self._getEntryByID(table_name="customer",
                                   id_name="cid",
                                   id_value=str(cid),
                                   columns=("cid", "cfname", "clname", "czipcode", "cphone"))
@@ -23,7 +24,7 @@ class CustomerDAO(DAO):
                                      id_value=str(cid),
                                      columns=("cfname", "clname", "czipcode", "cphone"),
                                      values=(cfname, clname, czipcode, cphone))
-    
+
     def deleteCustomerById(self, cid):
         return self._deleteEntryByID(table_name="customer",
                                      id_name="cid",
