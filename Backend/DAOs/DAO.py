@@ -26,7 +26,10 @@ class DAO:
         return self._generic_retrieval_query(query)
     
 
+  
     def _getEntryByID(self, table_name: str, id_name: str, id_value: str, columns: tuple) -> Iterable | None:
+        # TODO: Get entry by ID does not need a list of columns since it returns 
+        # a single entry.
         """
         Selects the given attributes that match the given id.
         Returns the matching entries or None if the operation failed.

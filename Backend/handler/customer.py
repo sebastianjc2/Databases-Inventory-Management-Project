@@ -43,7 +43,9 @@ class CustomerHandler:
             else:
                 return jsonify("Internal Server Error"), 500
         else:
-            return jsonify("Attributes cannot contain null fields."), 400
+            # TODO: add validation and error handling and map to dict 
+            return jsonify("Unexpected attribute values."), 400
+    
 
 
     def getCustomerById(self, cid):

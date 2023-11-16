@@ -1,13 +1,16 @@
 from flask import Flask, jsonify, request
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from Backend import dbconfig as config
-from Backend.handler.outgoingTransaction import OutgoingTransactionHandler
 # Import handlers
+from Backend.handler.outgoingTransaction import OutgoingTransactionHandler
 from Backend.handler.parts import PartHandler
 from Backend.handler.suppliers import SupplierHandler
+from Backend.handler.user_handler import UserHandler
+from Backend.handler.warehouse_handler import WarehouseHandler
 from Backend.handler.customer import CustomerHandler
 from Backend.handler.racks import RackHandler
 from Backend.handler.incomingTransaction import IncomingTransactionHandler
+
 
 # App initialization
 app = Flask(__name__)
@@ -17,7 +20,7 @@ CORS(app)
 
 @app.route('/')  # default route handler
 def greeting():
-    return 'Hello, this is the parts DB app practice'
+    return 'Hello, this is the SQLytes API!'
 
 
 # route to get all parts or add a part
@@ -44,36 +47,7 @@ def searchPartByID(pid):
         return PartHandler().deleteByID(pid)
     else:
         return jsonify('Not supported'), 405
-
-
-@app.route('/sqlytes/suppliers', methods=['GET', 'POST'])
-def getAllSuppliers():
-    if request.method == "GET":
-        return SupplierHandler().getAllSuppliers()
-    elif request.method == "POST":  # performs insert queries
-        data = request.json
-        return SupplierHandler().insertSupplier(data)
-    else:
-        return jsonify('Not supported'), 405
-
-
-@app.route('/sqlytes/suppliers/<int:sid>', methods=['GET', 'PUT', 'DELETE'])
-def searchSupplierByID(sid):
-    if request.method == "GET":  # performs select-project-join queries
-        return SupplierHandler().searchByID(sid)
-
-    elif request.method == "PUT":  # performs update queries
-        data = request.json
-        return SupplierHandler().updateByID(sid, data)
-
-    elif request.method == "DELETE":  # performs delete queries
-        return SupplierHandler().deleteByID(sid)
-
-    else:
-        return jsonify('Not supported'), 405
-
-
-
+    
 @app.route("/sqlytes/customer", methods=["POST", "GET"])
 def allCustomers():
     if request.method == "POST":
@@ -121,6 +95,78 @@ def rackById(rid):
     else:
         return jsonify("Not supported"), 405
 
+
+
+@app.route('/sqlytes/suppliers', methods=['GET', 'POST'])
+def getAllSuppliers():
+    if request.method == "GET":
+        return SupplierHandler().getAllSuppliers()
+    elif request.method == "POST":  # performs insert queries
+        data = request.json
+        return SupplierHandler().insertSupplier(data)
+    else:
+        return jsonify('Not supported'), 405
+
+
+@app.route('/sqlytes/suppliers/<int:sid>', methods=['GET', 'PUT', 'DELETE'])
+def searchSupplierByID(sid):
+    if request.method == "GET":  # performs select-project-join queries
+        return SupplierHandler().searchByID(sid)
+
+    elif request.method == "PUT":  # performs update queries
+        data = request.json
+        return SupplierHandler().updateByID(sid, data)
+
+    elif request.method == "DELETE":  # performs delete queries
+        return SupplierHandler().deleteByID(sid)
+
+    else:
+        return jsonify('Not supported'), 405
+    
+@app.route('/sqlytes/users',methods=['GET','POST'])
+def getUsers():
+    """Returns all users from the Users Table in the database 
+       or it creates a new user in the Users Table
+    """
+    if request.method == "GET": # Performs the select-project-join queries.
+        return UserHandler().getAllUsers()
+    elif request.method == "POST":
+        return UserHandler().insertUser(request.json)
+    else:
+        return jsonify(Error='Method not allowed'), 405
+    
+@app.route('/sqlytes/users/<int:uid>', methods=['GET','PUT','DELETE'])
+def getUserById(uid:int):
+    if request.method == 'GET':
+        return UserHandler().getUserByID(uid)
+    elif request.method == 'PUT':
+        return UserHandler().updateUserByID(uid,request.json)
+    elif request.method == 'DELETE':
+        return UserHandler().deleteUserByID(uid)
+    else:
+        return jsonify(Error='Method not allowed'), 405
+
+@app.route('/sqlytes/warehouse', methods=['GET','POST'])
+def getWarehouses():
+    if request.method == 'GET':
+        return WarehouseHandler().getAllWarehouses()
+    elif request.method == 'POST':
+        return WarehouseHandler().insertWarehouse(request.json)
+    else:
+        return jsonify(Error='Method not allowed'), 405
+    
+    
+@app.route('/sqlytes/warehouse/<int:wid>', methods=['GET','PUT','DELETE'])
+def getWarehouseById(wid:int):
+    if request.method == 'GET':
+        return WarehouseHandler().getWarehouseById(wid)
+    elif request.method == 'PUT':
+        return WarehouseHandler().updateWarehouseByID(wid,request.json)
+    elif request.method == 'DELETE':
+        return WarehouseHandler().deleteWarehouseByID(wid)
+    else:
+        return jsonify(Error='Method not allowed'), 405
+    
 
 
 @app.route("/sqlytes/incomingTransaction", methods=["POST", "GET"])
@@ -171,3 +217,4 @@ def outgoingTransactionById(otid):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
