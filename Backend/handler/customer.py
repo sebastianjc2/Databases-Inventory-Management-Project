@@ -12,6 +12,7 @@ class CustomerHandler:
         my_dict["Phone"] = tup[4]
         return my_dict
 
+
     def getAllCustomers(self):
         dao = CustomerDAO()
         dbtuples = dao.getAllCustomers()
@@ -23,11 +24,15 @@ class CustomerHandler:
         else:
             return jsonify("Internal Server Error"), 500
 
+
     def addCustomer(self, data):
-        fname = data["FirstName"]
-        lname = data["LastName"]
-        zipcode = data["Zipcode"]
-        phone = data["Phone"]
+        try:
+            fname = data["FirstName"]
+            lname = data["LastName"]
+            zipcode = data["Zipcode"]
+            phone = data["Phone"]
+        except KeyError as e:
+            return jsonify({"Unexpected attribute values": e.args}), 400
 
         if fname and lname and zipcode and phone:
             dao = CustomerDAO()
@@ -38,7 +43,8 @@ class CustomerHandler:
             else:
                 return jsonify("Internal Server Error"), 500
         else:
-            return jsonify("Unexpected attribute values."), 400
+            return jsonify("Attributes cannot contain null fields."), 400
+
 
     def getCustomerById(self, cid):
         dao = CustomerDAO()
@@ -48,26 +54,35 @@ class CustomerHandler:
         else:
             return jsonify("Internal Server Error"), 500
 
+
     def modifyCustomerById(self, cid, data):
-        fname = data["FirstName"]
-        lname = data["LastName"]
-        zipcode = data["Zipcode"]
-        phone = data["Phone"]
+        try:
+            fname = data["FirstName"]
+            lname = data["LastName"]
+            zipcode = data["Zipcode"]
+            phone = data["Phone"]
+        except KeyError as e:
+            return jsonify({"Unexpected attribute values": e.args}), 400
 
         if fname and lname and zipcode and phone:
             dao = CustomerDAO()
-            flag = dao.modifyCustomerById(fname, lname, zipcode, phone, cid)
-            if flag:
+            count = dao.modifyCustomerById(fname, lname, zipcode, phone, cid)
+            if count == 0:
+                return jsonify(f'No customer with id: {cid}'), 404
+            elif count == 1:
                 return jsonify(data), 200
             else:
-                return jsonify("Not Found"), 404
+                return jsonify("Internal Server Error"), 500
         else:
-            return jsonify("Unexpected attribute values."), 400
+            return jsonify("Attributes cannot contain null fields."), 400
+
 
     def deleteCustomerById(self, cid):
         dao = CustomerDAO()
-        res = dao.deleteCustomerById(cid)
-        if res:
+        count = dao.deleteCustomerById(cid)
+        if count == 0:
+            return jsonify(f'No customer with id: {cid}'), 404
+        elif count == 1:
             return jsonify(f'Deleted customer with id: {cid}'), 200
         else:
             return jsonify("Internal Server Error"), 500

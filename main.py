@@ -1,12 +1,13 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from Backend import dbconfig as config
+from Backend.handler.outgoingTransaction import OutgoingTransactionHandler
 # Import handlers
 from Backend.handler.parts import PartHandler
 from Backend.handler.suppliers import SupplierHandler
 from Backend.handler.customer import CustomerHandler
 from Backend.handler.racks import RackHandler
-from Backend.handler.incomingnTransaction import IncomingTransactionHandler
+from Backend.handler.incomingTransaction import IncomingTransactionHandler
 
 # App initialization
 app = Flask(__name__)
@@ -142,6 +143,30 @@ def incomingTransactionById(itid):
         return IncomingTransactionHandler().modifyIncomingTransactionByID(itid, data)
     else:
         return jsonify("Not supported"), 405
+    
+
+
+@app.route("/sqlytes/outgoingTransaction", methods=["POST", "GET"])
+def allOutgoingTransactions():
+    if request.method == "POST":
+        data = request.json
+        return OutgoingTransactionHandler().addOutgoingTransaction(data)
+    elif request.method == "GET":
+        return OutgoingTransactionHandler().getAllOutgoingTransaction()
+    else:
+        return jsonify("Not supported"), 405
+
+
+@app.route("/sqlytes/outgoingTransaction/<int:otid>", methods=["GET", "PUT"])
+def outgoingTransactionById(otid):
+    if request.method == "GET":
+        return OutgoingTransactionHandler().getOutgoingTransactionById(otid)
+    elif request.method == "PUT":
+        data = request.json
+        return OutgoingTransactionHandler().modifyOutgoingTransactionByID(otid, data)
+    else:
+        return jsonify("Not supported"), 405
+
 
 
 if __name__ == '__main__':

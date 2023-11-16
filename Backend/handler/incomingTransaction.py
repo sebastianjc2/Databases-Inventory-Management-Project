@@ -19,14 +19,22 @@ class IncomingTransactionHandler:
 
 
     def addIncomingTransaction(self, data):
-        transactionDate = data["transactionDate"]
-        partAmount = data["partAmount"]
-        unitBuyPrice = data["unitBuyPrice"]
-        partID = data["partID"]
-        warehouseID = data["warehouseID"]
-        rackID = data["rackID"]
-        supplierID = data["supplierID"]
-        userID = data["userID"]
+        try:
+            transactionDate = data["transactionDate"]
+            partAmount = data["partAmount"]
+            unitBuyPrice = data["unitBuyPrice"]
+            partID = data["partID"]
+            warehouseID = data["warehouseID"]
+            rackID = data["rackID"]
+            supplierID = data["supplierID"]
+            userID = data["userID"]
+        except KeyError as e:
+            return jsonify({"Unexpected attribute values": e.args}), 400
+        
+        if unitBuyPrice < 0:
+            return jsonify("unitBuyPrice must be a positive number"), 400
+        if partAmount < 0:
+            return jsonify("partAmount must be a positive number"), 400
 
         no_values_are_none = (transactionDate and partAmount and unitBuyPrice and partID
                               and warehouseID and rackID and supplierID and userID)
@@ -46,7 +54,7 @@ class IncomingTransactionHandler:
                 return jsonify(data), 201
             else:
                 return jsonify("Internal Server Error"), 500
-        return jsonify("Unexpected attribute values."), 400
+        return jsonify("Attributes cannot contain null fields."), 400
 
     
     def getAllIncomingTransaction(self):
@@ -58,7 +66,7 @@ class IncomingTransactionHandler:
                 result.append(self.mapToDict(tup))
             return jsonify(result)
         else:
-            jsonify("Internal Server Error"), 500
+            return jsonify("Internal Server Error"), 500
     
 
     def getIncomingTransactionById(self, itid):
@@ -67,18 +75,26 @@ class IncomingTransactionHandler:
         if dbtuples:
             return jsonify(dbtuples)
         else:
-            jsonify("Internal Server Error"), 500
+            return jsonify("Internal Server Error"), 500
 
 
     def modifyIncomingTransactionByID(self, itid, data):
-        transactionDate = data["transactionDate"]
-        partAmount = data["partAmount"]
-        unitBuyPrice = data["unitBuyPrice"]
-        partID = data["partID"]
-        warehouseID = data["warehouseID"]
-        rackID = data["rackID"]
-        supplierID = data["supplierID"]
-        userID = data["userID"]
+        try:
+            transactionDate = data["transactionDate"]
+            partAmount = data["partAmount"]
+            unitBuyPrice = data["unitBuyPrice"]
+            partID = data["partID"]
+            warehouseID = data["warehouseID"]
+            rackID = data["rackID"]
+            supplierID = data["supplierID"]
+            userID = data["userID"]
+        except KeyError as e:
+            return jsonify({"Unexpected attribute values": e.args}), 400
+        
+        if unitBuyPrice < 0:
+            return jsonify("unitBuyPrice must be a positive number"), 400
+        if partAmount < 0:
+            return jsonify("partAmount must be a positive number"), 400
 
         no_values_are_none = (transactionDate and partAmount and unitBuyPrice and partID
                               and warehouseID and rackID and supplierID and userID)
@@ -99,4 +115,4 @@ class IncomingTransactionHandler:
             else:
                 return jsonify("Not Found"), 404
         else:
-            return jsonify("Unexpected attribute values."), 400
+            return jsonify("Attributes cannot contain null fields."), 400
