@@ -167,6 +167,7 @@ INSERT INTO transactions (tdate, part_amount, pid, uid, wid) VALUES
 ('2023-11-24', 11, (SELECT pid FROM parts WHERE pname = 'Roofing Nails'), (SELECT uid FROM users WHERE uemail = 'jean@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage')),
 ('2023-11-25', 1, (SELECT pid FROM parts WHERE pname = 'Smoke Detector'), (SELECT uid FROM users WHERE uemail = 'yadiel@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution')),
 ('2023-11-26', 1, (SELECT pid FROM parts WHERE pname = 'Smoke Detector'), (SELECT uid FROM users WHERE uemail = 'yadiel@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution'));
+
 -- Outgoing Transactions
 INSERT INTO outgoing_transaction (unit_sale_price, cid, tid) VALUES
 (49.99, (SELECT cid FROM customer WHERE cphone = '787-213-1234'), (SELECT tid FROM transactions WHERE tdate = '2023-11-14')),
@@ -183,6 +184,7 @@ INSERT INTO outgoing_transaction (unit_sale_price, cid, tid) VALUES
 (29.99, (SELECT cid FROM customer WHERE cphone = '787-888-5678'), (SELECT tid FROM transactions WHERE tdate = '2023-11-19')),
 (9.99, (SELECT cid FROM customer WHERE cphone = '939-654-2345'), (SELECT tid FROM transactions WHERE tdate = '2023-11-25')),
 (29.99, (SELECT cid FROM customer WHERE cphone = '787-888-5678'), (SELECT tid FROM transactions WHERE tdate = '2023-11-26'));
+
 -- Incoming Transactions
 INSERT INTO incoming_transaction (unit_buy_price, sid, rid, tid) VALUES
 (39.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), (SELECT rid FROM racks WHERE rname = 'Wood'), (SELECT tid FROM transactions WHERE tdate = '2023-11-14')),
@@ -207,6 +209,7 @@ INSERT INTO transfer (to_warehouse, user_requester, tid) VALUES
 ((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT uid FROM users WHERE username = 'yaya'), (SELECT tid FROM transactions WHERE tdate = '2023-11-22')),
 ((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT uid FROM users WHERE username = 'jean'), (SELECT tid FROM transactions WHERE tdate = '2023-11-24')),
 ((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT uid FROM users WHERE username = 'jean'), (SELECT tid FROM transactions WHERE tdate = '2023-11-23'));
+
 -- Stored In
 INSERT INTO stored_in (wid, pid, rid) VALUES
 -- Wood
@@ -312,6 +315,4 @@ INSERT INTO stored_in (wid, pid, rid) VALUES
 ((SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution'), (SELECT pid FROM parts WHERE pname = 'Cabinet Knob Set'), (SELECT rid FROM racks WHERE rname = 'Misc.')),
 ((SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution'), (SELECT pid FROM parts WHERE pname = 'Picture Frame Set'), (SELECT rid FROM racks WHERE rname = 'Misc.')),
 ((SELECT wid FROM warehouse WHERE wname = 'Las Montañas No-Aseguradoras'), (SELECT pid FROM parts WHERE pname = 'Picture Frame Set'), (SELECT rid FROM racks WHERE rname = 'Misc.'));
-
-
 
