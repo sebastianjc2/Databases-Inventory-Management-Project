@@ -2,7 +2,7 @@ from Backend.DAOs.DAO import DAO
 
 class IncomingTransactionDAO(DAO):
     def getAllIncomingTransaction(self):
-        return self._generic_query(
+        return self._generic_retrieval_query(
             """
             SELECT itid, tdate, unit_buy_price, part_amount, sid, rid, tid, pid, uid, wid
             FROM incoming_transaction
@@ -12,7 +12,7 @@ class IncomingTransactionDAO(DAO):
     
 
     def getIncomingTransactionById(self, itid):
-        return self._generic_query(
+        return self._generic_retrieval_query(
             query="""
             SELECT itid, tdate, unit_buy_price, part_amount, sid, rid, tid, pid, uid, wid
             FROM incoming_transaction
@@ -36,7 +36,7 @@ class IncomingTransactionDAO(DAO):
 
 
     def modifyIncomingTransactionById(self, unit_buy_price, sid, rid, tdate, part_amount, pid, uid, wid, itid):
-        tid = self._generic_query(
+        tid = self._generic_retrieval_query(
             query="""
             SELECT tid
             FROM transactions
@@ -45,11 +45,15 @@ class IncomingTransactionDAO(DAO):
             """,
             substitutions=itid
         )[0]
+        if not tid:
+            return None
         rowcountTransactions = self._modifyEntryByID(table_name="transactions",
                                                      id_name="tid",
                                                      id_value=tid,
                                                      columns=("tdate", "part_amount", "pid", "uid", "wid"),
                                                      values=(tdate, part_amount, pid, uid, wid))
+        if not rowcountTransactions:
+            return None
         rowcountIncomingTransactions = self._modifyEntryByID(table_name="incoming_transaction",
                                      id_name="tid",
                                      id_value=tid,

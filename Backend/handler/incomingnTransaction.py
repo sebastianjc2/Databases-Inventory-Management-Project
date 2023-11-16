@@ -41,25 +41,33 @@ class IncomingTransactionHandler:
                                               pid=partID,
                                               uid=userID,
                                               wid=warehouseID)
-            data["itid"] = itid
-            return jsonify(data), 201
+            if itid:
+                data["itid"] = itid
+                return jsonify(data), 201
+            else:
+                return jsonify("Internal Server Error"), 500
         return jsonify("Unexpected attribute values."), 400
 
     
     def getAllIncomingTransaction(self):
         dao = IncomingTransactionDAO()
         dbtuples = dao.getAllIncomingTransaction()
-
-        result = []
-        for tup in dbtuples:
-            result.append(self.mapToDict(tup))
-        return jsonify(result)
+        if dbtuples:
+            result = []
+            for tup in dbtuples:
+                result.append(self.mapToDict(tup))
+            return jsonify(result)
+        else:
+            jsonify("Internal Server Error"), 500
     
 
     def getIncomingTransactionById(self, itid):
         dao = IncomingTransactionDAO()
         dbtuples = dao.getIncomingTransactionById(itid)
-        return jsonify(dbtuples)
+        if dbtuples:
+            return jsonify(dbtuples)
+        else:
+            jsonify("Internal Server Error"), 500
 
 
     def modifyIncomingTransactionByID(self, itid, data):
