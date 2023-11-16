@@ -1,59 +1,31 @@
-from DAO import DAO
+from Backend.DAOs.DAO import DAO
 
 
 class CustomerDAO(DAO):
     def getAllCustomers(self):
-        cursor = self.conn.cursor()
-        res = []
-        query = "select cid, cfname, clname, czipcode, cphone from customer"
-        cursor.execute(query)
+        return self._getAllEntries(table_name="customer",
+                                   columns=("cid", "cfname", "clname", "czipcode", "cphone"))
 
-        for row in cursor:
-            print("row:", row)
-            res.append(row)
-        return res
-    
-    def addCustomer(self, cfname, clname, czipcode, cphone):
-        cursor = self.conn.cursor()
-        query = "INSERT INTO customer(cfname, clname, czipcode, cphone) VALUES (%s, %s, %s, %s) returning cid;"
-        cursor.execute(query, (cfname, clname, czipcode, cphone))
-        pid = cursor.fetchone()[0]
-        self.conn.commit()
-        return pid
-    
     def getCustomerById(self, cid):
-        cursor = self.conn.cursor()
-        res = []
-        query = """
-        SELECT cid, cfname, clname, czipcode, cphone
-        FROM customer
-        WHERE cid = %s
-        """
-        cursor.execute(query, (str(cid)))
+        return self._getEntryByID(table_name="customer",
+                                  id_name="cid",
+                                  id_value=str(cid),
+                                  columns=("cid", "cfname", "clname", "czipcode", "cphone"))
 
-        for row in cursor:
-            print("row:", row)
-            res.append(row)
-        return res
-    
+    def addCustomer(self, cfname, clname, czipcode, cphone):
+        return self._addEntry(table_name="customer",
+                              id_name="cid",
+                              columns=("cfname", "clname", "czipcode", "cphone"),
+                              values=(cfname, clname, czipcode, cphone))
 
     def modifyCustomerById(self, cfname, clname, czipcode, cphone, cid):
-        cursor = self.conn.cursor()
-        query = """
-        UPDATE customer
-        SET cfname = %s, clname = %s, czipcode = %s, cphone = %s
-        WHERE cid = %s;
-        """
-        cursor.execute(query, (cfname, clname, czipcode, cphone, cid))
-        count = cursor.rowcount
-        self.conn.commit()
-        return count
-    
+        return self._modifyEntryByID(table_name="customer",
+                                     id_name="cid",
+                                     id_value=str(cid),
+                                     columns=("cfname", "clname", "czipcode", "cphone"),
+                                     values=(cfname, clname, czipcode, cphone))
 
     def deleteCustomerById(self, cid):
-        cur = self.conn.cursor()
-        query = "DELETE FROM customer WHERE cid = %s"
-        cur.execute(query, (cid))
-        count = cur.rowcount
-        self.conn.commit()
-        return count
+        return self._deleteEntryByID(table_name="customer",
+                                     id_name="cid",
+                                     id_value=cid)

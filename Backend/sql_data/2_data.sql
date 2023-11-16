@@ -188,13 +188,9 @@ INSERT INTO incoming_transaction (unit_buy_price, sid, rid, tid) VALUES
 (39.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), (SELECT rid FROM racks WHERE rname = 'Wood'), (SELECT tid FROM transactions WHERE tdate = '2023-11-14')),
 (2.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Nails'), (SELECT tid FROM transactions WHERE tdate = '2023-11-15')),
 (7.99, (SELECT sid FROM supplier WHERE sphone = '787-173-9101'), (SELECT rid FROM racks WHERE rname = 'Gardening'), (SELECT tid FROM transactions WHERE tdate = '2023-11-16')),
-(49.99, (SELECT sid FROM supplier WHERE sphone = '939-555-1122'), (SELECT rid FROM racks WHERE rname = 'Interior Furniture'), (SELECT tid FROM transactions WHERE tdate = '2023-11-17')),
-(5.99, (SELECT sid FROM supplier WHERE sphone = '787-456-7788'), (SELECT rid FROM racks WHERE rname = 'Plumbing'), (SELECT tid FROM transactions WHERE tdate = '2023-11-18')),
 (12.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), (SELECT rid FROM racks WHERE rname = 'Paint'), (SELECT tid FROM transactions WHERE tdate = '2023-11-19')),
 (8.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Power Tools'), (SELECT tid FROM transactions WHERE tdate = '2023-11-14')),
 (24.99, (SELECT sid FROM supplier WHERE sphone = '787-173-9101'), (SELECT rid FROM racks WHERE rname = 'Misc.'), (SELECT tid FROM transactions WHERE tdate = '2023-11-15')),
-(19.99, (SELECT sid FROM supplier WHERE sphone = '939-555-1122'), (SELECT rid FROM racks WHERE rname = 'Wood'), (SELECT tid FROM transactions WHERE tdate = '2023-11-16')),
-(8.99, (SELECT sid FROM supplier WHERE sphone = '787-456-7788'), (SELECT rid FROM racks WHERE rname = 'Nails'), (SELECT tid FROM transactions WHERE tdate = '2023-11-17')),
 (5.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), (SELECT rid FROM racks WHERE rname = 'Gardening'), (SELECT tid FROM transactions WHERE tdate = '2023-11-18')),
 (29.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Interior Furniture'), (SELECT tid FROM transactions WHERE tdate = '2023-11-19'));
 
