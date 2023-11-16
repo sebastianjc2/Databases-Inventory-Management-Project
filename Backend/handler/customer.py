@@ -15,10 +15,13 @@ class CustomerHandler:
     def getAllCustomers(self):
         dao = CustomerDAO()
         dbtuples = dao.getAllCustomers()
-        result = []
-        for tup in dbtuples:
-            result.append(self.mapToDict(tup))
-        return jsonify(result)
+        if dbtuples:
+            result = []
+            for tup in dbtuples:
+                result.append(self.mapToDict(tup))
+            return jsonify(result)
+        else:
+            return jsonify("Internal Server Error"), 500
 
     def addCustomer(self, data):
         fname = data["FirstName"]
@@ -28,16 +31,22 @@ class CustomerHandler:
 
         if fname and lname and zipcode and phone:
             dao = CustomerDAO()
-            pid = dao.addCustomer(fname, lname, zipcode, phone)
-            data["pid"] = pid
-            return jsonify(data), 201
+            cid = dao.addCustomer(fname, lname, zipcode, phone)
+            if cid:
+                data["cid"] = cid
+                return jsonify(data), 201
+            else:
+                return jsonify("Internal Server Error"), 500
         else:
             return jsonify("Unexpected attribute values."), 400
 
     def getCustomerById(self, cid):
         dao = CustomerDAO()
         dbtuples = dao.getCustomerById(cid)
-        return jsonify(dbtuples)
+        if dbtuples:
+            return jsonify(dbtuples)
+        else:
+            return jsonify("Internal Server Error"), 500
 
     def modifyCustomerById(self, cid, data):
         fname = data["FirstName"]
@@ -57,8 +66,8 @@ class CustomerHandler:
 
     def deleteCustomerById(self, cid):
         dao = CustomerDAO()
-        res = dao.deleteCustomerById(str(cid))
+        res = dao.deleteCustomerById(cid)
         if res:
-            return jsonify(f'Deleted part with id: {cid}'), 200
+            return jsonify(f'Deleted customer with id: {cid}'), 200
         else:
-            return jsonify("Not Found"), 404
+            return jsonify("Internal Server Error"), 500

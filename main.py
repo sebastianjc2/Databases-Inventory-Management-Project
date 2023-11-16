@@ -6,6 +6,7 @@ from Backend.handler.parts import PartHandler
 from Backend.handler.suppliers import SupplierHandler
 from Backend.handler.customer import CustomerHandler
 from Backend.handler.racks import RackHandler
+from Backend.handler.incomingnTransaction import IncomingTransactionHandler
 
 # App initialization
 app = Flask(__name__)
@@ -116,6 +117,29 @@ def rackById(rid):
         return RackHandler().updateByID(rid, data)
     elif request.method == "DELETE":
         return RackHandler().deleteByID(rid)
+    else:
+        return jsonify("Not supported"), 405
+
+
+
+@app.route("/sqlytes/incomingTransaction", methods=["POST", "GET"])
+def allIncomingTransactions():
+    if request.method == "POST":
+        data = request.json
+        return IncomingTransactionHandler().addIncomingTransaction(data)
+    elif request.method == "GET":
+        return IncomingTransactionHandler().getAllIncomingTransaction()
+    else:
+        return jsonify("Not supported"), 405
+
+
+@app.route("/sqlytes/incomingTransaction/<int:itid>", methods=["GET", "PUT"])
+def incomingTransactionById(itid):
+    if request.method == "GET":
+        return IncomingTransactionHandler().getIncomingTransactionById(itid)
+    elif request.method == "PUT":
+        data = request.json
+        return IncomingTransactionHandler().modifyIncomingTransactionByID(itid, data)
     else:
         return jsonify("Not supported"), 405
 
