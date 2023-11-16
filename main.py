@@ -123,7 +123,7 @@ def rackById(rid):
 
 
 @app.route("/sqlytes/incomingTransaction", methods=["POST", "GET"])
-def allTransactions():
+def allIncomingTransactions():
     if request.method == "POST":
         data = request.json
         return IncomingTransactionHandler().addIncomingTransaction(data)
@@ -134,7 +134,7 @@ def allTransactions():
 
 
 @app.route("/sqlytes/incomingTransaction/<int:itid>", methods=["GET", "PUT"])
-def customerById(itid):
+def incomingTransactionById(itid):
     if request.method == "GET":
         return IncomingTransactionHandler().getIncomingTransactionById(itid)
     elif request.method == "PUT":

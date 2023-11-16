@@ -9,7 +9,7 @@ class CustomerDAO(DAO):
     def getCustomerById(self, cid):
         return self._getEntryByID(table_name="customer",
                                   id_name="cid",
-                                  id_value=str(cid),
+                                  id_value=cid,
                                   columns=("cid", "cfname", "clname", "czipcode", "cphone"))
 
     def addCustomer(self, cfname, clname, czipcode, cphone):
@@ -21,11 +21,11 @@ class CustomerDAO(DAO):
     def modifyCustomerById(self, cfname, clname, czipcode, cphone, cid):
         return self._modifyEntryByID(table_name="customer",
                                      id_name="cid",
-                                     id_value=str(cid),
+                                     id_value=cid,
                                      columns=("cfname", "clname", "czipcode", "cphone"),
                                      values=(cfname, clname, czipcode, cphone))
 
     def deleteCustomerById(self, cid):
         return self._deleteEntryByID(table_name="customer",
                                      id_name="cid",
-                                     id_value=str(cid))
+                                     id_value=cid)

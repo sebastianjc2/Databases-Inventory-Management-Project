@@ -18,7 +18,6 @@ class IncomingTransactionHandler:
         return my_dict
 
 
-
     def addIncomingTransaction(self, data):
         transactionDate = data["transactionDate"]
         partAmount = data["partAmount"]
@@ -34,7 +33,7 @@ class IncomingTransactionHandler:
 
         if no_values_are_none:
             dao = IncomingTransactionDAO()
-            itid = dao.addIncomindTransaction(unit_buy_price=unitBuyPrice,
+            itid = dao.addIncomingTransaction(unit_buy_price=unitBuyPrice,
                                               sid=supplierID,
                                               rid=rackID,
                                               tdate=transactionDate,
@@ -63,7 +62,7 @@ class IncomingTransactionHandler:
         return jsonify(dbtuples)
 
 
-    def modifyIncomingTransactionByID(itid, data):
+    def modifyIncomingTransactionByID(self, itid, data):
         transactionDate = data["transactionDate"]
         partAmount = data["partAmount"]
         unitBuyPrice = data["unitBuyPrice"]
@@ -85,7 +84,8 @@ class IncomingTransactionHandler:
                                                      part_amount=partAmount,
                                                      pid=partID,
                                                      uid=userID,
-                                                     wid=warehouseID)
+                                                     wid=warehouseID,
+                                                     itid=itid)
             if flag:
                 return jsonify(data), 200
             else:

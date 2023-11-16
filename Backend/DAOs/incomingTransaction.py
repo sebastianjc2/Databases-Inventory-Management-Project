@@ -6,7 +6,7 @@ class IncomingTransactionDAO(DAO):
             """
             SELECT itid, tdate, unit_buy_price, part_amount, sid, rid, tid, pid, uid, wid
             FROM incoming_transaction
-            NATURAL INNER JOIN transactions 
+            NATURAL INNER JOIN transactions;
             """
         )
     
@@ -17,7 +17,7 @@ class IncomingTransactionDAO(DAO):
             SELECT itid, tdate, unit_buy_price, part_amount, sid, rid, tid, pid, uid, wid
             FROM incoming_transaction
             NATURAL INNER JOIN transactions
-            WHERE itid = %s
+            WHERE itid = %s;
             """,
             substitutions=(itid)
         )
@@ -37,20 +37,22 @@ class IncomingTransactionDAO(DAO):
 
     def modifyIncomingTransactionById(self, unit_buy_price, sid, rid, tdate, part_amount, pid, uid, wid, itid):
         tid = self._generic_query(
-            """
+            query="""
             SELECT tid
             FROM transactions
-            NATURAL INNER JOIN incomind_transaction 
-            """
-        )
+            NATURAL INNER JOIN incoming_transaction
+            WHERE itid = %s;
+            """,
+            substitutions=itid
+        )[0]
         rowcountTransactions = self._modifyEntryByID(table_name="transactions",
                                                      id_name="tid",
-                                                     id_value=str(tid),
+                                                     id_value=tid,
                                                      columns=("tdate", "part_amount", "pid", "uid", "wid"),
                                                      values=(tdate, part_amount, pid, uid, wid))
         rowcountIncomingTransactions = self._modifyEntryByID(table_name="incoming_transaction",
-                                     id_name="itid",
-                                     id_value=str(itid),
+                                     id_name="tid",
+                                     id_value=tid,
                                      columns=("unit_buy_price", "sid", "rid"),
                                      values=(unit_buy_price, sid, rid))
         return rowcountIncomingTransactions

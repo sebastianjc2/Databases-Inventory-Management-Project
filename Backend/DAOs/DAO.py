@@ -1,3 +1,4 @@
+from typing import Iterable
 from Backend.dbconfig import pg_config
 import psycopg2
 
@@ -46,7 +47,7 @@ class DAO:
         FROM {table_name}
         WHERE {id_name} = %s
         """
-        cursor.execute(query, (id_value))
+        cursor.execute(query, (id_value,))
         res = []
         for row in cursor:
             print("row:", row)
@@ -94,7 +95,7 @@ class DAO:
         """
         cursor = self.conn.cursor()
         query = f"DELETE FROM {table_name} WHERE {id_name} = %s"
-        cursor.execute(query, (id_value))
+        cursor.execute(query, (id_value,))
         count = cursor.rowcount
         self.conn.commit()
         return count
@@ -106,6 +107,8 @@ class DAO:
         Useful for custom queries requiring joins.
         """
         cursor = self.conn.cursor()
+        if not isinstance(substitutions, Iterable):
+            substitutions = (substitutions,)
         cursor.execute(query, substitutions)
         res = []
         for row in cursor:

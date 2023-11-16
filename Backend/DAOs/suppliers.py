@@ -1,4 +1,4 @@
-from DAO import DAO
+from Backend.DAOs.DAO import DAO
 
 
 class SupplierDAO(DAO):
