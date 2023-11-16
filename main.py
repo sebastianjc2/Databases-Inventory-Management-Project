@@ -10,6 +10,7 @@ from Backend.handler.warehouse_handler import WarehouseHandler
 from Backend.handler.customer import CustomerHandler
 from Backend.handler.racks import RackHandler
 from Backend.handler.incomingTransaction import IncomingTransactionHandler
+from Backend.handler.transferTransaction import TransferTransactionHandler
 
 
 # App initialization
@@ -210,6 +211,29 @@ def outgoingTransactionById(otid):
     elif request.method == "PUT":
         data = request.json
         return OutgoingTransactionHandler().modifyOutgoingTransactionByID(otid, data)
+    else:
+        return jsonify("Not supported"), 405
+
+
+
+@app.route("/sqlytes/transferTransaction", methods=["POST", "GET"])
+def allTransferTransactions():
+    if request.method == "POST":
+        data = request.json
+        return TransferTransactionHandler().addTransferTransaction(data)
+    elif request.method == "GET":
+        return TransferTransactionHandler().getAllTransferTransaction()
+    else:
+        return jsonify("Not supported"), 405
+
+
+@app.route("/sqlytes/transferTransaction/<int:transferid>", methods=["GET", "PUT"])
+def transferTransactionById(transferid):
+    if request.method == "GET":
+        return TransferTransactionHandler().getTransferTransactionById(transferid)
+    elif request.method == "PUT":
+        data = request.json
+        return TransferTransactionHandler().modifyTransferTransactionByID(transferid, data)
     else:
         return jsonify("Not supported"), 405
 

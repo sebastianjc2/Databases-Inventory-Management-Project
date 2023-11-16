@@ -73,7 +73,10 @@ class IncomingTransactionHandler:
         dao = IncomingTransactionDAO()
         dbtuples = dao.getIncomingTransactionById(itid)
         if dbtuples:
-            return jsonify(dbtuples)
+            result = []
+            for tup in dbtuples:
+                result.append(self.mapToDict(tup))
+            return jsonify(result)
         else:
             return jsonify("Internal Server Error"), 500
 

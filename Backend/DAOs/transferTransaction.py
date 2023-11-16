@@ -23,19 +23,19 @@ class TransferTransactionDAO(DAO):
         )
 
 
-    def addTransferTransaction(self, unit_buy_price, sid, rid, tdate, part_amount, pid, uid, wid):
+    def addTransferTransaction(self, to_warehouse, user_requester, tdate, part_amount, pid, uid, wid):
         tid = self._addEntry(table_name="transactions",
                              id_name="tid",
                              columns=("tdate", "part_amount", "pid", "uid", "wid"),
                              values=(tdate, part_amount, pid, uid, wid))
         transferid = self._addEntry(table_name="transfer",
                               id_name="transferid",
-                              columns=("unit_buy_price", "sid", "rid", "tid"),
-                              values=(unit_buy_price, sid, rid, tid))
+                              columns=("to_warehouse", "user_requester", "tid"),
+                              values=(to_warehouse, user_requester, tid))
         return transferid
 
 
-    def modifyTransferTransactionById(self, unit_buy_price, sid, rid, tdate, part_amount, pid, uid, wid, transferid):
+    def modifyTransferTransactionById(self, to_warehouse, user_requester, tdate, part_amount, pid, uid, wid, transferid):
         tid = self._generic_retrieval_query(
             query="""
             SELECT tid
@@ -57,6 +57,6 @@ class TransferTransactionDAO(DAO):
         rowcountTransferTransactions = self._modifyEntryByID(table_name="transfer",
                                      id_name="tid",
                                      id_value=tid,
-                                     columns=("unit_buy_price", "sid", "rid"),
-                                     values=(unit_buy_price, sid, rid))
+                                     columns=("to_warehouse", "user_requester"),
+                                     values=(to_warehouse, user_requester))
         return rowcountTransferTransactions
