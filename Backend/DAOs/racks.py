@@ -45,3 +45,13 @@ class RackDAO(DAO):
         count = cur.rowcount
         self.conn.commit()
         return count
+    
+    def get_capacity(self, rid):
+        result = self._generic_retrieval_query(query="""
+                                               SELECT rcapacity
+                                               FROM racks
+                                               WHERE rid = %s
+                                               """,
+                                               substitutions=rid)
+        if not result: return None
+        return result[0][0]

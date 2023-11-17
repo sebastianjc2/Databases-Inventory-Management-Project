@@ -1,4 +1,5 @@
 from Backend.DAOs.DAO import DAO
+import psycopg2
 
 class WarehouseDAO(DAO):
 
@@ -120,4 +121,34 @@ class WarehouseDAO(DAO):
         return self._deleteEntryByID(table_name="warehouse",
                                      id_name="wid",
                                      id_value=str(wid))
+    
+
+    def get_warehouse_budget(self, wid):
+        result = self._generic_retrieval_query(query="""
+                                               SELECT wbudget
+                                               FROM warehouse
+                                               WHERE wid = %s
+                                               """,
+                                               substitutions=wid)
+        if not result or len(result) == 0: return None
+        return result[0][0]
        
+
+    def decrease_budget(self, wid, delta):
+        """
+        Decreases the budget by the given delta.
+        Returns the new number of affected rows.
+
+        WARNING: If delta is negative or 0, will return None and not execute any operations.
+        """
+        if delta <= 0: return None
+        cursor = self.conn.cursor()
+        query = "UPDATE warehouse SET wbudget = wbudget-%s WHERE wid = %s AND wbudget >= %s"
+        try:
+            cursor.execute(query, (delta, wid, delta))
+            count = cursor.rowcount
+            self.conn.commit()
+            return count
+        except psycopg2.errors.Error as e:
+            print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
+            return None 
