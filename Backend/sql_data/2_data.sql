@@ -152,7 +152,8 @@ INSERT INTO customer (cfname, clname, czipcode, cphone) VALUES
 ('Carmen', 'Torres', '00907', '787-765-1234'),
 ('Pedro', 'Gomez', '00603', '939-654-2345'),
 ('Isabel', 'Ramos', '00610', '787-888-5678'),
-('Moises', 'Pagan', '00610', '999-999-9999'),
+('Moises', 'Robles', '00610', '999-311-5532'),
+('Manuel', 'Rodriguez', '00610', '999-312-4332'),
 ('Sebastian', 'Estrada', '00542', '954-321-3124');
 
 -- Relational table values
