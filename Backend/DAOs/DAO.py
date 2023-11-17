@@ -60,7 +60,7 @@ class DAO:
             self.conn.commit()
             return entry_id
         except psycopg2.errors.Error as e:
-            print(e.pgerror)
+            print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
             return None
     
 
@@ -80,7 +80,7 @@ class DAO:
             self.conn.commit()
             return count
         except psycopg2.errors.Error as e:
-            print(e.pgerror)
+            print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
             return None
     
 
@@ -97,7 +97,7 @@ class DAO:
             self.conn.commit()
             return count
         except psycopg2.errors.Error as e:
-            print(e.pgerror)
+            print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
             return None
 
 
@@ -117,5 +117,5 @@ class DAO:
                 res.append(row)
             return res
         except psycopg2.errors.Error as e:
-            print(e.pgerror)
+            print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
             return None
