@@ -11,8 +11,9 @@ INSERT INTO warehouse (wname, wcountry, wregion, wcity, wstreet, wzipcode, wbudg
 ('El Campo Storage Solution', 'USA', 'Caribbean', 'Morovis', 'La Cuneta del Ocho', '00687', 450000.00),
 ('Los Altísimos de Almacenamiento', 'USA', 'Caribbean', 'Vega Alta', 'Calle de los Altos', '00646', 70000.00),
 ('El Morro Ancient Storage', 'USA', 'Caribbean', 'San Juan', 'Calle de la Catedral Basícila', '00901', 9500000.00),
-('La Competencia Sin Chavo', 'USA', 'Caribbean', 'San Juan', 'Avenida no Money', '00765', 0.00),
-('CRUD Scrum', 'USA', 'Caribbean', 'San Juan', '420 La Fortalez', '00766', 2.00);
+('Mojo Dojo Casa House', 'USA', 'Caribbean', 'San Juan', 'Avenida no Money', '00765', 0.00),
+('Mojo Dojo Casa House', 'USA', 'Caribbean', 'Mayaguez', 'Avenida no Money', '00864', 0.00),
+('CRUD Scrum', 'USA', 'Caribbean', 'San Juan', '420 La Fortaleza', '00766', 2.00);
 
 
 INSERT INTO racks (rname, rcapacity) VALUES
@@ -213,8 +214,8 @@ INSERT INTO users (ufname, ulname, username, uemail, upassword, wid) VALUES
 ('Daniel', 'Lopez', 'dan', 'daniel@email.com', 'danpass321', (SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution')),
 ('Yadiel', 'Lugo', 'yaya', 'yadiel@email.com', 'yayapass654', (SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution')),
 ('Jean', 'Castro', 'jean', 'jean@email.com', 'jeanpass654', (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage')),
-('Yari', 'Alex', 'yarmer', 'yari@email.com', 'yari69', (SELECT wid FROM warehouse WHERE wname = 'La Competencia Sin Chavo')),
-('Juan', 'del Pueblo', 'juanp', 'juanp@email.com', 'juanp69', (SELECT wid FROM warehouse WHERE wname = 'CRUD Scrum'));
+('Yari', 'Alex', 'yarmer', 'yari@email.com', 'yari69', (SELECT wid FROM warehouse WHERE wname = 'Mojo Dojo Casa House' AND wcity = 'San Juan')),
+('Juan', 'del Pueblo', 'juanpueblo', 'juanpueblo@email.com', 'juanp69', (SELECT wid FROM warehouse WHERE wname = 'CRUD Scrum'));
 
 
 -- Transactions

@@ -1,12 +1,13 @@
 CREATE TABLE IF NOT EXISTS warehouse (
     wid SERIAL PRIMARY KEY,
-    wname VARCHAR(255) NOT NULL UNIQUE,
+    wname VARCHAR(255) NOT NULL,
     wcountry VARCHAR(255) NOT NULL,
     wregion VARCHAR(255) NOT NULL,
     wcity VARCHAR(255) NOT NULL,
     wstreet VARCHAR(255) NOT NULL,
     wzipcode VARCHAR(255) NOT NULL,
-    wbudget DOUBLE PRECISION NOT NULL
+    wbudget DOUBLE PRECISION NOT NULL,
+    UNIQUE(wname, wcity)
 );
 
 CREATE TABLE IF NOT EXISTS supplier (
