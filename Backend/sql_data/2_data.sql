@@ -11,7 +11,8 @@ INSERT INTO warehouse (wname, wcountry, wregion, wcity, wstreet, wzipcode, wbudg
 ('El Campo Storage Solution', 'USA', 'Caribbean', 'Morovis', 'La Cuneta del Ocho', '00687', 450000.00),
 ('Los Altísimos de Almacenamiento', 'USA', 'Caribbean', 'Vega Alta', 'Calle de los Altos', '00646', 70000.00),
 ('El Morro Ancient Storage', 'USA', 'Caribbean', 'San Juan', 'Calle de la Catedral Basícila', '00901', 9500000.00),
-('La Competencia Sin Chavo', 'USA', 'Caribbean', 'San Juan', 'Avenida del Valle', '00901', 0.00);
+('La Competencia Sin Chavo', 'USA', 'Caribbean', 'San Juan', 'Avenida no Money', '00765', 0.00),
+('CRUD Scrum', 'USA', 'Caribbean', 'San Juan', '420 La Fortalez', '00766', 2.00);
 
 
 INSERT INTO racks (rname, rcapacity) VALUES
@@ -67,7 +68,8 @@ INSERT INTO racks (rname, rcapacity) VALUES
 ('Floor Lamps Rack', 15),
 ('Wall Sconces Rack', 18),
 ('Outdoor Lighting Rack', 12),
-('Left For Dead Rack', 12);
+('Left For Dead Rack', 12),
+('Spaghetti Rack', 1);
 
 
 INSERT INTO parts (pname, pcolor, pmaterial, MSRP) VALUES
@@ -123,7 +125,8 @@ INSERT INTO parts (pname, pcolor, pmaterial, MSRP) VALUES
 ('Step Ladder', 'Gray', 'Metal', 39.99),
 ('Extension Cord', 'White', 'Copper', 12.99),
 ('Toolbox Accessories Kit', 'Assorted', 'Metal', 29.99),
-('Mystery', 'Silver', 'Amorphous', 29.99);
+('Mystery', 'Silver', 'Amorphous', 69.99),
+('Switch 2 OLED', 'Silver', 'Plastic', 399.99);
 
 
 INSERT INTO supplier (sname, scountry, scity, sstreet, szipcode, sphone) VALUES
@@ -132,7 +135,8 @@ INSERT INTO supplier (sname, scountry, scity, sstreet, szipcode, sphone) VALUES
 ('Puerto Rico Hardware Emporium', 'USA', 'Ponce', 'Calle de la Luna Mágica', '00716', '787-173-9101'),
 ('Island Undestroyers Supply', 'USA', 'Arecibo', 'Calle de las Buenas', '00612', '787-402-9967'),
 ('Los Caimanes Construyentes', 'USA', 'Bayamon', 'Avenida del Sol Radiante', '00953', '939-425-1278'),
-('Los Suppliers sin na', 'USA', 'Bayamon', 'Avenida del Sol Radiante', '00953', '939-132-5678');
+('Los Suppliers sin na', 'USA', 'Bayamon', 'Avenida del Sol Radiante', '00953', '939-132-5678'),
+('Superficial Super Suppliers', 'USA', 'Fajardo', 'Bahia 710', '00646', '939-666-4321');
 
 INSERT INTO customer (cfname, clname, czipcode, cphone) VALUES
 ('Luis', 'Martinez', '00610', '787-213-1234'),
@@ -147,7 +151,8 @@ INSERT INTO customer (cfname, clname, czipcode, cphone) VALUES
 ('Carmen', 'Torres', '00907', '787-765-1234'),
 ('Pedro', 'Gomez', '00603', '939-654-2345'),
 ('Isabel', 'Ramos', '00610', '787-888-5678'),
-('Moises', 'Pagan', '00610', '999-999-9999');
+('Moises', 'Pagan', '00610', '999-999-9999'),
+('Sebastian', 'Estrada', '00542', '954-321-3124');
 
 -- Relational table values
 -- Supplies
@@ -208,7 +213,8 @@ INSERT INTO users (ufname, ulname, username, uemail, upassword, wid) VALUES
 ('Daniel', 'Lopez', 'dan', 'daniel@email.com', 'danpass321', (SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution')),
 ('Yadiel', 'Lugo', 'yaya', 'yadiel@email.com', 'yayapass654', (SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution')),
 ('Jean', 'Castro', 'jean', 'jean@email.com', 'jeanpass654', (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage')),
-('Yari', 'Alex', 'yarmer', 'yari@email.com', 'yari69', (SELECT wid FROM warehouse WHERE wname = 'La Competencia Sin Chavo'));
+('Yari', 'Alex', 'yarmer', 'yari@email.com', 'yari69', (SELECT wid FROM warehouse WHERE wname = 'La Competencia Sin Chavo')),
+('Juan', 'del Pueblo', 'juanp', 'juanp@email.com', 'juanp69', (SELECT wid FROM warehouse WHERE wname = 'CRUD Scrum'));
 
 
 -- Transactions

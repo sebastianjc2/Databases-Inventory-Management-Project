@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(255) UNIQUE NOT NULL,
     uemail VARCHAR(255) UNIQUE NOT NULL,
     upassword VARCHAR(255) NOT NULL,
-    wid INTEGER REFERENCES warehouse(wid)
+    wid INTEGER REFERENCES warehouse(wid) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS transactions (
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     part_amount INTEGER NOT NULL,
     pid INTEGER REFERENCES parts(pid) NOT NULL,
     uid INTEGER REFERENCES users(uid) NOT NULL,
-    wid INTEGER REFERENCES warehouse(wid)
+    wid INTEGER REFERENCES warehouse(wid) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS outgoing_transaction(
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS incoming_transaction(
 
 CREATE TABLE IF NOT EXISTS transfer(
     transferId SERIAL PRIMARY KEY,
-    to_warehouse INTEGER REFERENCES warehouse(wid),
+    to_warehouse INTEGER REFERENCES warehouse(wid) NOT NULL,
     user_requester INTEGER REFERENCES users(uid) NOT NULL,
     tid INTEGER REFERENCES transactions(tid) NOT NULL
 );
