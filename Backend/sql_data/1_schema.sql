@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS warehouse (
 
 CREATE TABLE IF NOT EXISTS supplier (
     sid SERIAL PRIMARY KEY,
-    sname VARCHAR(255) NOT NULL,
+    sname VARCHAR(255) UNIQUE NOT NULL,
     scountry VARCHAR(255) NOT NULL,
     scity VARCHAR(255) NOT NULL,
     sstreet VARCHAR(255) NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS supplier (
 
 CREATE TABLE IF NOT EXISTS racks (
     rid SERIAL PRIMARY KEY,
-    rname VARCHAR(255) NOT NULL,
+    rname VARCHAR(255) UNIQUE NOT NULL,
     rcapacity INTEGER NOT NULL
 );
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS parts (
 );
 
 CREATE TABLE IF NOT EXISTS supplies (
-    sid INTEGER REFERENCES supplier(sid),
+    sid INTEGER REFERENCES supplier(sid) NOT NULL,
     pid INTEGER REFERENCES parts(pid) NOT NULL,
     stock INTEGER NOT NULL,
     PRIMARY KEY(sid, pid)
@@ -52,8 +52,8 @@ CREATE TABLE IF NOT EXISTS users (
     uid SERIAL PRIMARY KEY,
     ufname VARCHAR(255) NOT NULL,
     ulname VARCHAR(255) NOT NULL,
-    username VARCHAR(255) NOT NULL,
-    uemail VARCHAR(255) NOT NULL,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    uemail VARCHAR(255) UNIQUE NOT NULL,
     upassword VARCHAR(255) NOT NULL,
     wid INTEGER REFERENCES warehouse(wid)
 );
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     tid SERIAL PRIMARY KEY,
     tdate DATE NOT NULL,
     part_amount INTEGER NOT NULL,
-    pid  INTEGER REFERENCES parts(pid) NOT NULL,
+    pid INTEGER REFERENCES parts(pid) NOT NULL,
     uid INTEGER REFERENCES users(uid) NOT NULL,
     wid INTEGER REFERENCES warehouse(wid)
 );
@@ -70,29 +70,29 @@ CREATE TABLE IF NOT EXISTS transactions (
 CREATE TABLE IF NOT EXISTS outgoing_transaction(
     otid SERIAL PRIMARY KEY,
     unit_sale_price DOUBLE PRECISION NOT NULL,
-    cid INTEGER REFERENCES customer(cid),
-    tid INTEGER REFERENCES transactions(tid)
+    cid INTEGER REFERENCES customer(cid) NOT NULL,
+    tid INTEGER REFERENCES transactions(tid) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS incoming_transaction(
     itid SERIAL PRIMARY KEY,
     unit_buy_price DOUBLE PRECISION NOT NULL,
-    sid INTEGER REFERENCES supplier(sid),
+    sid INTEGER REFERENCES supplier(sid) NOT NULL,
     rid INTEGER REFERENCES racks(rid) NOT NULL,
-    tid INTEGER REFERENCES transactions(tid)
+    tid INTEGER REFERENCES transactions(tid) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS transfer(
     transferId SERIAL PRIMARY KEY,
     to_warehouse INTEGER REFERENCES warehouse(wid),
-    user_requester INTEGER REFERENCES users(uid),
-    tid INTEGER REFERENCES transactions(tid)
+    user_requester INTEGER REFERENCES users(uid) NOT NULL,
+    tid INTEGER REFERENCES transactions(tid) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS stored_in(
-     wid INTEGER REFERENCES warehouse(wid),
-     pid INTEGER REFERENCES parts(pid),
-     rid INTEGER REFERENCES racks(rid),
+     wid INTEGER REFERENCES warehouse(wid) NOT NULL,
+     pid INTEGER REFERENCES parts(pid) NOT NULL,
+     rid INTEGER REFERENCES racks(rid) NOT NULL,
      parts_qty INTEGER NOT NULL,
      UNIQUE (wid, pid),
      UNIQUE (rid),

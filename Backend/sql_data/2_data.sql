@@ -213,14 +213,14 @@ INSERT INTO users (ufname, ulname, username, uemail, upassword, wid) VALUES
 
 -- Transactions
 INSERT INTO transactions (tdate, part_amount, pid, uid, wid) VALUES
-('2023-11-14', 5, (SELECT pid FROM parts WHERE pname = 'Circular Saw'), (SELECT uid FROM users WHERE uemail = 'sofia@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center')),
+('2019-11-14', 5, (SELECT pid FROM parts WHERE pname = 'Circular Saw'), (SELECT uid FROM users WHERE uemail = 'sofia@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center')),
 ('2023-11-15', 3, (SELECT pid FROM parts WHERE pname = 'Painters Tape'), (SELECT uid FROM users WHERE uemail = 'alejandra@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus')),
-('2023-11-16', 10, (SELECT pid FROM parts WHERE pname = 'Spray Paint Assortment'), (SELECT uid FROM users WHERE uemail = 'carlos@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions')),
+('2022-11-16', 10, (SELECT pid FROM parts WHERE pname = 'Spray Paint Assortment'), (SELECT uid FROM users WHERE uemail = 'carlos@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions')),
 ('2022-11-17', 8, (SELECT pid FROM parts WHERE pname = 'Toolbox'), (SELECT uid FROM users WHERE uemail = 'isabella@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center')),
 ('2023-11-18', 2, (SELECT pid FROM parts WHERE pname = 'Pipe Cutter'), (SELECT uid FROM users WHERE uemail = 'juan@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus')),
 ('2021-11-19', 15, (SELECT pid FROM parts WHERE pname = 'Step Ladder'), (SELECT uid FROM users WHERE uemail = 'mariana@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions')),
-('2023-11-20', 4, (SELECT pid FROM parts WHERE pname = 'Jigsaw'), (SELECT uid FROM users WHERE uemail = 'sebastian@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution')),
-('2023-11-21', 7, (SELECT pid FROM parts WHERE pname = 'Tool Belt'), (SELECT uid FROM users WHERE uemail = 'daniel@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution')),
+('2021-11-20', 4, (SELECT pid FROM parts WHERE pname = 'Jigsaw'), (SELECT uid FROM users WHERE uemail = 'sebastian@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution')),
+('2021-11-21', 7, (SELECT pid FROM parts WHERE pname = 'Tool Belt'), (SELECT uid FROM users WHERE uemail = 'daniel@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution')),
 ('2020-11-22', 1, (SELECT pid FROM parts WHERE pname = 'Extension Cord'), (SELECT uid FROM users WHERE uemail = 'yadiel@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution')),
 ('2023-11-23', 11, (SELECT pid FROM parts WHERE pname = 'Plunger'), (SELECT uid FROM users WHERE uemail = 'jean@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage')),
 ('2022-11-24', 11, (SELECT pid FROM parts WHERE pname = 'Plunger'), (SELECT uid FROM users WHERE uemail = 'jean@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage')),
@@ -238,49 +238,53 @@ INSERT INTO transactions (tdate, part_amount, pid, uid, wid) VALUES
 ('2021-09-28', 11, (SELECT pid FROM parts WHERE pname = 'Plunger'), (SELECT uid FROM users WHERE uemail = 'carlos@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Las Montañas Aseguradoras')),
 ('2018-12-10', 9, (SELECT pid FROM parts WHERE pname = 'Pipe Fittings Assortment'), (SELECT uid FROM users WHERE uemail = 'alejandra@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Bayamon Database Centers')),
 ('2017-03-24', 5, (SELECT pid FROM parts WHERE pname = 'Paint Roller Set'), (SELECT uid FROM users WHERE uemail = 'alejandra@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Los Altísimos de Almacenamiento')),
-('2023-12-31', 8, (SELECT pid FROM parts WHERE pname = 'Jigsaw'), (SELECT uid FROM users WHERE uemail = 'alejandra@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'));
+('2019-12-31', 8, (SELECT pid FROM parts WHERE pname = 'Jigsaw'), (SELECT uid FROM users WHERE uemail = 'alejandra@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'));
 
 -- Outgoing Transactions
 INSERT INTO outgoing_transaction (unit_sale_price, cid, tid) VALUES
-(49.99, (SELECT cid FROM customer WHERE cphone = '787-213-1234'), (SELECT tid FROM transactions WHERE tdate = '2023-11-14')),
+(49.99, (SELECT cid FROM customer WHERE cphone = '787-213-1234'), (SELECT tid FROM transactions WHERE tdate = '2019-12-31')),
 (299.99, (SELECT cid FROM customer WHERE cphone = '939-534-5678'), (SELECT tid FROM transactions WHERE tdate = '2023-11-15')),
-(5.99, (SELECT cid FROM customer WHERE cphone = '787-632-2345'), (SELECT tid FROM transactions WHERE tdate = '2023-11-16')),
-(7.99, (SELECT cid FROM customer WHERE cphone = '939-645-6789'), (SELECT tid FROM transactions WHERE tdate = '2022-12-25')),
-(12.99, (SELECT cid FROM customer WHERE cphone = '787-133-3456'), (SELECT tid FROM transactions WHERE tdate = '2023-11-18')),
-(7.99, (SELECT cid FROM customer WHERE cphone = '939-222-7890'), (SELECT tid FROM transactions WHERE tdate = '2018-12-10')),
-(34.99, (SELECT cid FROM customer WHERE cphone = '787-432-4567'), (SELECT tid FROM transactions WHERE tdate = '2023-11-14')),
-(19.99, (SELECT cid FROM customer WHERE cphone = '787-876-5678'), (SELECT tid FROM transactions WHERE tdate = '2023-11-15')),
-(3.99, (SELECT cid FROM customer WHERE cphone = '939-987-8901'), (SELECT tid FROM transactions WHERE tdate = '2023-11-16')),
-(14.99, (SELECT cid FROM customer WHERE cphone = '787-765-1234'), (SELECT tid FROM transactions WHERE tdate = '2022-09-18')),
-(9.99, (SELECT cid FROM customer WHERE cphone = '939-654-2345'), (SELECT tid FROM transactions WHERE tdate = '2023-11-18')),
-(29.99, (SELECT cid FROM customer WHERE cphone = '787-888-5678'), (SELECT tid FROM transactions WHERE tdate = '2022-09-18')),
+(5.99, (SELECT cid FROM customer WHERE cphone = '787-632-2345'), (SELECT tid FROM transactions WHERE tdate = '2022-11-16')),
+(7.99, (SELECT cid FROM customer WHERE cphone = '939-645-6789'), (SELECT tid FROM transactions WHERE tdate = '2021-11-20')),
+(12.99, (SELECT cid FROM customer WHERE cphone = '787-133-3456'), (SELECT tid FROM transactions WHERE tdate = '2021-11-21')),
+(7.99, (SELECT cid FROM customer WHERE cphone = '939-222-7890'), (SELECT tid FROM transactions WHERE tdate = '2019-12-31')),
+(34.99, (SELECT cid FROM customer WHERE cphone = '787-432-4567'), (SELECT tid FROM transactions WHERE tdate = '2019-11-14')),
+(19.99, (SELECT cid FROM customer WHERE cphone = '787-876-5678'), (SELECT tid FROM transactions WHERE tdate = '2019-11-14')),
+(3.99, (SELECT cid FROM customer WHERE cphone = '939-987-8901'), (SELECT tid FROM transactions WHERE tdate = '2022-12-25')),
+(14.99, (SELECT cid FROM customer WHERE cphone = '787-765-1234'), (SELECT tid FROM transactions WHERE tdate = '2017-03-24')),
+(9.99, (SELECT cid FROM customer WHERE cphone = '939-654-2345'), (SELECT tid FROM transactions WHERE tdate = '2017-03-24')),
+(29.99, (SELECT cid FROM customer WHERE cphone = '787-888-5678'), (SELECT tid FROM transactions WHERE tdate = '2021-08-22')),
 (9.99, (SELECT cid FROM customer WHERE cphone = '939-654-2345'), (SELECT tid FROM transactions WHERE tdate = '2023-11-25')),
+(9.99, (SELECT cid FROM customer WHERE cphone = '939-654-2345'), (SELECT tid FROM transactions WHERE tdate = '2023-11-23')),
 (29.99, (SELECT cid FROM customer WHERE cphone = '787-888-5678'), (SELECT tid FROM transactions WHERE tdate = '2023-11-26'));
 
 -- Incoming Transactions
 INSERT INTO incoming_transaction (unit_buy_price, sid, rid, tid) VALUES
-(39.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), (SELECT rid FROM racks WHERE rname = 'Paintbrush Rack'), (SELECT tid FROM transactions WHERE tdate = '2023-11-14')),
-(2.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Heat Gun Rack'), (SELECT tid FROM transactions WHERE tdate = '2023-11-15')),
-(7.99, (SELECT sid FROM supplier WHERE sphone = '787-173-9101'), (SELECT rid FROM racks WHERE rname = 'Measuring Tools Rack'), (SELECT tid FROM transactions WHERE tdate = '2023-11-16')),
-(12.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), (SELECT rid FROM racks WHERE rname = 'Flashlight Rack'), (SELECT tid FROM transactions WHERE tdate = '2018-12-10')),
-(8.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Work Gloves Rack'), (SELECT tid FROM transactions WHERE tdate = '2023-11-14')),
-(24.99, (SELECT sid FROM supplier WHERE sphone = '787-173-9101'), (SELECT rid FROM racks WHERE rname = 'Toolbox Accessories Rack'), (SELECT tid FROM transactions WHERE tdate = '2023-11-15')),
-(5.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), (SELECT rid FROM racks WHERE rname = 'Leaf Blower Rack'), (SELECT tid FROM transactions WHERE tdate = '2023-11-18')),
-(29.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Ceiling Light Fixtures Rack'), (SELECT tid FROM transactions WHERE tdate = '2018-12-10'));
+(39.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), (SELECT rid FROM racks WHERE rname = 'Paintbrush Rack'), (SELECT tid FROM transactions WHERE tdate = '2019-11-14')),
+(2.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Heat Gun Rack'), (SELECT tid FROM transactions WHERE tdate = '2017-03-24')),
+(7.99, (SELECT sid FROM supplier WHERE sphone = '787-173-9101'), (SELECT rid FROM racks WHERE rname = 'Measuring Tools Rack'), (SELECT tid FROM transactions WHERE tdate = '2023-11-15')),
+(12.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), (SELECT rid FROM racks WHERE rname = 'Flashlight Rack'), (SELECT tid FROM transactions WHERE tdate = '2023-11-15')),
+(8.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Work Gloves Rack'), (SELECT tid FROM transactions WHERE tdate = '2019-12-31')),
+(24.99, (SELECT sid FROM supplier WHERE sphone = '787-173-9101'), (SELECT rid FROM racks WHERE rname = 'Toolbox Accessories Rack'), (SELECT tid FROM transactions WHERE tdate = '2018-12-10')),
+(5.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), (SELECT rid FROM racks WHERE rname = 'Leaf Blower Rack'), (SELECT tid FROM transactions WHERE tdate = '2023-11-15')),
+(29.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Ceiling Light Fixtures Rack'), (SELECT tid FROM transactions WHERE tdate = '2022-02-27')),
+(51.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), (SELECT rid FROM racks WHERE rname = 'Leaf Blower Rack'), (SELECT tid FROM transactions WHERE tdate = '2021-08-22')),
+(33.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Ceiling Light Fixtures Rack'), (SELECT tid FROM transactions WHERE tdate = '2023-11-23')),
+(1.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Ceiling Light Fixtures Rack'), (SELECT tid FROM transactions WHERE tdate = '2019-12-31'));
 
 -- Transfers
 INSERT INTO transfer (to_warehouse, user_requester, tid) VALUES
-((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT uid FROM users WHERE username = 'carlosh'), (SELECT tid FROM transactions WHERE tdate = '2023-11-14')),
-((SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions'), (SELECT uid FROM users WHERE username = 'alejandral'), (SELECT tid FROM transactions WHERE tdate = '2023-11-15')),
-((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT uid FROM users WHERE username = 'sofiam'), (SELECT tid FROM transactions WHERE tdate = '2023-11-16')),
-((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT uid FROM users WHERE username = 'carlosh'), (SELECT tid FROM transactions WHERE tdate = '2021-11-15')),
-((SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions'), (SELECT uid FROM users WHERE username = 'alejandral'), (SELECT tid FROM transactions WHERE tdate = '2023-11-18')),
-((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT uid FROM users WHERE username = 'sofiam'), (SELECT tid FROM transactions WHERE tdate = '2023-11-26')),
-((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT uid FROM users WHERE username = 'sebas'), (SELECT tid FROM transactions WHERE tdate = '2023-11-20')),
-((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT uid FROM users WHERE username = 'dan'), (SELECT tid FROM transactions WHERE tdate = '2023-11-21')),
-((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT uid FROM users WHERE username = 'yaya'), (SELECT tid FROM transactions WHERE tdate = '2023-11-26')),
-((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT uid FROM users WHERE username = 'jean'), (SELECT tid FROM transactions WHERE tdate = '2019-06-15')),
-((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT uid FROM users WHERE username = 'jean'), (SELECT tid FROM transactions WHERE tdate = '2023-11-23'));
+((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT uid FROM users WHERE username = 'carlosh'), (SELECT tid FROM transactions WHERE tdate = '2019-12-31')),
+((SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions'), (SELECT uid FROM users WHERE username = 'alejandral'), (SELECT tid FROM transactions WHERE tdate = '2021-08-22')),
+((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT uid FROM users WHERE username = 'sofiam'), (SELECT tid FROM transactions WHERE tdate = '2017-03-24')),
+((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT uid FROM users WHERE username = 'carlosh'), (SELECT tid FROM transactions WHERE tdate = '2019-12-31')),
+((SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions'), (SELECT uid FROM users WHERE username = 'alejandral'), (SELECT tid FROM transactions WHERE tdate = '2018-12-10')),
+((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT uid FROM users WHERE username = 'sofiam'), (SELECT tid FROM transactions WHERE tdate = '2018-12-10')),
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT uid FROM users WHERE username = 'sebas'), (SELECT tid FROM transactions WHERE tdate = '2022-02-27')),
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT uid FROM users WHERE username = 'dan'), (SELECT tid FROM transactions WHERE tdate = '2022-02-27')),
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT uid FROM users WHERE username = 'yaya'), (SELECT tid FROM transactions WHERE tdate = '2022-02-27')),
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT uid FROM users WHERE username = 'jean'), (SELECT tid FROM transactions WHERE tdate = '2021-08-22')),
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT uid FROM users WHERE username = 'jean'), (SELECT tid FROM transactions WHERE tdate = '2022-02-27'));
 
 -- Stored In
 INSERT INTO stored_in (wid, pid, rid, parts_qty) VALUES
