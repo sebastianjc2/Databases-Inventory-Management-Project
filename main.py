@@ -270,6 +270,15 @@ def usersWithMostTransactions():
     else:
         return jsonify("Not Supported"), 405
 
+# Local Statistics
+@app.route("/sqlytes/warehouse/<int:wid>/profit", methods=["POST"])
+def warehouseProfit(wid):
+    if request.method == "POST":
+        return WarehouseHandler().getYearlyProfit(wid, request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 
