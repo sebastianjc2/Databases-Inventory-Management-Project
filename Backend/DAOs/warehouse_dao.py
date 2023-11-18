@@ -165,7 +165,7 @@ class WarehouseDAO(DAO):
         return self._generic_retrieval_query(query)
 
     def get_most_exchanges(self):
-        """Part of the Global Statistics. Gets the top 5 warehouses
+        """Part of the global statistics. Gets the top 5 warehouses
         with the most exchanges/transfers."""
         query = """SELECT wname as warehouse, COUNT(*) as total_transfers
                     FROM warehouse
@@ -174,4 +174,16 @@ class WarehouseDAO(DAO):
                     GROUP BY wname
                     ORDER BY total_transfers DESC
                     LIMIT 5;"""
+        return self._generic_retrieval_query(query)
+
+    def get_least_outgoing(self):
+        """Part of the global statistics. Gets the top 3 warehouses
+        with the least outgoing transactions."""
+        query = """SELECT wname as warehouse, COUNT(otid) as total_outgoing_transactions
+                    FROM warehouse
+                    NATURAL INNER JOIN transactions
+                    NATURAL INNER JOIN outgoing_transaction
+                    GROUP BY wname
+                    ORDER BY total_outgoing_transactions ASC
+                    LIMIT 3;"""
         return self._generic_retrieval_query(query)
