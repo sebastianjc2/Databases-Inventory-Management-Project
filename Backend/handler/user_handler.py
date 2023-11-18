@@ -62,7 +62,7 @@ class UserHandler:
         Returns:
             object: JSON object that contains all the data found of the user with the given uid.
         """
-    
+
         uid_row = self.userDAO.getUserByID(uid)
         # If the user was not found, return a 404 error.
         if not uid_row:
@@ -90,27 +90,27 @@ class UserHandler:
             wid = data['wid']
         except KeyError:
             return jsonify(Error="Unexpected or Incorrect attribute in post request. Check that the fields of the request are correct"), 400
-        
+
         # Check that the data is not empty.
         for key in data:
             if not data[key]:
                 return jsonify(Error='Missing ' + key + ' attribute'), 400
-            
+
         # Check that the all fields except wid are strings.
         for key in data:
             if key != 'wid' and not isinstance(data[key],str):
                 return jsonify(Error='{} has to be a string.'.format(key)),400
-        
+
         # Check that the warehouse ID is an integer.
         if not isinstance(wid,int):
             return jsonify(Error='wid has to be an integer.'), 400
         # Check that the warehouse ID is a positive integer.
         elif wid <= 0:
             return jsonify(Error='wid has to be a positive integer greater than zero.'), 400
-        # Check that the warehouse exists.    
+        # Check that the warehouse exists.
         elif not self.warehouseDAO.getWarehouseByID(wid):
             return jsonify(Error="User can not belong to a Warehouses that does not exist"),404
-         # Data has been verified  up to this point. It is safe to insert it in the DB   
+         # Data has been verified  up to this point. It is safe to insert it in the DB
         else:
             uid = self.userDAO.insertUser(ufname,ulname,username,uemail,upassword,wid)
             # TODO: Refactor this so it is not hardcoded.
@@ -123,7 +123,7 @@ class UserHandler:
             inserted_user['upassword'] = upassword
             inserted_user['wid'] = wid
             return jsonify(User=inserted_user),201
-                    
+
     def updateUserByID(self,uid:int,data:object) -> object:
         try:
             ufname = data['ufname']
@@ -134,7 +134,7 @@ class UserHandler:
             wid = data['wid']
         except KeyError:
             return jsonify(Error="Unexpected attributes in post request"),400
-        
+
         # Check that the data is not empty.
         for key in data:
            if not data[key]:
@@ -143,14 +143,14 @@ class UserHandler:
         for key in data:
             if key != 'wid' and not isinstance(data[key],str):
                 return jsonify(Error='{} has to be a string.'.format(key)),400
-            
+
         # Check that the user ID is an integer.
         if not isinstance(uid,int):
             return jsonify(Error='wid has to be an integer.'), 400
         # Check that the user ID is a positive integer.
         elif uid <= 0:
             return jsonify(Error='wid has to be a positive integer greater than zero.'), 400
-        
+
         # Check that the user exists
         elif not self.userDAO.getUserByID(uid):
             return jsonify(Error="User does not exist"),404
@@ -160,7 +160,7 @@ class UserHandler:
         # Check that the warehouse ID is a positive integer.
         elif wid <= 0:
             return jsonify(Error='wid has to be a positive integer greater than zero.'), 400
-        # Check that the warehouse exists.    
+        # Check that the warehouse exists.
         elif not self.warehouseDAO.getWarehouseByID(wid):
             return jsonify(Error="User can not belong to a Warehouses that does not exist"),404
         else:
@@ -178,10 +178,10 @@ class UserHandler:
         """
         if not uid:
             return jsonify(Error="uid was not given."),400
-        
+
         elif not isinstance(uid,int):
             return jsonify(Error="uid has to be of type integer.")
-        
+
         elif uid <= 0:
             return jsonify(Error="uid has to be a positive number greater than zero.")
         
@@ -195,16 +195,4 @@ class UserHandler:
         else:
             deleted_user_id = self.userDAO.deleteUserByID(uid)
             return jsonify('Deleted user with id: {}'.format(uid)),200
-        
-            
-            
-            
-            
-            
-        
-    
-            
-        
-        
-        
-    
+

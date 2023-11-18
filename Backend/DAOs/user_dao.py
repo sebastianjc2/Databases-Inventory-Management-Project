@@ -71,9 +71,9 @@ class UserDAO(DAO):
         return self._deleteEntryByID(table_name="users",
                                      id_name="uid",
                                      id_value=str(uid))
-        
 
-        
+
+
     def userHasTransactions(self,uid:int) -> bool:
         """Check if a user has any transactions in the Transactions Table in the database.
 
@@ -94,7 +94,7 @@ class UserDAO(DAO):
         #                                       where uid = %s;
         #                                       """,
         #                                       substitutions=(uid,))[0] == 0 else False
-        
+
     def userHasTransfers(self,user_requester:int) -> bool:
         """Check if a user has any transfers in the Transfer Table in the database.
 
