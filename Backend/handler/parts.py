@@ -87,7 +87,7 @@ class PartHandler:
 
         in_stock = dao.inStock(pid)
         if in_stock:
-            return jsonify("Cannot delete this part, since it is currently being supplied.")
+            return jsonify("Cannot delete this part, since it is currently being supplied."), 400
 
         # Can't delete a part that is being referenced in a transaction
         in_transaction = dao.inTransaction(pid)
