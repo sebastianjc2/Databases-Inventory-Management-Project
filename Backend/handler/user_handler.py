@@ -151,9 +151,15 @@ class UserHandler:
         else:
             deleted_user_id = self.userDAO.deleteUserByID(uid)
             return jsonify('Deleted user with id: {}'.format(deleted_user_id)),200
-        
-            
-            
+
+
+    def getTopTransactions(self):
+        """Part of the Global Statistics.Top 3 users that made the most transactions."""
+        transaction_results = self.userDAO.get_most_transactions()
+        if not transaction_results:
+            return jsonify(Error='No Results were returned.'), 404
+        else:
+            return jsonify(transaction_results), 200
             
             
             

@@ -71,3 +71,14 @@ class UserDAO(DAO):
         return self._deleteEntryByID(table_name="users",
                                      id_name="uid",
                                      id_value=str(uid))
+
+    def get_most_transactions(self):
+        """Part of the Global Statistics. Top 3 users that made the most transactions """
+        query = """SELECT ufname as first_name, ulname as last_name, COUNT(*) as transaction_count
+                    FROM users
+                    NATURAL INNER JOIN transactions
+                    GROUP BY ufname, ulname
+                    ORDER BY transaction_count DESC
+                    LIMIT 3;"""
+        return self._generic_retrieval_query(query)
+
