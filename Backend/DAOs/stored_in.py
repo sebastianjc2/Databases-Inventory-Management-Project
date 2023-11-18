@@ -46,4 +46,26 @@ class StoredInDAO(DAO):
             return count
         except psycopg2.errors.Error as e:
             print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
-            return None 
+            return None
+
+    def isPartInWarehouse(self, pid, wid):
+        result = self._generic_retrieval_query(query="""
+                                                       SELECT COUNT(pid)
+                                                       FROM stored_in
+                                                       WHERE pid = %s
+                                                       AND wid = %s;
+                                                       """,
+                                               substitutions=(pid, wid))
+        if not result or len(result) == 0: return 0
+        return result[0][0]
+
+    def get_qty_with_rid(self, rid):
+        res = self._generic_retrieval_query(query="""
+                                            SELECT parts_qty
+                                            FROM stored_in
+                                            WHERE rid = %s;
+                                            """,
+                                            substitutions=rid)
+        if not res: return 0
+        return res[0][0]
+

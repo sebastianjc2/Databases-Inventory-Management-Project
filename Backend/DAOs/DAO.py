@@ -108,6 +108,7 @@ class DAO:
         Returns the tuples matched by the query or None if the operation failed.
         """
         cursor = self.conn.cursor()
+        curs = self.conn.cursor()
         if not isinstance(substitutions, Iterable): substitutions = (substitutions,)
         try:
             cursor.execute(query, substitutions)
