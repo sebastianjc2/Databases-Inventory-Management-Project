@@ -165,9 +165,53 @@ class WarehouseHandler:
             return jsonify(outgoing_results), 200
 
     def getTopIncoming(self):
-        """Part of the Global Statistics. Top 5 warehouses with the most incoming transactions."""
+        """Part of the global statistics. Top 5 warehouses with the most incoming transactions."""
         incoming_results = self.warehouseDAO.get_most_incoming()
         if not incoming_results:
-            return jsonify(Error='No Results were returned.'), 404
+            return jsonify(Error='No results were returned.'), 404
         else:
             return jsonify(incoming_results), 200
+
+    # Local statistics
+    def validate_user(self, uid: str) -> dict:
+        """Helps encapsulate the code for verifying whether
+        a valid user can access the local warehouse statistics."""
+        response = dict.fromkeys(['error', 'user_permissions'])
+        if type(uid) != str:
+            error = f"Invalid argument type! Expected 'str' for a user ID but received {type(uid)}."
+            response['error'] = jsonify(Error=error), 400
+        else:
+            has_access = self.warehouseDAO._getEntryByID(table_name="users",
+                                                       id_name="uid",
+                                                       id_value=uid,
+                                                       columns=["uid"])
+
+            if has_access is None or has_access == []:
+                error = "User does not have access to the requested resource!"
+                response['error'] = jsonify(Error=error), 404
+            else:
+                response['user_permissions'] = True
+        return response
+
+    def getYearlyProfit(self, wid: int, data: object) -> object:
+        """Part of the global statistics. Specified warehouse's profit by year."""
+        try:
+            uid = data['user']
+        except:
+            return jsonify(Error="Invalid argument! Couldn't process the 'User' field."), 400
+
+        if type(wid) != int:
+            error = f"Invalid argument type! Expected 'int' for a warehouse ID but received {type(wid)}."
+            return jsonify(Error=error), 400
+
+        # Verify if the user can access this resource
+        user_perms = self.validate_user(uid)
+        if user_perms['error']:
+            return user_perms['error']
+
+        elif user_perms['user_permissions']:
+            profit_results = self.warehouseDAO.get_profit_yearly(wid)
+            if not profit_results:
+                return jsonify(Error='No results were returned.'), 404
+            else:
+                return jsonify(profit_results), 200

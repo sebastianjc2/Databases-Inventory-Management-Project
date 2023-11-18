@@ -189,7 +189,7 @@ class WarehouseDAO(DAO):
         return self._generic_retrieval_query(query)
 
     def get_most_incoming(self):
-        """Part of the Global Statistics. Top 5 warehouses with the most incoming transactions."""
+        """Part of the global statistics. Top 5 warehouses with the most incoming transactions."""
         query = """SELECT wname as warehouse, COUNT(*) as total_incoming_transactions
                     FROM warehouse
                     NATURAL INNER JOIN transactions
@@ -199,3 +199,26 @@ class WarehouseDAO(DAO):
                     LIMIT 5;"""
         return self._generic_retrieval_query(query)
 
+    def get_profit_yearly(self, wid: int):
+        """Part of the global statistics. Specified warehouse's profit by year."""
+        query = """WITH transaction_earnings AS (
+                        SELECT tid,
+                        SUM(unit_sale_price * part_amount) AS total_earnings,
+                        SUM(unit_buy_price * part_amount) AS total_costs
+                        FROM transactions
+                        NATURAL INNER JOIN outgoing_transaction
+                        NATURAL INNER JOIN incoming_transaction
+                        GROUP BY tid
+                    )
+                
+                    SELECT EXTRACT(YEAR FROM tdate) AS year,
+                    wname AS warehouse,
+                    SUM(te.total_earnings - te.total_costs) AS net_profit
+                    FROM warehouse
+                    NATURAL INNER JOIN transactions
+                    NATURAL INNER JOIN transaction_earnings as te
+                    WHERE wid = %s
+                    GROUP BY year, wname
+                    ORDER BY year DESC;"""
+
+        return self._generic_retrieval_query(query, substitutions=(wid,))
