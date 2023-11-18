@@ -1,3 +1,4 @@
+import json
 from Backend.DAOs.incomingTransaction import IncomingTransactionDAO
 from Backend.DAOs.stored_in import StoredInDAO
 from Backend.DAOs.supplies import SuppliesDao
@@ -33,12 +34,21 @@ class IncomingTransactionHandler:
             supplierID = data["supplierID"]
             userID = data["userID"]
         except KeyError as e:
-            return jsonify({"Unexpected attribute values": e.args}), 400
+            return jsonify({"Unexpected parameter names": e.args}), 400
         
         # Verify nulls
         if not (transactionDate and partAmount and unitBuyPrice and partID
                 and warehouseID and rackID and supplierID and userID):
             return jsonify("Attributes cannot contain null fields."), 400
+
+        # Verify types
+        for attr in (partID, warehouseID, rackID, supplierID, userID, partAmount):
+            if not isinstance(attr, int):
+                return jsonify(f"Invalid attritube for type 'int' ({attr})"), 400
+        if not isinstance(unitBuyPrice, float) and not isinstance(unitBuyPrice, int):
+            return jsonify(f"Invalid type for unitBuyPrice ({unitBuyPrice})"), 400
+        if not isinstance(transactionDate, str):
+            return jsonify(f"Invalid type for transaction date ({transactionDate})"), 400
 
         # Verify values are valid
         if unitBuyPrice < 0:
@@ -68,11 +78,13 @@ class IncomingTransactionHandler:
         # Verfiy against rack
         stored_in_DAO = StoredInDAO()
         rack_capacity = RackDAO().get_capacity(rid=rackID)
-        current_amount_in_rack = stored_in_DAO.get_quantity(wid=warehouseID, pid=partID, rid=rackID)
+        current_amount_in_rack = stored_in_DAO.get_quantity(wid=warehouseID, pid=partID)
+        if not rack_capacity: return jsonify(f"Internal Server Error: Rack {rackID} does not exist"), 500
         rack_delta = rack_capacity - current_amount_in_rack
         if partAmount > rack_delta:
+            leftover = rack_delta if rack_delta >= 0 else 0
             return jsonify(
-                f"Too many parts ({partAmount}). Rack ({rackID}) can only hold {rack_delta} more parts."
+                f"Too many parts ({partAmount}). Rack ({rackID}) can hold {leftover} more parts."
                 ), 400
         
         # Add transaction
@@ -96,12 +108,15 @@ class IncomingTransactionHandler:
         if not new_budget: return jsonify("Internal Server Error: Failed to update warehouse budget"), 500
 
         # Add to stored_in
-        count = stored_in_DAO.modify_quantity_or_insert(wid=warehouseID,
-                                                        pid=partID,
-                                                        rid=rackID,
-                                                        quantity=current_amount_in_rack+partAmount)
-        if not count: return jsonify("Internal Server Error: Failed to modify quantity of parts"), 500
-
+        count = stored_in_DAO.modify_quantity(wid=warehouseID,
+                                              pid=partID,
+                                              rid=rackID,
+                                              new_quantity=current_amount_in_rack+partAmount)
+        if not count:
+            return jsonify(
+                f"Internal Server Error: Failed to modify quantity of part ({partID}) in warehouse ({warehouseID})"
+                ), 500
+        
         data["itid"] = itid
         return jsonify(data), 201
 

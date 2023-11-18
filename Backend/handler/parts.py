@@ -1,6 +1,5 @@
 from flask import jsonify
 from Backend.DAOs.parts import PartDAO
-from Backend.DAOs.supplies import SuppliesDao
 
 
 class PartHandler:

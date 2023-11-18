@@ -186,8 +186,7 @@ def incomingTransactionById(itid):
     if request.method == "GET":
         return IncomingTransactionHandler().getIncomingTransactionById(itid)
     elif request.method == "PUT":
-        data = request.json
-        return IncomingTransactionHandler().modifyIncomingTransactionByID(itid, data)
+        return jsonify("Cannot modify transactions"), 400
     else:
         return jsonify("Not supported"), 405
     
@@ -209,8 +208,7 @@ def outgoingTransactionById(otid):
     if request.method == "GET":
         return OutgoingTransactionHandler().getOutgoingTransactionById(otid)
     elif request.method == "PUT":
-        data = request.json
-        return OutgoingTransactionHandler().modifyOutgoingTransactionByID(otid, data)
+        return jsonify("Cannot modify transactions"), 400
     else:
         return jsonify("Not supported"), 405
 
@@ -232,8 +230,7 @@ def transferTransactionById(transferid):
     if request.method == "GET":
         return TransferTransactionHandler().getTransferTransactionById(transferid)
     elif request.method == "PUT":
-        data = request.json
-        return TransferTransactionHandler().modifyTransferTransactionByID(transferid, data)
+        return jsonify("Cannot modify transactions"), 400
     else:
         return jsonify("Not supported"), 405
 

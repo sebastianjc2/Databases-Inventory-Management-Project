@@ -139,9 +139,9 @@ class WarehouseDAO(DAO):
         Decreases the budget by the given delta.
         Returns the new number of affected rows.
 
-        WARNING: If delta is negative or 0, will return None and not execute any operations.
+        WARNING: If delta is negative, will return None and not execute any operations.
         """
-        if delta <= 0: return None
+        if delta < 0: return None
         cursor = self.conn.cursor()
         query = "UPDATE warehouse SET wbudget = wbudget-%s WHERE wid = %s AND wbudget >= %s"
         try:
@@ -151,4 +151,25 @@ class WarehouseDAO(DAO):
             return count
         except psycopg2.errors.Error as e:
             print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
-            return None 
+            return None
+        
+        
+    def increase_budget(self, wid, delta):
+        """
+        Increases the budget by the given delta.
+        Returns the new number of affected rows.
+
+        WARNING: If delta is negative, will return None and not execute any operations.
+        """
+        if delta < 0: return None
+        cursor = self.conn.cursor()
+        # integer overflow who?
+        query = "UPDATE warehouse SET wbudget = wbudget+%s WHERE wid = %s"
+        try:
+            cursor.execute(query, (delta, wid))
+            count = cursor.rowcount
+            self.conn.commit()
+            return count
+        except psycopg2.errors.Error as e:
+            print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
+            return None

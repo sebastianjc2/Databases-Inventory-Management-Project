@@ -1,4 +1,6 @@
 from Backend.DAOs.outgoingTransaction import OutgoingTransactionDAO
+from Backend.DAOs.stored_in import StoredInDAO
+from Backend.DAOs.warehouse_dao import WarehouseDAO
 from flask import jsonify
 
 
@@ -27,31 +29,60 @@ class OutgoingTransactionHandler:
             customerID = data["customerID"]
             userID = data["userID"]
         except KeyError as e:
-            return jsonify({"Unexpected attribute values": e.args}), 400
+            return jsonify({"Unexpected parameter names": e.args}), 400
         
+        # Verify nulls
+        if not (transactionDate and partAmount and unitSalePrice and partID
+                and warehouseID and customerID and userID):
+            return jsonify("Attributes cannot contain null fields."), 400
+
+        # Verify types
+        for attr in (partID, warehouseID, customerID, userID, partAmount):
+            if not isinstance(attr, int):
+                return jsonify(f"Invalid attritube for type 'int' ({attr})"), 400
+        if not isinstance(unitSalePrice, float) and not isinstance(unitSalePrice, int):
+            return jsonify(f"Invalid type for unitBuyPrice ({unitSalePrice})"), 400
+        if not isinstance(transactionDate, str):
+            return jsonify(f"Invalid type for transaction date ({transactionDate})"), 400
+
+
+        # Verify values are valid
         if unitSalePrice < 0:
             return jsonify("unitSalePrice must be a positive number"), 400
         if partAmount < 0:
             return jsonify("partAmount must be a positive number"), 400
 
-        no_values_are_none = (transactionDate and partAmount and unitSalePrice and partID
-                              and warehouseID and customerID and userID)
+        # Verify against quantity in warehouse
+        stored_in_DAO = StoredInDAO()
+        available_quantity = stored_in_DAO.get_quantity(wid=warehouseID, pid=partID)
+        if available_quantity < partAmount:
+            return jsonify(f"Not enough stock ({available_quantity}) in warehouse ({warehouseID})"), 400
 
-        if no_values_are_none:
-            dao = OutgoingTransactionDAO()
-            otid = dao.addOutgoingTransaction(unit_sale_price=unitSalePrice,
-                                              cid=customerID,
-                                              tdate=transactionDate,
-                                              part_amount=partAmount,
-                                              pid=partID,
-                                              uid=userID,
-                                              wid=warehouseID)
-            if otid:
-                data["otid"] = otid
-                return jsonify(data), 201
-            else:
-                return jsonify("Internal Server Error"), 500
-        return jsonify("Attributes cannot contain null fields."), 400
+        # Add transaction
+        otid = OutgoingTransactionDAO().addOutgoingTransaction(unit_sale_price=unitSalePrice,
+                                                               cid=customerID,
+                                                               tdate=transactionDate,
+                                                               part_amount=partAmount,
+                                                               pid=partID,
+                                                               uid=userID,
+                                                               wid=warehouseID)
+        if not otid: return jsonify("Internal Server Error: Failed to add transaction"), 500
+
+        # Update available budget
+        revenue = partAmount*unitSalePrice
+        new_budget = WarehouseDAO().increase_budget(wid=warehouseID, delta=revenue)
+        if not new_budget: return jsonify("Internal Server Error: Failed to update warehouse budget"), 500
+
+        # Update stored_in
+        quantity_delta = available_quantity - partAmount
+        count = stored_in_DAO.modify_quantity(wid=warehouseID, pid=partID, rid=None, new_quantity=quantity_delta)
+        if not count:
+            return jsonify(
+                f"Internal Server Error: Failed to modify quantity of part ({partID}) in warehouse ({warehouseID})"
+                ), 500
+
+        data["otid"] = otid
+        return jsonify(data), 201
 
     
     def getAllOutgoingTransaction(self):

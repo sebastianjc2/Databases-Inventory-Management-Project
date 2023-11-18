@@ -2,7 +2,7 @@ from Backend.DAOs.DAO import DAO
 import psycopg2
 
 class StoredInDAO(DAO):
-    def get_quantity(self, wid, pid, rid):
+    def get_quantity(self, wid, pid):
         """
         Returns the quantity of parts currently stored in the rack,
         or 0 if the relationship does not exist.
@@ -12,33 +12,43 @@ class StoredInDAO(DAO):
                                                FROM stored_in
                                                WHERE wid = %s
                                                AND pid = %s
-                                               AND rid = %s;
                                                """,
-                                               substitutions=(wid, pid, rid))
+                                               substitutions=(wid, pid))
         if not result: return 0
         return result[0][0]
 
-    def modify_quantity_or_insert(self, wid, pid, rid, quantity):
+    def modify_quantity(self, wid, pid, rid, new_quantity):
         """
         Sets the quantity to the given value.
+        If the new quantity is 0, the entry is removed.
+        If the entry did not previously exist, it is inserted.
         Returns the new number of affected rows.
         """
         cursor = self.conn.cursor()
-        if self.get_quantity(wid, pid, rid):
-            query = """
-            UPDATE stored_in
-            SET parts_qty = %s
-            WHERE wid = %s
-            AND pid = %s
-            AND rid = %s;
-            """
-            values = (quantity, wid, pid, rid)
-        else:
+        if self.get_quantity(wid, pid): # check if entry exists
+            if new_quantity == 0: # must delete entry
+                query = """
+                DELETE FROM stored_in
+                WHERE wid = %s
+                AND pid = %s;
+                """
+                values = (wid, pid)
+            else: # simply update the entry
+                query = """
+                UPDATE stored_in
+                SET parts_qty = %s
+                WHERE wid = %s
+                AND pid = %s;
+                """
+                values = (new_quantity, wid, pid)
+        elif rid: # can't insert w/o an rid
             query = """
             INSERT INTO stored_in (wid, pid, rid, parts_qty)
             VALUES (%s, %s, %s, %s)
             """
-            values = (wid, pid, rid, quantity)
+            values = (wid, pid, rid, new_quantity)
+        else: # no rid, no insertion
+            return None
         try:
             cursor.execute(query, values  )
             count = cursor.rowcount
