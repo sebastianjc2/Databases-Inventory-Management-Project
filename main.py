@@ -242,6 +242,13 @@ def warehousesWithMostRacks():
     else:
         return jsonify("Not supported"), 405
 
+@app.route("/sqlytes/most/deliver", methods=["GET"])
+def warehousesWithMostTransfers():
+    if request.method == "GET":
+        return WarehouseHandler().geTopExchanges()
+    else:
+        return jsonify("Not supported"), 405
+
 
 if __name__ == '__main__':
     app.run(debug=True)
