@@ -137,4 +137,11 @@ class WarehouseHandler:
         else:
             wid = self.warehouseDAO.deleteWarehouseByID(wid)
             return jsonify(wid), 200
-        
+
+    def getTopRacks(self):
+        """Part of the Global Statistics. Gets the top 10 warehouses with the most racks."""
+        rack_results = self.warehouseDAO.get_top_racks()
+        if not rack_results:
+            return jsonify(Error='No results were returned.'), 404
+        else:
+            return jsonify(rack_results), 200
