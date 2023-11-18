@@ -270,6 +270,14 @@ def usersWithMostTransactions():
     else:
         return jsonify("Not Supported"), 405
 
+@app.route("/sqlytes/most/city", methods=["GET"])
+def warehouseMostCityTransactions():
+    if request.method == "GET":
+        return WarehouseHandler().getTopCity()
+    else:
+        return jsonify("Not Supported"), 405
+
+
 # Local Statistics
 @app.route("/sqlytes/warehouse/<int:wid>/profit", methods=["POST"])
 def warehouseProfit(wid):
@@ -292,6 +300,32 @@ def warehouseTopUserExchanges(wid):
     else:
         return jsonify("Not Supported"), 405
 
+@app.route("/sqlytes/warehouse/<int:wid>/rack/expensive", methods=["POST"])
+def warehouseTopExpensiveRacks(wid):
+    if request.method == "POST":
+        return WarehouseHandler().getTopExpensiveRacks(wid, request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route("/sqlytes/warehouse/<int:wid>/transaction/suppliers", methods=["POST"])
+def warehouseTopSuppliers(wid):
+    if request.method == "POST":
+        return WarehouseHandler().getTopSuppliers(wid, request.json)
+    else:
+        return jsonify("Not Supported"), 405
+@app.route("/sqlytes/warehouse/<int:wid>/transaction/leastcost", methods=["POST"])
+def warehouseSmallestIncomingCost(wid):
+    if request.method == "POST":
+        return WarehouseHandler().getLowestDayCost(wid, request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route("/sqlytes/warehouse/<int:wid>/rack/lowstock", methods=["POST"])
+def warehouseLowestStockRack(wid):
+    if request.method == "POST":
+        return WarehouseHandler().getLowestRackStock(wid, request.json)
+    else:
+        return jsonify("Not Supported"), 405
 
 if __name__ == '__main__':
     app.run(debug=True)

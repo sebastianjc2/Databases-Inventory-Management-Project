@@ -225,6 +225,14 @@ class WarehouseHandler:
         else:
             return jsonify(incoming_results), 200
 
+    def getTopCity(self):
+        """Part of the global statistics. Top 5 warehouses with the most incoming transactions."""
+        city_results = self.warehouseDAO.get_most_city()
+        if not city_results:
+            return jsonify(Error='No results were returned.'), 404
+        else:
+            return jsonify(city_results), 200
+
     # Local statistics
     def validate_user(self, data: object) -> dict:
         """Helps encapsulate the code for verifying whether
@@ -290,8 +298,7 @@ class WarehouseHandler:
                 return jsonify(bottom_rack_results), 200
 
     def getTopUserExchanges(self, wid: int, data: object) -> object:
-        """Part of the local statistics. Returns top 3 users that received the most
-        exchanges from a warehouse."""
+        """Part of the local statistics.  Top 5 most expensive racks in the warehouse"""
         if type(wid) != int:
             error = f"Invalid argument type! Expected 'int' for a warehouse ID but received {type(wid)}."
             return jsonify(Error=error), 400
@@ -302,8 +309,82 @@ class WarehouseHandler:
             return user_perms['error']
 
         elif user_perms['user_permissions']:
-            user_exchange_results = self.warehouseDAO.get_most_user_exchanges(wid)
-            if not user_exchange_results:
+            user_results = self.warehouseDAO.get_most_user_exchanges(wid)
+            if not user_results:
                 return jsonify(Error='No results were returned.'), 404
             else:
-                return jsonify(user_exchange_results), 200
+                return jsonify(user_results), 200
+
+
+
+    def getTopExpensiveRacks(self, wid: int, data: object) -> object:
+        """Part of the local statistics. Top 5 most expensive racks in the warehouse."""
+        if type(wid) != int:
+            error = f"Invalid argument type! Expected 'int' for a warehouse ID but received {type(wid)}."
+            return jsonify(Error=error), 400
+
+        # Verify if the user can access this resource
+        user_perms = self.validate_user(data)
+        if user_perms['error']:
+            return user_perms['error']
+
+        elif user_perms['user_permissions']:
+            rack_results = self.warehouseDAO.get_most_expensive_racks(wid)
+            if not rack_results:
+                return jsonify(Error='No results were returned.'), 404
+            else:
+                return jsonify(rack_results), 200
+
+    def getLowestDayCost(self, wid: int, data: object) -> object:
+        """Part of the local statistics.Top 3 days with the smallest incoming transactions’ cost."""
+        if type(wid) != int:
+            error = f"Invalid argument type! Expected 'int' for a warehouse ID but received {type(wid)}."
+            return jsonify(Error=error), 400
+
+        # Verify if the user can access this resource
+        user_perms = self.validate_user(data)
+        if user_perms['error']:
+            return user_perms['error']
+
+        elif user_perms['user_permissions']:
+            day_results = self.warehouseDAO.get_least_daily_cost(wid)
+            if not day_results:
+                return jsonify(Error='No results were returned.'), 404
+            else:
+                return jsonify(day_results), 200
+
+    def getLowestRackStock(self, wid: int, data: object) -> object:
+        """Part of the local statistics. Top 5 racks with quantity under the 25% capacity threshold."""
+        if type(wid) != int:
+            error = f"Invalid argument type! Expected 'int' for a warehouse ID but received {type(wid)}."
+            return jsonify(Error=error), 400
+
+        # Verify if the user can access this resource
+        user_perms = self.validate_user(data)
+        if user_perms['error']:
+            return user_perms['error']
+
+        elif user_perms['user_permissions']:
+            rack_results = self.warehouseDAO.get_least_rack_stock(wid)
+            if not rack_results:
+                return jsonify(Error='No results were returned.'), 404
+            else:
+                return jsonify(rack_results), 200
+
+    def getTopSuppliers(self, wid: int, data: object) -> object:
+        """Part of the local statistics. Top 5 racks with quantity under the 25% capacity threshold."""
+        if type(wid) != int:
+            error = f"Invalid argument type! Expected 'int' for a warehouse ID but received {type(wid)}."
+            return jsonify(Error=error), 400
+
+        # Verify if the user can access this resource
+        user_perms = self.validate_user(data)
+        if user_perms['error']:
+            return user_perms['error']
+
+        elif user_perms['user_permissions']:
+            supplier_results = self.warehouseDAO.get_most_suppliers(wid)
+            if not supplier_results:
+                return jsonify(Error='No results were returned.'), 404
+            else:
+                return jsonify(supplier_results), 200
