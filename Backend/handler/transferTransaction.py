@@ -5,12 +5,12 @@ from flask import jsonify
 class TransferTransactionHandler:
     def mapToDict(self, tup):
         my_dict = {}
-        my_dict["transferid"] = tup[0]
+        my_dict["transferID"] = tup[0]
         my_dict["transactionDate"] = tup[1]
         my_dict["partAmount"] = tup[2]
         my_dict["toWarehouse"] = tup[3]
         my_dict["userRequester"] = tup[4]
-        my_dict["transferID"] = tup[5]
+        my_dict["transactionID"] = tup[5]
         my_dict["partID"] = tup[6]
         my_dict["userID"] = tup[7]
         my_dict["warehouseID"] = tup[8]
