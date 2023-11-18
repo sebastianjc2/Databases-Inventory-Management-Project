@@ -51,7 +51,6 @@ class PartDAO(DAO):
                                                               WHERE pid = %s
                                                               """,
                                             substitutions=pid)
-        print("in stock res", res)
         if not res or len(res) == 0: return None
         return res[0][0]
 

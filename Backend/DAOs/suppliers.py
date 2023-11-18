@@ -31,7 +31,8 @@ class SupplierDAO(DAO):
     def deleteByID(self, sid):
         cur = self.conn.cursor()
         query = "DELETE FROM supplier WHERE sid = %s"
-        cur.execute(query,(sid,))
+
+        cur.execute(query, (sid,))
         count = cur.rowcount
         self.conn.commit()
         return count
@@ -44,3 +45,23 @@ class SupplierDAO(DAO):
         count = cur.rowcount
         self.conn.commit()
         return count
+
+    def suppliesParts(self, sid):
+        res = self._generic_retrieval_query(query="""
+                                                              SELECT COUNT(sid)
+                                                              FROM supplies
+                                                              WHERE sid = %s
+                                                              """,
+                                            substitutions=sid)
+        if not res or len(res) == 0: return None
+        return res[0][0]
+
+    def inTransaction(self, sid):
+        res = self._generic_retrieval_query(query="""
+                                                      SELECT COUNT(sid)
+                                                      FROM incoming_transaction
+                                                      WHERE sid = %s
+                                                      """,
+                                            substitutions=sid)
+        if not res or len(res) == 0: return None
+        return res[0][0]
