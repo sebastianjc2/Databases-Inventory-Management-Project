@@ -46,30 +46,30 @@ class PartDAO(DAO):
 
     def inStock(self, pid):
         res = self._generic_retrieval_query(query="""
-                                                              SELECT COUNT(pid)
-                                                              FROM supplies
-                                                              WHERE pid = %s
-                                                              """,
+                                            SELECT COUNT(pid)
+                                            FROM supplies
+                                            WHERE pid = %s;
+                                            """,
                                             substitutions=pid)
         if not res or len(res) == 0: return None
         return res[0][0]
 
     def inTransaction(self, pid):
         res = self._generic_retrieval_query(query="""
-                                                      SELECT COUNT(pid)
-                                                      FROM transactions
-                                                      WHERE pid = %s
-                                                      """,
+                                            SELECT COUNT(pid)
+                                            FROM transactions
+                                            WHERE pid = %s;
+                                            """,
                                             substitutions=pid)
         if not res or len(res) == 0: return None
         return res[0][0]
 
     def beingStored(self, pid):
         res = self._generic_retrieval_query(query="""
-                                                              SELECT COUNT(pid)
-                                                              FROM stored_in
-                                                              WHERE pid = %s
-                                                              """,
+                                            SELECT COUNT(pid)
+                                            FROM stored_in
+                                            WHERE pid = %s;
+                                            """,
                                             substitutions=pid)
         if not res or len(res) == 0: return None
         return res[0][0]
