@@ -55,3 +55,35 @@ class RackDAO(DAO):
                                                substitutions=rid)
         if not result: return None
         return result[0][0]
+
+    def stores_parts(self, rid):
+        res = self._generic_retrieval_query(query="""
+                                            SELECT pid
+                                            FROM stored_in
+                                            WHERE rid = %s
+                                            """,
+                                            substitutions=rid)
+        if not res:
+            return 0
+        return res[0][0]
+
+    def in_incoming_transaction(self, rid):
+        res = self._generic_retrieval_query(query="""
+                                            SELECT itid
+                                            FROM incoming_transaction
+                                            WHERE rid = %s
+                                            """,
+                                            substitutions=rid)
+        if not res:
+            return 0
+        return res[0][0]
+
+    def name_exists(self, name):
+        res = self._generic_retrieval_query(query="""
+                                            SELECT COUNT(rid)
+                                            FROM racks
+                                            WHERE rname = %s;
+                                            """,
+                                            substitutions=(name,))
+        if not res: return 0
+        return res[0][0]
