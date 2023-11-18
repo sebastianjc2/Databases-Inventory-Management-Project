@@ -60,7 +60,7 @@ class PartHandler:
             material = data['Material']
             msrp = data['msrp']
         except:
-            return jsonify("Error: Invalid argument names!")
+            return jsonify("Error: Invalid argument names!"), 400
 
         if not isinstance(name, str):
             return jsonify(f"Error: The inputted name '{name}' is not a string!"), 400
@@ -115,7 +115,7 @@ class PartHandler:
             material = data['Material']
             msrp = data['msrp']
         except:
-            return jsonify("Error: Invalid argument names!")
+            return jsonify("Error: Invalid argument names!"), 400
 
 
         if not isinstance(name, str):
