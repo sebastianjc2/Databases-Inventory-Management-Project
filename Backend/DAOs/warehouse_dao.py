@@ -187,3 +187,15 @@ class WarehouseDAO(DAO):
                     ORDER BY total_outgoing_transactions ASC
                     LIMIT 3;"""
         return self._generic_retrieval_query(query)
+
+    def get_most_incoming(self):
+        """Part of the Global Statistics. Top 5 warehouses with the most incoming transactions."""
+        query = """SELECT wname as warehouse, COUNT(*) as total_incoming_transactions
+                    FROM warehouse
+                    NATURAL INNER JOIN transactions
+                    NATURAL INNER JOIN incoming_transaction
+                    GROUP BY wname
+                    ORDER BY total_incoming_transactions DESC
+                    LIMIT 5;"""
+        return self._generic_retrieval_query(query)
+
