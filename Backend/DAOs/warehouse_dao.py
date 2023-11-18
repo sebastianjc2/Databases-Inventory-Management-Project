@@ -241,7 +241,7 @@ class WarehouseDAO(DAO):
 
 
     def get_top_racks(self):
-        """Part of the Global Statistics. Gets the top 10 warehouses with the most racks."""
+        """Part of the global statistics. Gets the top 10 warehouses with the most racks."""
         query = """SELECT wname as warehouse, COUNT(rid) as rack_count
                     FROM warehouse NATURAL INNER JOIN stored_in
                     GROUP BY wname
@@ -285,25 +285,42 @@ class WarehouseDAO(DAO):
         return self._generic_retrieval_query(query)
 
     def get_profit_yearly(self, wid: int):
-        """Part of the global statistics. Specified warehouse's profit by year."""
-        query = """WITH transaction_earnings AS (
-                        SELECT tid,
-                        SUM(unit_sale_price * part_amount) AS total_earnings,
-                        SUM(unit_buy_price * part_amount) AS total_costs
-                        FROM transactions
-                        NATURAL INNER JOIN outgoing_transaction
-                        NATURAL INNER JOIN incoming_transaction
-                        GROUP BY tid
-                    )
+        """Part of the local statistics. Returns specified warehouse's profit by year."""
+        query = """WITH net_expenses AS (
+                    SELECT t.tid,
+                    COALESCE(SUM(ot.unit_sale_price * t.part_amount), 0) AS total_earnings,
+                    COALESCE(SUM(it.unit_buy_price * t.part_amount), 0) AS total_costs
+                    FROM transactions as t
+                    LEFT JOIN outgoing_transaction as ot ON t.tid = ot.tid
+                    LEFT JOIN incoming_transaction as it ON t.tid = it.tid
+                    GROUP BY t.tid
+                )
                 
-                    SELECT EXTRACT(YEAR FROM tdate) AS year,
-                    wname AS warehouse,
-                    SUM(te.total_earnings - te.total_costs) AS net_profit
-                    FROM warehouse
-                    NATURAL INNER JOIN transactions
-                    NATURAL INNER JOIN transaction_earnings as te
+                SELECT EXTRACT(YEAR FROM tdate) AS year,
+                wname AS warehouse,
+                SUM(ne.total_earnings - ne.total_costs) AS net_profit
+                FROM warehouse
+                NATURAL INNER JOIN transactions
+                NATURAL INNER JOIN net_expenses as ne
+                WHERE wid = %s
+                GROUP BY year, wname
+                ORDER BY year DESC;"""
+
+        return self._generic_retrieval_query(query, substitutions=(wid,))
+
+    def get_bottom_racks(self, wid: int):
+        """Part of the local statistics. Returns bottom 3 racks by material/type in a warehouse."""
+        query = """WITH part_types AS (
+                    SELECT pname AS part, pmaterial AS type, COUNT(*) AS part_count
+                    FROM stored_in
+                    NATURAL INNER JOIN parts
                     WHERE wid = %s
-                    GROUP BY year, wname
-                    ORDER BY year DESC;"""
+                    GROUP BY pname, pmaterial
+                )
+                
+                SELECT part, type, part_count
+                FROM part_types
+                ORDER BY part_count ASC
+                LIMIT 3;"""
 
         return self._generic_retrieval_query(query, substitutions=(wid,))

@@ -278,6 +278,13 @@ def warehouseProfit(wid):
     else:
         return jsonify("Not Supported"), 405
 
+@app.route("/sqlytes/warehouse/<int:wid>/rack/material", methods=["POST"])
+def warehouseBottomRacks(wid):
+    if request.method == "POST":
+        return WarehouseHandler().getBottomRacks(wid, request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
 
 if __name__ == '__main__':
     app.run(debug=True)

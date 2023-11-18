@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS outgoing_transaction(
     otid SERIAL PRIMARY KEY,
     unit_sale_price DOUBLE PRECISION NOT NULL,
     cid INTEGER REFERENCES customer(cid) NOT NULL,
-    tid INTEGER REFERENCES transactions(tid) NOT NULL
+    tid INTEGER REFERENCES transactions(tid) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS incoming_transaction(
@@ -80,14 +80,14 @@ CREATE TABLE IF NOT EXISTS incoming_transaction(
     unit_buy_price DOUBLE PRECISION NOT NULL,
     sid INTEGER REFERENCES supplier(sid) NOT NULL,
     rid INTEGER REFERENCES racks(rid) NOT NULL,
-    tid INTEGER REFERENCES transactions(tid) NOT NULL
+    tid INTEGER REFERENCES transactions(tid) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS transfer(
     transferId SERIAL PRIMARY KEY,
     to_warehouse INTEGER REFERENCES warehouse(wid) NOT NULL,
     user_requester INTEGER REFERENCES users(uid) NOT NULL,
-    tid INTEGER REFERENCES transactions(tid) NOT NULL
+    tid INTEGER REFERENCES transactions(tid) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS stored_in(
