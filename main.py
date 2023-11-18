@@ -256,6 +256,13 @@ def warehousesWithLeastOutgoing():
     else:
         return jsonify("Not supported"), 405
 
+@app.route("/sqlytes/most/incoming", methods=["GET"])
+def warehousesWithMostIncoming():
+    if request.method == "GET":
+        return WarehouseHandler().getTopIncoming()
+    else:
+        return jsonify("Not Supported"), 405
+
 
 if __name__ == '__main__':
     app.run(debug=True)

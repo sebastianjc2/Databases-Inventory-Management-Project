@@ -217,3 +217,11 @@ class WarehouseHandler:
             return jsonify(Error='No results were returned.'), 404
         else:
             return jsonify(outgoing_results), 200
+
+    def getTopIncoming(self):
+        """Part of the Global Statistics. Top 5 warehouses with the most incoming transactions."""
+        incoming_results = self.warehouseDAO.get_most_incoming()
+        if not incoming_results:
+            return jsonify(Error='No Results were returned.'), 404
+        else:
+            return jsonify(incoming_results), 200
