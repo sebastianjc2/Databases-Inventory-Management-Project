@@ -235,3 +235,22 @@ class WarehouseHandler:
                 return jsonify(Error='No results were returned.'), 404
             else:
                 return jsonify(bottom_rack_results), 200
+
+    def getTopUserExchanges(self, wid: int, data: object) -> object:
+        """Part of the local statistics. Returns top 3 users that received the most
+        exchanges from a warehouse."""
+        if type(wid) != int:
+            error = f"Invalid argument type! Expected 'int' for a warehouse ID but received {type(wid)}."
+            return jsonify(Error=error), 400
+
+        # Verify if the user can access this resource
+        user_perms = self.validate_user(data)
+        if user_perms['error']:
+            return user_perms['error']
+
+        elif user_perms['user_permissions']:
+            user_exchange_results = self.warehouseDAO.get_most_user_exchanges(wid)
+            if not user_exchange_results:
+                return jsonify(Error='No results were returned.'), 404
+            else:
+                return jsonify(user_exchange_results), 200
