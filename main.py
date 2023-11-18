@@ -137,7 +137,7 @@ def getUsers():
         return jsonify(Error='Method not allowed'), 405
     
 @app.route('/sqlytes/users/<int:uid>', methods=['GET','PUT','DELETE'])
-def getUserById(uid:int):
+def getUserById(uid: int):
     if request.method == 'GET':
         return UserHandler().getUserByID(uid)
     elif request.method == 'PUT':
@@ -158,7 +158,7 @@ def getWarehouses():
     
     
 @app.route('/sqlytes/warehouse/<int:wid>', methods=['GET','PUT','DELETE'])
-def getWarehouseById(wid:int):
+def getWarehouseById(wid: int):
     if request.method == 'GET':
         return WarehouseHandler().getWarehouseById(wid)
     elif request.method == 'PUT':
@@ -234,6 +234,13 @@ def transferTransactionById(transferid):
     else:
         return jsonify("Not supported"), 405
 
+# Global Statistics
+@app.route("/sqlytes/most/rack", methods=["GET"])
+def warehousesWithMostRacks():
+    if request.method == "GET":
+        return WarehouseHandler().getTopRacks()
+    else:
+        return jsonify("Not supported"), 405
 
 
 if __name__ == '__main__':

@@ -53,10 +53,10 @@ class WarehouseHandler:
         argument: Data to be sent to the DAO.
         Return: JSON object that contains the warehouse ID that was inserted.
         """
-        # Check that we received the expect quantity of data.
+        # Check that we received the expected quantity of data.
         if len(data) != 7:
             return jsonify(Error='Missing data to insert a warehouse.'), 400
-        
+
         # Handle that the keys are valid.
         try:
             warehouse_name = data['wname']
@@ -68,13 +68,13 @@ class WarehouseHandler:
             warehouse_budget = data['wbudget']
         except KeyError:
             return jsonify(Error='Unexpected or Incorrect attribute in post request. Check that the fields of the request are correct'), 400
-            
+
         
         # Check that there are no empty attributes and return which noe failed to the client.
         for key in data:
             if not data[key]:
                 return jsonify(Error='Missing ' + key + ' attribute'), 400
-        
+
         # Check that all fields except budget are strings.
         for key in data:
                 if key != 'wbudget' and not isinstance(data[key],str):
@@ -87,7 +87,7 @@ class WarehouseHandler:
         # Budget can not be a negative value or zero.
         elif warehouse_budget <= 0:
             return jsonify(Error='Budget can not be a value less or equal to 0'), 400
-            
+
         wid = self.warehouseDAO.insertWarehouse(warehouse_name,
                                                 warehouse_country,
                                                 warehouse_region,
@@ -127,7 +127,7 @@ class WarehouseHandler:
          # Check that we received the expect quantity of data.
         if len(data) != 7:
             return jsonify(Error='Incorrect amount of data has been sent.'), 400
-        
+
         # Handle that the keys are valid.
         try:
             warehouse_name = data['wname']
@@ -139,7 +139,7 @@ class WarehouseHandler:
             warehouse_budget = data['wbudget']
         except KeyError:
             return jsonify(Error='Unexpected or Incorrect attribute in post request'), 400
-            
+
         # Check that there are no empty attributes and return which noe failed to the client.
         for key in data:
             if not data[key]:
@@ -149,7 +149,7 @@ class WarehouseHandler:
         for key in data:
             if key != 'wbudget' and not isinstance(data[key],str):
                 return jsonify(Error='{} has to be a string.'.format(key)),400
-            
+
         # Check that budget is a double.
         if not isinstance(warehouse_budget,float):
             return jsonify(Error='Field {} has to be a double'.format(warehouse_budget)), 400
@@ -191,4 +191,11 @@ class WarehouseHandler:
             if not result:
                 return jsonify(Error='Unexpected Error.'), 404
             return jsonify(Message='Warehouse {} deleted succesfully'.format(wid)), 200
-        
+
+    def getTopRacks(self):
+        """Part of the Global Statistics. Gets the top 10 warehouses with the most racks."""
+        rack_results = self.warehouseDAO.get_top_racks()
+        if not rack_results:
+            return jsonify(Error='No results were returned.'), 404
+        else:
+            return jsonify(rack_results), 200

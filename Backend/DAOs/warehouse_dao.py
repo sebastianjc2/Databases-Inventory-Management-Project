@@ -1,30 +1,31 @@
 from Backend.DAOs.DAO import DAO
 import psycopg2
 
+
 class WarehouseDAO(DAO):
 
-    def getAllWarehouses(self) -> list:
+    def getAllWarehouses(self):
         """Execute a query to get all the warehouses from the Warehouses Table in the database.
         
         Return: all records from the Warehouses Table in the database.
         """
         return self._getAllEntries(table_name="warehouse",
-                                columns=["wid",
-                                         "wname",
-                                         "wcountry",
-                                         "wregion",
-                                         "wcity",
-                                         "wstreet",
-                                         "wzipcode",
-                                         "wbudget"])
-        
-    def insertWarehouse(self,warehouse_name:str,
-                        warehouse_country:str,
-                        warehouse_region:str,
-                        warehouse_city:str,
-                        warehouse_street:str,
-                        warehouse_zipcode:str,
-                        warehouse_budget:float) -> int:
+                                   columns=("wid",
+                                            "wname",
+                                            "wcountry",
+                                            "wregion",
+                                            "wcity",
+                                            "wstreet",
+                                            "wzipcode",
+                                            "wbudget"))
+
+    def insertWarehouse(self, warehouse_name: str,
+                        warehouse_country: str,
+                        warehouse_region: str,
+                        warehouse_city: str,
+                        warehouse_street: str,
+                        warehouse_zipcode: str,
+                        warehouse_budget: float) -> int:
         """Insert a new warehouse in the Warehouses Table in the database.
 
         Args:
@@ -41,28 +42,30 @@ class WarehouseDAO(DAO):
         """
         return self._addEntry(table_name="warehouse",
                               id_name="wid",
-                              columns=["wname","wcountry","wregion","wcity","wstreet","wzipcode","wbudget"],
-                              values=(warehouse_name,
+                              columns=["wname", "wcountry", "wregion", "wcity", "wstreet", "wzipcode", "wbudget"],
+                              values=[warehouse_name,
                                       warehouse_country,
                                       warehouse_region,
                                       warehouse_city,
                                       warehouse_street,
                                       warehouse_zipcode,
-                                      warehouse_budget))
-    def getWarehouseByID(self,wid:int) -> list:
+                                      warehouse_budget])
+
+    def getWarehouseByID(self, wid: int):
         """Execute a query to get a warehouse from the Warehouses Table in the database.
         
         Return: a record from the Warehouses Table in the database which matches the given wid.
         """
-        return self._getEntryByID(table_name="warehouse",id_name="wid",id_value=str(wid),
-                                  columns=["wid","wname","wcountry","wregion","wcity","wstreet","wzipcode","wbudget"])
-        
-    def insertWarehouse(self,warehouse_name:str,
-                        warehouse_country:str,
-                        warehouse_region:str,
-                        warehouse_city:str,
-                        warehouse_street:str,warehouse_zipcode:str,
-                        warehouse_budget:float) -> int:
+        return self._getEntryByID(table_name="warehouse", id_name="wid", id_value=str(wid),
+                                  columns=("wid", "wname", "wcountry", "wregion", "wcity", "wstreet", "wzipcode",
+                                           "wbudget"))
+
+    def insertWarehouse(self, warehouse_name: str,
+                        warehouse_country: str,
+                        warehouse_region: str,
+                        warehouse_city: str,
+                        warehouse_street: str, warehouse_zipcode: str,
+                        warehouse_budget: float) -> int:
         """Insert a new warehouse in the Warehouses Table in the database.
 
         Args:
@@ -79,37 +82,38 @@ class WarehouseDAO(DAO):
         """
         return self._addEntry(table_name="warehouse",
                               id_name="wid",
-                              columns=["wname","wcountry","wregion","wcity","wstreet","wzipcode","wbudget"],
-                              values=(warehouse_name,
+                              columns=["wname", "wcountry", "wregion", "wcity", "wstreet", "wzipcode", "wbudget"],
+                              values=[warehouse_name,
                                       warehouse_country,
                                       warehouse_region,
                                       warehouse_city,
                                       warehouse_street,
                                       warehouse_zipcode,
-                                      warehouse_budget))
-    def updateWarehouseByID(self,wid:int,warehouse_name:str,
-                                        warehouse_country:str,
-                                        warehouse_region:str,
-                                        warehouse_city:str,
-                                        warehouse_street:str,warehouse_zipcode:str,
-                                        warehouse_budget:float) -> object:
+                                      warehouse_budget])
+
+    def updateWarehouseByID(self, wid: int, warehouse_name: str,
+                            warehouse_country: str,
+                            warehouse_region: str,
+                            warehouse_city: str,
+                            warehouse_street: str, warehouse_zipcode: str,
+                            warehouse_budget: float) -> object:
         return self._modifyEntryByID(table_name="warehouse",
-                                        id_name="wid",
-                                        id_value=str(wid),
-                                        columns=["wname",
-                                                 "wcountry",
-                                                 "wregion",
-                                                 "wcity",
-                                                 "wstreet","wzipcode","wbudget"],
-                                        values=(warehouse_name,
-                                                warehouse_country,
-                                                warehouse_region,
-                                                warehouse_city,
-                                                warehouse_street,
-                                                warehouse_zipcode,
-                                                warehouse_budget))
-        
-    def deleteWarehouseByID(self,wid:int) -> object:
+                                     id_name="wid",
+                                     id_value=str(wid),
+                                     columns=["wname",
+                                              "wcountry",
+                                              "wregion",
+                                              "wcity",
+                                              "wstreet", "wzipcode", "wbudget"],
+                                     values=[warehouse_name,
+                                             warehouse_country,
+                                             warehouse_region,
+                                             warehouse_city,
+                                             warehouse_street,
+                                             warehouse_zipcode,
+                                             warehouse_budget])
+
+    def deleteWarehouseByID(self, wid: int) -> object:
         """Delete a warehouse from the Warehouses Table in the database by the given ID.
 
         Args:
@@ -121,7 +125,6 @@ class WarehouseDAO(DAO):
         return self._deleteEntryByID(table_name="warehouse",
                                      id_name="wid",
                                      id_value=str(wid))
-    
 
     def get_warehouse_budget(self, wid):
         result = self._generic_retrieval_query(query="""
@@ -132,7 +135,6 @@ class WarehouseDAO(DAO):
                                                substitutions=wid)
         if not result or len(result) == 0: return None
         return result[0][0]
-       
 
     def decrease_budget(self, wid, delta):
         """
@@ -152,8 +154,8 @@ class WarehouseDAO(DAO):
         except psycopg2.errors.Error as e:
             print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
             return None
-        
-        
+
+
     def increase_budget(self, wid, delta):
         """
         Increases the budget by the given delta.
@@ -173,6 +175,7 @@ class WarehouseDAO(DAO):
         except psycopg2.errors.Error as e:
             print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
             return None
+
     def warehouseInUsers(self,wid:int) -> bool:
         """Check if a warehouse is in the Users Table in the database.
 
@@ -182,13 +185,13 @@ class WarehouseDAO(DAO):
         Returns:
             bool: True if the warehouse is in the Users Table in the database, False otherwise.
         """
-        
+
         result = self._generic_retrieval_query(query="""select count(wid) from users
                                              where wid = %s
                                              """, substitutions=wid)
-        
+
         return True if result[0][0]==0 else False
-        
+
     def warehouseInTransfer(self,to_warehouse:int) -> bool:
         """Check if a warehouse is in the Transfer Table in the database.
 
@@ -203,6 +206,7 @@ class WarehouseDAO(DAO):
                                              where to_warehouse = %s
                                              """, substitutions=to_warehouse)
         return True if result[0][0]==0 else False
+
     def warehouseInTransactions(self,wid:int) -> bool:
         """Check if a warehouse is in the Transactions Table in the database.
 
@@ -215,9 +219,9 @@ class WarehouseDAO(DAO):
         result = self._generic_retrieval_query(query="""
                                              select count(wid) from transactions
                                              where wid = %s
-                                             """, substitutions=wid) 
+                                             """, substitutions=wid)
         return True if result[0][0]==0 else False
-        
+
     def warehouseInStoredIn(self,wid:int) -> bool:
         """Check if a warehouse has racks stored in it
 
@@ -227,11 +231,22 @@ class WarehouseDAO(DAO):
         Returns:
             bool: True if the warehouse is in the table, False otherwise
         """
-        
+
         result = self._generic_retrieval_query(query="""
                                               select count (wid)
                                               from stored_in
                                               where wid = %s 
-                                              """, substitutions=wid) 
+                                              """, substitutions=wid)
         return True if result[0][0]==0 else False
-                                               
+
+
+    def get_top_racks(self):
+        """Part of the Global Statistics. Gets the top 10 warehouses with the most racks."""
+        query = (
+            "SELECT wname as warehouse, COUNT(rid) as rack_count "
+            "FROM warehouse NATURAL INNER JOIN stored_in "
+            "GROUP BY wname "
+            "ORDER BY rack_count DESC "
+            "LIMIT 10;"
+        )
+        return self._generic_retrieval_query(query)
