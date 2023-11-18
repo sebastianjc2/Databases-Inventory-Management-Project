@@ -5,11 +5,11 @@ from Backend.DAOs.warehouse_dao import WarehouseDAO
 class WarehouseHandler:
     """WarehouseHandler takes care of managing the communication between the
     request and the database for the warehouses route."""
-    
+
     def __init__(self):
         self.warehouseDAO = WarehouseDAO()
-    
-    def build_warehouse_dict(self,row:tuple) -> dict:
+
+    def build_warehouse_dict(self, row: tuple) -> dict:
         """Builds dictionary that contains
         all the information from a warehouse.
 
@@ -32,21 +32,20 @@ class WarehouseHandler:
         warehouse_dict['wzipcode'] = row[6]
         warehouse_dict['wbudget'] = row[7]
         return warehouse_dict
-        
-        
+
     def getAllWarehouses(self):
         """Returns all warehouses from the Warehouses Table in the database.
     
         Return: JSON object that contains all the warehouses from the Warehouses Table that were found in the database.
         """
-        
+
         all_warehouses_tuples = self.warehouseDAO.getAllWarehouses()
         all_warehouses_result = []
         for record in all_warehouses_tuples:
             all_warehouses_result.append(self.build_warehouse_dict(record))
         return jsonify(Warehouses=all_warehouses_result)
-    
-    def insertWarehouse(self,data) -> object:
+
+    def insertWarehouse(self, data) -> object:
         """Insert a new warehouse in the Warehouses Table in the database.
         
         Keyword arguments:
@@ -61,18 +60,18 @@ class WarehouseHandler:
         warehouse_street = data['wstreet']
         warehouse_zipcode = data['wzipcode']
         warehouse_budget = data['wbudget']
-        
+
         if warehouse_name and warehouse_country and warehouse_region and warehouse_city \
-        and warehouse_street and warehouse_zipcode and (warehouse_budget and warehouse_budget >= 0):
-            
-            wid = self.warehouseDAO.insertWarehouse(warehouse_name,warehouse_country,warehouse_region,warehouse_city,
-                                                    warehouse_street,warehouse_zipcode,warehouse_budget)
+                and warehouse_street and warehouse_zipcode and (warehouse_budget and warehouse_budget >= 0):
+
+            wid = self.warehouseDAO.insertWarehouse(warehouse_name, warehouse_country, warehouse_region, warehouse_city,
+                                                    warehouse_street, warehouse_zipcode, warehouse_budget)
             data['wid'] = wid
             return jsonify(data), 201
         else:
             return jsonify(Error='Unexpected attribute values'), 400
-        
-    def getWarehouseById(self,wid:int) -> object:
+
+    def getWarehouseById(self, wid: int) -> object:
         """Execute a query to get a warehouse from the Warehouses Table in the database with the given ID.
 
         Args:
@@ -87,8 +86,8 @@ class WarehouseHandler:
         else:
             warehouse = self.build_warehouse_dict(warehouse_tuple[0])
             return jsonify(Warehouse=warehouse)
-    
-    def updateWarehouseByID(self,wid:int,data:object) -> object:
+
+    def updateWarehouseByID(self, wid: int, data: object) -> object:
         """Update a warehouse in the Warehouses Table in the database by the given ID.
 
         Args:
@@ -105,23 +104,24 @@ class WarehouseHandler:
         warehouse_street = data['wstreet']
         warehouse_zipcode = data['wzipcode']
         warehouse_budget = data['wbudget']
-        
+
         if len(data) != 7:
             return jsonify(Error='Malformed update request'), 400
-        
+
         elif warehouse_name and warehouse_country and warehouse_region and warehouse_city \
-        and warehouse_street and warehouse_zipcode and (warehouse_budget and warehouse_budget >= 0):
-            
-            flag = self.warehouseDAO.updateWarehouseByID(wid,warehouse_name,warehouse_country,warehouse_region,warehouse_city,
-                                                    warehouse_street,warehouse_zipcode,warehouse_budget)
+                and warehouse_street and warehouse_zipcode and (warehouse_budget and warehouse_budget >= 0):
+
+            flag = self.warehouseDAO.updateWarehouseByID(wid, warehouse_name, warehouse_country, warehouse_region,
+                                                         warehouse_city,
+                                                         warehouse_street, warehouse_zipcode, warehouse_budget)
             if flag:
                 return jsonify(data), 200
             else:
                 return jsonify(Error='Warehouse Not Found'), 404
         else:
             return jsonify(Error='Unexpected attribute values'), 400
-        
-    def deleteWarehouseByID(self,wid:int) -> object:
+
+    def deleteWarehouseByID(self, wid: int) -> object:
         """Delete a warehouse from the Warehouses Table in the database by the given ID.
 
         Args:
@@ -173,39 +173,41 @@ class WarehouseHandler:
             return jsonify(incoming_results), 200
 
     # Local statistics
-    def validate_user(self, uid: str) -> dict:
+    def validate_user(self, data: object) -> dict:
         """Helps encapsulate the code for verifying whether
         a valid user can access the local warehouse statistics."""
         response = dict.fromkeys(['error', 'user_permissions'])
-        if type(uid) != str:
-            error = f"Invalid argument type! Expected 'str' for a user ID but received {type(uid)}."
-            response['error'] = jsonify(Error=error), 400
-        else:
-            has_access = self.warehouseDAO._getEntryByID(table_name="users",
-                                                       id_name="uid",
-                                                       id_value=uid,
-                                                       columns=["uid"])
-
-            if has_access is None or has_access == []:
-                error = "User does not have access to the requested resource!"
-                response['error'] = jsonify(Error=error), 404
-            else:
-                response['user_permissions'] = True
-        return response
-
-    def getYearlyProfit(self, wid: int, data: object) -> object:
-        """Part of the global statistics. Specified warehouse's profit by year."""
         try:
             uid = data['user']
         except:
-            return jsonify(Error="Invalid argument! Couldn't process the 'User' field."), 400
+            response['error'] = jsonify(Error="Invalid argument! Couldn't process the 'User' field."), 400
+            return response
 
+        if type(uid) != str:
+            error = f"Invalid argument type! Expected 'str' for a user ID but received {type(uid)}."
+            response['error'] = jsonify(Error=error), 400
+            return response
+
+        has_access = self.warehouseDAO._getEntryByID(table_name="users",
+                                                     id_name="uid",
+                                                     id_value=uid,
+                                                     columns=["uid"])
+
+        if has_access is None or has_access == []:
+            error = "User does not have access to the requested resource!"
+            response['error'] = jsonify(Error=error), 404
+        else:
+            response['user_permissions'] = True
+        return response
+
+    def getYearlyProfit(self, wid: int, data: object) -> object:
+        """Part of the local statistics. Specifies warehouse's profit by year."""
         if type(wid) != int:
             error = f"Invalid argument type! Expected 'int' for a warehouse ID but received {type(wid)}."
             return jsonify(Error=error), 400
 
         # Verify if the user can access this resource
-        user_perms = self.validate_user(uid)
+        user_perms = self.validate_user(data)
         if user_perms['error']:
             return user_perms['error']
 
@@ -215,3 +217,21 @@ class WarehouseHandler:
                 return jsonify(Error='No results were returned.'), 404
             else:
                 return jsonify(profit_results), 200
+
+    def getBottomRacks(self, wid: int, data: object) -> object:
+        """Part of the local statistics. Returns bottom 3 racks by material/type in a warehouse."""
+        if type(wid) != int:
+            error = f"Invalid argument type! Expected 'int' for a warehouse ID but received {type(wid)}."
+            return jsonify(Error=error), 400
+
+        # Verify if the user can access this resource
+        user_perms = self.validate_user(data)
+        if user_perms['error']:
+            return user_perms['error']
+
+        elif user_perms['user_permissions']:
+            bottom_rack_results = self.warehouseDAO.get_bottom_racks(wid)
+            if not bottom_rack_results:
+                return jsonify(Error='No results were returned.'), 404
+            else:
+                return jsonify(bottom_rack_results), 200
