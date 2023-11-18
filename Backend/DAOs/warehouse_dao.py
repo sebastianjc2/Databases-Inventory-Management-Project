@@ -199,6 +199,19 @@ class WarehouseDAO(DAO):
                     LIMIT 5;"""
         return self._generic_retrieval_query(query)
 
+    def get_most_city(self):
+        """Part of the global statistics. Top 5 warehouses with the most incoming transactions."""
+        query = """SELECT wcity as warehouse_city, COUNT(*) as total_transactions
+                    FROM warehouse
+                    NATURAL INNER JOIN transactions
+                    GROUP BY wcity
+                    ORDER BY total_transactions DESC
+                    LIMIT 3;
+"""
+        return self._generic_retrieval_query(query)
+
+
+
     def get_profit_yearly(self, wid: int):
         """Part of the local statistics. Returns specified warehouse's profit by year."""
         query = """WITH net_expenses AS (
@@ -256,3 +269,70 @@ class WarehouseDAO(DAO):
                 LIMIT 3;"""
 
         return self._generic_retrieval_query(query, substitutions=(wid,))
+
+    def get_most_expensive_racks(self, wid: int):
+        """Part of the local statistics. Top 5 most expensive racks in the warehouse."""
+        query = """SELECT wname as warehouse, rname as rack, SUM(msrp*parts_qty) as rack_price
+                    FROM warehouse
+                    NATURAL INNER JOIN stored_in
+                    NATURAL INNER JOIN racks
+                    NATURAL INNER JOIN parts
+                    WHERE wid = %s
+                    GROUP BY wname, rname
+                    ORDER BY rack_price DESC
+                    LIMIT 5;"""
+
+        return self._generic_retrieval_query(query, substitutions=(wid,))
+
+    def get_least_daily_cost(self, wid: int):
+        """Part of the local statistics.Top 3 days with the smallest incoming transactions’ cost."""
+        query = """WITH daily_costs AS (
+                        SELECT tdate,
+                        SUM(unit_buy_price * part_amount) AS total_incoming_cost
+                        FROM transactions
+                        NATURAL INNER JOIN incoming_transaction
+                        WHERE wid = %s
+                        GROUP BY tdate
+                        )
+
+                    SELECT *
+                    FROM daily_costs
+                    ORDER BY total_incoming_cost ASC
+                    LIMIT 3;"""
+
+        return self._generic_retrieval_query(query, substitutions=(wid,))
+
+    def get_least_rack_stock(self, wid: int):
+        """Part of the local statistics. Top 5 racks with quantity under the 25% capacity threshold."""
+        query = """
+                SELECT rname, rcapacity * 0.25 AS low_capacity, parts_qty
+                FROM racks
+                NATURAL INNER JOIN stored_in
+                NATURAL INNER JOIN parts
+                WHERE rid IN (SELECT rid FROM stored_in WHERE wid = %s)
+                AND parts_qty < rcapacity * 0.25
+                ORDER BY parts_qty DESC
+                LIMIT 5;
+                """
+
+        return self._generic_retrieval_query(query, substitutions=(wid,))
+    def get_most_suppliers(self, wid: int):
+        """Part of the local statistics. Top 5 racks with quantity under the 25% capacity threshold."""
+        query = """
+                WITH suppliers AS (
+                    SELECT sname AS supplier_name, COUNT(wid) AS supply_count
+                    from incoming_transaction
+                    natural  inner join transactions
+                    natural inner join warehouse
+                    natural inner join supplier
+                    WHERE wid = %s
+                    GROUP BY sname
+                    )
+                SELECT * FROM suppliers
+                ORDER BY supply_count DESC
+                LIMIT 3;
+                """
+
+        return self._generic_retrieval_query(query, substitutions=(wid,))
+
+
