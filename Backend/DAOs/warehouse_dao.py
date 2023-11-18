@@ -324,3 +324,20 @@ class WarehouseDAO(DAO):
                 LIMIT 3;"""
 
         return self._generic_retrieval_query(query, substitutions=(wid,))
+
+    def get_most_user_exchanges(self, wid: int):
+        """Part of the local statistics. Returns top 3 users that received the most
+        exchanges from a warehouse."""
+        query = """WITH user_exchanges as (
+                    SELECT ufname as first_name, ulname as last_name, COUNT(*) AS transfer_count
+                    FROM users as u
+                    INNER JOIN transfer as tr ON u.uid = tr.user_requester
+                    WHERE wid=%s
+                    GROUP BY first_name, last_name
+                )
+                
+                SELECT * FROM user_exchanges
+                ORDER BY transfer_count DESC
+                LIMIT 3;"""
+
+        return self._generic_retrieval_query(query, substitutions=(wid,))
