@@ -157,11 +157,21 @@ class WarehouseDAO(DAO):
 
     def get_top_racks(self):
         """Part of the Global Statistics. Gets the top 10 warehouses with the most racks."""
-        query = (
-            "SELECT wname as warehouse, COUNT(rid) as rack_count "
-            "FROM warehouse NATURAL INNER JOIN stored_in "
-            "GROUP BY wname "
-            "ORDER BY rack_count DESC "
-            "LIMIT 10;"
-        )
+        query = """SELECT wname as warehouse, COUNT(rid) as rack_count
+                    FROM warehouse NATURAL INNER JOIN stored_in
+                    GROUP BY wname
+                    ORDER BY rack_count DESC
+                    LIMIT 10;"""
+        return self._generic_retrieval_query(query)
+
+    def get_most_exchanges(self):
+        """Part of the Global Statistics. Gets the top 5 warehouses
+        with the most exchanges/transfers."""
+        query = """SELECT wname as warehouse, COUNT(*) as total_transfers
+                    FROM warehouse
+                    NATURAL INNER JOIN transactions
+                    NATURAL INNER JOIN transfer
+                    GROUP BY wname
+                    ORDER BY total_transfers DESC
+                    LIMIT 5;"""
         return self._generic_retrieval_query(query)

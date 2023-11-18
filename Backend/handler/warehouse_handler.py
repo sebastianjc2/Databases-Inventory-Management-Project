@@ -145,3 +145,11 @@ class WarehouseHandler:
             return jsonify(Error='No results were returned.'), 404
         else:
             return jsonify(rack_results), 200
+
+    def geTopExchanges(self):
+        """Part of the Global Statistics. Gets the top 10 warehouses with the most racks."""
+        transfer_results = self.warehouseDAO.get_most_exchanges()
+        if not transfer_results:
+            return jsonify(Error='No results were returned.'), 404
+        else:
+            return jsonify(transfer_results), 200
