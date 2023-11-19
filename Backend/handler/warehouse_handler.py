@@ -1,5 +1,6 @@
 from flask import jsonify
 from Backend.DAOs.warehouse_dao import WarehouseDAO
+from Backend.DAOs.user_dao import UserDAO
 
 
 class WarehouseHandler:
@@ -226,7 +227,7 @@ class WarehouseHandler:
             return jsonify(incoming_results), 200
 
     def getTopCity(self):
-        """Part of the global statistics. Top 5 warehouses with the most incoming transactions."""
+        """Part of the global statistics. Top 3 warehouse cities with the most transactions."""
         city_results = self.warehouseDAO.get_most_city()
         if not city_results:
             return jsonify(Error='No results were returned.'), 404
@@ -234,7 +235,7 @@ class WarehouseHandler:
             return jsonify(city_results), 200
 
     # Local statistics
-    def validate_user(self, data: object) -> dict:
+    def __validate_user(self, data: object) -> dict:
         """Helps encapsulate the code for verifying whether
         a valid user can access the local warehouse statistics."""
         response = dict.fromkeys(['error', 'user_permissions'])
@@ -249,11 +250,7 @@ class WarehouseHandler:
             response['error'] = jsonify(Error=error), 400
             return response
 
-        has_access = self.warehouseDAO._getEntryByID(table_name="users",
-                                                     id_name="uid",
-                                                     id_value=uid,
-                                                     columns=["uid"])
-
+        has_access = UserDAO().getUserByID(uid)
         if has_access is None or has_access == []:
             error = "User does not have access to the requested resource!"
             response['error'] = jsonify(Error=error), 404
@@ -268,7 +265,7 @@ class WarehouseHandler:
             return jsonify(Error=error), 400
 
         # Verify if the user can access this resource
-        user_perms = self.validate_user(data)
+        user_perms = self.__validate_user(data)
         if user_perms['error']:
             return user_perms['error']
 
@@ -286,7 +283,7 @@ class WarehouseHandler:
             return jsonify(Error=error), 400
 
         # Verify if the user can access this resource
-        user_perms = self.validate_user(data)
+        user_perms = self.__validate_user(data)
         if user_perms['error']:
             return user_perms['error']
 
@@ -298,13 +295,14 @@ class WarehouseHandler:
                 return jsonify(bottom_rack_results), 200
 
     def getTopUserExchanges(self, wid: int, data: object) -> object:
-        """Part of the local statistics.  Top 5 most expensive racks in the warehouse"""
+        """Part of the local statistics. Returns top 3 users that received the most
+        exchanges from a warehouse."""
         if type(wid) != int:
             error = f"Invalid argument type! Expected 'int' for a warehouse ID but received {type(wid)}."
             return jsonify(Error=error), 400
 
         # Verify if the user can access this resource
-        user_perms = self.validate_user(data)
+        user_perms = self.__validate_user(data)
         if user_perms['error']:
             return user_perms['error']
 
@@ -315,8 +313,6 @@ class WarehouseHandler:
             else:
                 return jsonify(user_results), 200
 
-
-
     def getTopExpensiveRacks(self, wid: int, data: object) -> object:
         """Part of the local statistics. Top 5 most expensive racks in the warehouse."""
         if type(wid) != int:
@@ -324,7 +320,7 @@ class WarehouseHandler:
             return jsonify(Error=error), 400
 
         # Verify if the user can access this resource
-        user_perms = self.validate_user(data)
+        user_perms = self.__validate_user(data)
         if user_perms['error']:
             return user_perms['error']
 
@@ -336,13 +332,13 @@ class WarehouseHandler:
                 return jsonify(rack_results), 200
 
     def getLowestDayCost(self, wid: int, data: object) -> object:
-        """Part of the local statistics.Top 3 days with the smallest incoming transactions’ cost."""
+        """Part of the local statistics. Top 3 days with the smallest incoming transactions’ cost."""
         if type(wid) != int:
             error = f"Invalid argument type! Expected 'int' for a warehouse ID but received {type(wid)}."
             return jsonify(Error=error), 400
 
         # Verify if the user can access this resource
-        user_perms = self.validate_user(data)
+        user_perms = self.__validate_user(data)
         if user_perms['error']:
             return user_perms['error']
 
@@ -360,7 +356,7 @@ class WarehouseHandler:
             return jsonify(Error=error), 400
 
         # Verify if the user can access this resource
-        user_perms = self.validate_user(data)
+        user_perms = self.__validate_user(data)
         if user_perms['error']:
             return user_perms['error']
 
@@ -372,13 +368,13 @@ class WarehouseHandler:
                 return jsonify(rack_results), 200
 
     def getTopSuppliers(self, wid: int, data: object) -> object:
-        """Part of the local statistics. Top 5 racks with quantity under the 25% capacity threshold."""
+        """Part of the local statistics. Top 3 suppliers that supplied to the given warehouse."""
         if type(wid) != int:
             error = f"Invalid argument type! Expected 'int' for a warehouse ID but received {type(wid)}."
             return jsonify(Error=error), 400
 
         # Verify if the user can access this resource
-        user_perms = self.validate_user(data)
+        user_perms = self.__validate_user(data)
         if user_perms['error']:
             return user_perms['error']
 
