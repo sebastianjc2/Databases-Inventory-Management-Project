@@ -53,37 +53,63 @@ class WarehouseHandler:
         argument: Data to be sent to the DAO.
         Return: JSON object that contains the warehouse ID that was inserted.
         """
-
-        warehouse_name = data['wname']
-        warehouse_country = data['wcountry']
-        warehouse_region = data['wregion']
-        warehouse_city = data['wcity']
-        warehouse_street = data['wstreet']
-        warehouse_zipcode = data['wzipcode']
-        warehouse_budget = data['wbudget']
+        # Check that we received the expect quantity of data.
+        if len(data) != 7:
+            return jsonify(Error='Missing data to insert a warehouse.'), 400
         
-        if warehouse_name and warehouse_country and warehouse_region and warehouse_city \
-        and warehouse_street and warehouse_zipcode and (warehouse_budget and warehouse_budget >= 0):
+        # Handle that the keys are valid.
+        try:
+            warehouse_name = data['wname']
+            warehouse_country = data['wcountry']
+            warehouse_region = data['wregion']
+            warehouse_city = data['wcity']
+            warehouse_street = data['wstreet']
+            warehouse_zipcode = data['wzipcode']
+            warehouse_budget = data['wbudget']
+        except KeyError:
+            return jsonify(Error='Unexpected or Incorrect attribute in post request. Check that the fields of the request are correct'), 400
             
-            wid = self.warehouseDAO.insertWarehouse(warehouse_name,warehouse_country,warehouse_region,warehouse_city,
-                                                    warehouse_street,warehouse_zipcode,warehouse_budget)
-            data['wid'] = wid
-            return jsonify(data), 201
-        else:
-            return jsonify(Error='Unexpected attribute values'), 400
+        
+        # Check that there are no empty attributes and return which noe failed to the client.
+        for key in data:
+            if not data[key]:
+                return jsonify(Error='Missing ' + key + ' attribute'), 400
+        
+        # Check that all fields except budget are strings.
+        for key in data:
+                if key != 'wbudget' and not isinstance(data[key],str):
+                    return jsonify(Error='{} has to be a string.'.format(key)),400
+            
+        # Check that budget is a double.
+        if not isinstance(warehouse_budget,float):
+            return jsonify(Error='Field {} has to be a double'.format(warehouse_budget)), 400
+
+        # Budget can not be a negative value or zero.
+        elif warehouse_budget <= 0:
+            return jsonify(Error='Budget can not be a value less or equal to 0'), 400
+            
+        wid = self.warehouseDAO.insertWarehouse(warehouse_name,
+                                                warehouse_country,
+                                                warehouse_region,
+                                                warehouse_city,
+                                                warehouse_street,
+                                                warehouse_zipcode,
+                                                warehouse_budget)
+        data['wid'] = wid
+        return jsonify(data), 201
         
     def getWarehouseById(self,wid:int) -> object:
         """Execute a query to get a warehouse from the Warehouses Table in the database with the given ID.
 
         Args:
-            wid (_type_): _description_
+            wid (int): ID of the warehouse to be searched for.
 
         Returns:
-            _type_: JSON object that contains all the data found of the warehouse with the given ID.
+            object: JSON object that contains all the data found of the warehouse with the given ID.
         """
         warehouse_tuple = self.warehouseDAO.getWarehouseByID(wid)
         if not warehouse_tuple:
-            return jsonify(Error='Warehouse Not Found'), 404
+            return jsonify(Error='Warehouse Not Found. Give an ID for an existing warehouse.'), 404
         else:
             warehouse = self.build_warehouse_dict(warehouse_tuple[0])
             return jsonify(Warehouse=warehouse)
@@ -98,28 +124,46 @@ class WarehouseHandler:
         Returns:
             ID of the user that was updated in JSON format.
         """
-        warehouse_name = data['wname']
-        warehouse_country = data['wcountry']
-        warehouse_region = data['wregion']
-        warehouse_city = data['wcity']
-        warehouse_street = data['wstreet']
-        warehouse_zipcode = data['wzipcode']
-        warehouse_budget = data['wbudget']
-        
+         # Check that we received the expect quantity of data.
         if len(data) != 7:
-            return jsonify(Error='Malformed update request'), 400
+            return jsonify(Error='Incorrect amount of data has been sent.'), 400
         
-        elif warehouse_name and warehouse_country and warehouse_region and warehouse_city \
-        and warehouse_street and warehouse_zipcode and (warehouse_budget and warehouse_budget >= 0):
+        # Handle that the keys are valid.
+        try:
+            warehouse_name = data['wname']
+            warehouse_country = data['wcountry']
+            warehouse_region = data['wregion']
+            warehouse_city = data['wcity']
+            warehouse_street = data['wstreet']
+            warehouse_zipcode = data['wzipcode']
+            warehouse_budget = data['wbudget']
+        except KeyError:
+            return jsonify(Error='Unexpected or Incorrect attribute in post request'), 400
             
-            flag = self.warehouseDAO.updateWarehouseByID(wid,warehouse_name,warehouse_country,warehouse_region,warehouse_city,
+        # Check that there are no empty attributes and return which noe failed to the client.
+        for key in data:
+            if not data[key]:
+                return jsonify(Error='Missing ' + key + ' attribute'), 400
+        
+        # Check that all fields except budget are strings.
+        for key in data:
+            if key != 'wbudget' and not isinstance(data[key],str):
+                return jsonify(Error='{} has to be a string.'.format(key)),400
+            
+        # Check that budget is a double.
+        if not isinstance(warehouse_budget,float):
+            return jsonify(Error='Field {} has to be a double'.format(warehouse_budget)), 400
+
+        # Budget can not be a negative value or zero.
+        elif warehouse_budget <= 0:
+            return jsonify(Error='Budget can not be a value less or equal to 0'), 400
+            
+        flag = self.warehouseDAO.updateWarehouseByID(wid,warehouse_name,warehouse_country,warehouse_region,warehouse_city,
                                                     warehouse_street,warehouse_zipcode,warehouse_budget)
-            if flag:
-                return jsonify(data), 200
-            else:
-                return jsonify(Error='Warehouse Not Found'), 404
+        if flag:
+            return jsonify(data), 200
         else:
-            return jsonify(Error='Unexpected attribute values'), 400
+            return jsonify(Error='Warehouse Not Found'), 404
         
     def deleteWarehouseByID(self,wid:int) -> object:
         """Delete a warehouse from the Warehouses Table in the database by the given ID.
@@ -131,10 +175,20 @@ class WarehouseHandler:
             ID of the warehouse that was deleted in JSON format.
         """
         if not wid:
-            return jsonify(Error='Malformed delete request'), 400
+            return jsonify(Error='wid was not passed to the request (wid is 0)'), 400
         elif not self.warehouseDAO.getWarehouseByID(wid):
-            return jsonify(Error='Warehouse Not Found'), 404
+            return jsonify(Error='Warehouse Not Found.'), 404
+        elif not self.warehouseDAO.warehouseInUsers(wid):
+            return jsonify(Error='Cannot Delete Warehouse that has active users.'), 400
+        elif not self.warehouseDAO.warehouseInTransactions(wid):
+            return jsonify(Error='Cannot Delete Warehouse that has transactions records.'), 400
+        elif not self.warehouseDAO.warehouseInTransfer(wid):
+            return jsonify(Error='Cannot Delete Warehouse that has transfers records.'), 400
+        elif not self.warehouseDAO.warehouseInStoredIn(wid):
+            return jsonify(Error='Cannot Delete Warehouse that has racks.'), 400
         else:
-            wid = self.warehouseDAO.deleteWarehouseByID(wid)
-            return jsonify(wid), 200
+            result = self.warehouseDAO.deleteWarehouseByID(wid)
+            if not result:
+                return jsonify(Error='Unexpected Error.'), 404
+            return jsonify(Message='Warehouse {} deleted succesfully'.format(wid)), 200
         

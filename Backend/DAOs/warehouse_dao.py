@@ -173,3 +173,65 @@ class WarehouseDAO(DAO):
         except psycopg2.errors.Error as e:
             print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
             return None
+    def warehouseInUsers(self,wid:int) -> bool:
+        """Check if a warehouse is in the Users Table in the database.
+
+        Args:
+            wid (int): ID of the warehouse to be checked.
+
+        Returns:
+            bool: True if the warehouse is in the Users Table in the database, False otherwise.
+        """
+        
+        result = self._generic_retrieval_query(query="""select count(wid) from users
+                                             where wid = %s
+                                             """, substitutions=wid)
+        
+        return True if result[0][0]==0 else False
+        
+    def warehouseInTransfer(self,to_warehouse:int) -> bool:
+        """Check if a warehouse is in the Transfer Table in the database.
+
+        Args:
+            wid (int): ID of the warehouse to be checked.
+
+        Returns:
+            bool: True if the warehouse is in the Transfer Table in the database, False otherwise.
+        """
+        result = self._generic_retrieval_query(query="""
+                                             select count(to_warehouse) from transfer
+                                             where to_warehouse = %s
+                                             """, substitutions=to_warehouse)
+        return True if result[0][0]==0 else False
+    def warehouseInTransactions(self,wid:int) -> bool:
+        """Check if a warehouse is in the Transactions Table in the database.
+
+        Args:
+            wid (int): ID of the warehouse to be checked.
+
+        Returns:
+            bool: True if the warehouse is in the Transactions Table in the database, False otherwise.
+        """
+        result = self._generic_retrieval_query(query="""
+                                             select count(wid) from transactions
+                                             where wid = %s
+                                             """, substitutions=wid) 
+        return True if result[0][0]==0 else False
+        
+    def warehouseInStoredIn(self,wid:int) -> bool:
+        """Check if a warehouse has racks stored in it
+
+        Args:
+            wid (int): warehouse id of the warehouse to be checked
+
+        Returns:
+            bool: True if the warehouse is in the table, False otherwise
+        """
+        
+        result = self._generic_retrieval_query(query="""
+                                              select count (wid)
+                                              from stored_in
+                                              where wid = %s 
+                                              """, substitutions=wid) 
+        return True if result[0][0]==0 else False
+                                               

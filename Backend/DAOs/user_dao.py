@@ -71,3 +71,41 @@ class UserDAO(DAO):
         return self._deleteEntryByID(table_name="users",
                                      id_name="uid",
                                      id_value=str(uid))
+        
+
+        
+    def userHasTransactions(self,uid:int) -> bool:
+        """Check if a user has any transactions in the Transactions Table in the database.
+
+        Args:
+            uid (int): ID of the user to check.
+
+        Returns:
+            bool: True if the user has transactions, False otherwise.
+        """
+        result = self._generic_retrieval_query(query="""
+                                              select count(uid) from transactions
+                                              where uid = %s;
+                                              """,
+                                              substitutions=(uid,))
+        return True if result[0][0]==0 else False
+        # return True if self._generic_retrieval_query(query="""
+        #                                       select count(uid) from transactions
+        #                                       where uid = %s;
+        #                                       """,
+        #                                       substitutions=(uid,))[0] == 0 else False
+        
+    def userHasTransfers(self,user_requester:int) -> bool:
+        """Check if a user has any transfers in the Transfer Table in the database.
+
+        Args:
+            uid (int): ID of the user to check.
+
+        Returns:
+            bool: True if the user has transfers, False otherwise.
+        """
+        result =  self._generic_retrieval_query(query="""
+                                                     select count(user_requester) from transfer
+                                                     where user_requester = %s;
+                                                     """,substitutions=(user_requester,))
+        return True if result[0][0]==0 else False

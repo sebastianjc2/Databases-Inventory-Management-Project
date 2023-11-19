@@ -60,3 +60,14 @@ class TransferTransactionDAO(DAO):
                                      columns=("to_warehouse", "user_requester"),
                                      values=(to_warehouse, user_requester))
         return rowcountTransferTransactions
+    
+    
+    def validateTransactionID(self, tid):
+        return self._generic_retrieval_query(
+            query="""
+            SELECT tid
+            FROM transactions
+            WHERE tid = %s;
+            """,
+            substitutions=(tid,)
+        )[0]

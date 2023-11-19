@@ -113,7 +113,6 @@ class DAO:
             cursor.execute(query, substitutions)
             res = []
             for row in cursor:
-                print("row:", row)
                 res.append(row)
             return res
         except psycopg2.errors.Error as e:

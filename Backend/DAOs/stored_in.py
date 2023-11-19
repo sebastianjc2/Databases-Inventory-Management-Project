@@ -78,4 +78,16 @@ class StoredInDAO(DAO):
                                             substitutions=rid)
         if not res: return 0
         return res[0][0]
-
+    
+    def get_rack_with_pid_wid(self,pid,wid):
+        res = self._generic_retrieval_query(query="""
+                                            SELECT rid
+                                            FROM stored_in
+                                            WHERE wid = %s
+                                            AND pid = %s;
+                                            """,
+                                            substitutions=(pid,wid))
+        print("Query result",res)
+        if not res: return 0
+        return res[0][0]
+    
