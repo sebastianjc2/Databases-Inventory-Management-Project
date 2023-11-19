@@ -11,6 +11,7 @@ from Backend.handler.customer import CustomerHandler
 from Backend.handler.racks import RackHandler
 from Backend.handler.incomingTransaction import IncomingTransactionHandler
 from Backend.handler.transferTransaction import TransferTransactionHandler
+from Backend.handler.supplies import SuppliesHandler
 from Backend.handler.transaction import TransactionHandler
 
 
@@ -124,6 +125,17 @@ def searchSupplierByID(sid):
 
     else:
         return jsonify('Not supported'), 405
+
+@app.route('/sqlytes/supplies', methods=['GET'])
+def getPartsSupplied():
+    """ Lets you see all parts that are being supplied
+        by a supplier.
+    """
+    if request.method == "GET":
+        return SuppliesHandler().getPartsSupplied()
+    else:
+        return jsonify("Not Supported"), 405
+
     
 @app.route('/sqlytes/user',methods=['GET','POST'])
 def getUsers():
