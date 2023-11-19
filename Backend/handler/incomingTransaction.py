@@ -56,7 +56,7 @@ class IncomingTransactionHandler:
         if partAmount < 0:
             return jsonify("partAmount must be a positive number"), 400
         
-        # Verify against stock
+        # Verify against supplier stock
         supplies_DAO = SuppliesDao()
         stock = supplies_DAO.get_stock_for_part_and_supplier(pid=partID, sid=supplierID)
         if not stock:
@@ -78,8 +78,12 @@ class IncomingTransactionHandler:
         # Verfiy against rack
         stored_in_DAO = StoredInDAO()
         rack_capacity = RackDAO().get_capacity(rid=rackID)
-        current_amount_in_rack = stored_in_DAO.get_quantity(wid=warehouseID, pid=partID)
-        if not rack_capacity: return jsonify(f"Internal Server Error: Rack {rackID} does not exist"), 500
+        current_amount_in_rack = stored_in_DAO.get_quantity(wid=warehouseID, pid=partID, rid=rackID)
+        # Verify against warehouse stock
+        # - if rack DNE in stored_in, create it
+        # - if rack is present, with other attributes, explode
+
+        if not rack_capacity: return jsonify(f"Internal Server Error: Rack {rackID} does not exist"), 500 # TODO it won't return None
         rack_delta = rack_capacity - current_amount_in_rack
         if partAmount > rack_delta:
             leftover = rack_delta if rack_delta >= 0 else 0

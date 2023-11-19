@@ -2,7 +2,7 @@ from Backend.DAOs.DAO import DAO
 import psycopg2
 
 class StoredInDAO(DAO):
-    def get_quantity(self, wid, pid):
+    def get_quantity(self, wid, pid, rid):
         """
         Returns the quantity of parts currently stored in the rack,
         or 0 if the relationship does not exist.
@@ -12,8 +12,9 @@ class StoredInDAO(DAO):
                                                FROM stored_in
                                                WHERE wid = %s
                                                AND pid = %s
+                                               AND rid = %s
                                                """,
-                                               substitutions=(wid, pid))
+                                               substitutions=(wid, pid, rid))
         if not result: return 0
         return result[0][0]
 
@@ -25,22 +26,24 @@ class StoredInDAO(DAO):
         Returns the new number of affected rows.
         """
         cursor = self.conn.cursor()
-        if self.get_quantity(wid, pid): # check if entry exists
+        if self.get_quantity(wid, pid, rid): # check if entry exists
             if new_quantity == 0: # must delete entry
                 query = """
                 DELETE FROM stored_in
                 WHERE wid = %s
-                AND pid = %s;
+                AND pid = %s
+                AND rid = %s
                 """
-                values = (wid, pid)
+                values = (wid, pid, rid)
             else: # simply update the entry
                 query = """
                 UPDATE stored_in
                 SET parts_qty = %s
                 WHERE wid = %s
-                AND pid = %s;
+                AND pid = %s
+                AND rid = %s
                 """
-                values = (new_quantity, wid, pid)
+                values = (new_quantity, wid, pid, rid)
         elif rid: # can't insert w/o an rid
             query = """
             INSERT INTO stored_in (wid, pid, rid, parts_qty)
