@@ -238,6 +238,15 @@ class WarehouseDAO(DAO):
                                               """, substitutions=wid)
         return True if result[0][0]==0 else False
 
+    def worksIn(self, wid: int, uid: str) -> bool:
+        """Returns a bool indicating whether a user works in a warehouse or not"""
+        query = """SELECT username
+                    FROM users
+                    WHERE uid = %s AND wid = %s;"""
+
+        res = self._generic_retrieval_query(query, substitutions=(uid, wid))
+        return res is not None and res != []
+
     # For Global/Local statistics
     def get_top_racks(self):
         """Part of the global statistics. Gets the top 10 warehouses with the most racks."""

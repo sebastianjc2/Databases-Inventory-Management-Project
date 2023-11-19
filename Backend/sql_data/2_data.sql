@@ -242,7 +242,8 @@ INSERT INTO users (ufname, ulname, username, uemail, upassword, wid) VALUES
 ('Conejo', 'Malo', 'badbunny', 'badbunny@email.com', 'badpass654', (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage')),
 ('Eddie', 'Halen', 'eddie', 'eddie@email.com', 'vanpass654', (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage')),
 ('Yari', 'Alex', 'yarmer', 'yari@email.com', 'yari69', (SELECT wid FROM warehouse WHERE wname = 'Mojo Dojo Casa House' AND wcity = 'San Juan')),
-('Juan', 'del Pueblo', 'juanpueblo', 'juanpueblo@email.com', 'juanp69', (SELECT wid FROM warehouse WHERE wname = 'CRUD Scrum'));
+('Juan', 'del Pueblo', 'juanpueblo', 'juanpueblo@email.com', 'juanp69', (SELECT wid FROM warehouse WHERE wname = 'CRUD Scrum')),
+('Manuel', 'Rodriguez', 'mrod', 'mrod@email.com', 'mrod_upr', (SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter'));
 
 
 -- Transactions
