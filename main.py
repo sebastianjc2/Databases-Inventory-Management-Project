@@ -22,6 +22,7 @@ CORS(app)
 
 
 @app.route('/')  # default route handler
+@app.route('/sqlytes')
 def greeting():
     return 'Hello, this is the SQLytes API!'
 
