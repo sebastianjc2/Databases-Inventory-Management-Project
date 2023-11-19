@@ -89,7 +89,7 @@ class StoredInDAO(DAO):
                                             WHERE wid = %s
                                             AND pid = %s;
                                             """,
-                                            substitutions=(pid,wid))
+                                            substitutions=(wid,pid))
         if not res: return None
         return res[0][0]
     
