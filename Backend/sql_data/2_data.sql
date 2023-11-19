@@ -270,7 +270,6 @@ INSERT INTO transactions (tdate, part_amount, pid, uid, wid) VALUES
 ('2020-03-22', 4, (SELECT pid FROM parts WHERE pname = 'Extension Cord'), (SELECT uid FROM users WHERE uemail = 'mariana@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter')),
 ('2022-04-12', 2, (SELECT pid FROM parts WHERE pname = 'Modern Ceiling Light Fixture'), (SELECT uid FROM users WHERE uemail = 'mariana@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter')),
 ('2022-08-10', 1, (SELECT pid FROM parts WHERE pname = 'Electric Hedge Trimmer'), (SELECT uid FROM users WHERE uemail = 'mariana@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter')),
-('2023-04-16', 3, (SELECT pid FROM parts WHERE pname = 'Toolbox Accessories Kit'), (SELECT uid FROM users WHERE uemail = 'mariana@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter')),
 ('2023-10-07', 5, (SELECT pid FROM parts WHERE pname = 'Extension Cord'), (SELECT uid FROM users WHERE uemail = 'mariana@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter')),
 ('2017-03-24', 5, (SELECT pid FROM parts WHERE pname = 'Paint Roller Set'), (SELECT uid FROM users WHERE uemail = 'alejandra@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Los Altísimos de Almacenamiento')),
 ('2019-12-31', 8, (SELECT pid FROM parts WHERE pname = 'Jigsaw'), (SELECT uid FROM users WHERE uemail = 'alejandra@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage')),
@@ -396,5 +395,5 @@ INSERT INTO stored_in (wid, pid, rid, parts_qty) VALUES
 ((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Spaghetti'), (SELECT rid FROM racks WHERE rname = 'Spaghetti Rack'), 10),
 ((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Left For Dead 2'), (SELECT rid FROM racks WHERE rname = 'Left For Dead Rack'), 1),
 ((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Mood Lights'), (SELECT rid FROM racks WHERE rname = 'Mood Lights Rack'), 13),
-((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Wall Sconce Pair'), (SELECT rid FROM racks WHERE rname = 'Wall Sconces Rack'), 50);
-
+((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Wall Sconce Pair'), (SELECT rid FROM racks WHERE rname = 'Wall Sconces Rack'), 50)
+((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Toolbox'), (SELECT rid FROM racks WHERE rname = 'Tech Gadgets Rack'), 50);

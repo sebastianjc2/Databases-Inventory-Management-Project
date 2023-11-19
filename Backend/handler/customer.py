@@ -34,6 +34,10 @@ class CustomerHandler:
         except KeyError as e:
             return jsonify({"Unexpected attribute values": e.args}), 400
 
+        for attr in (fname, lname, zipcode, phone):
+            if not isinstance(attr, str):
+                return jsonify(f"Error: Invalid attribute for type 'str': {attr}."), 400
+
         if fname and lname and zipcode and phone:
             dao = CustomerDAO()
             cid = dao.addCustomer(fname, lname, zipcode, phone)
@@ -69,6 +73,11 @@ class CustomerHandler:
         except KeyError as e:
             return jsonify({"Unexpected attribute values": e.args}), 400
 
+        for attr in (fname, lname, zipcode, phone):
+            if not isinstance(attr, str):
+                return jsonify(f"Error: Invalid attribute for type 'str': {attr}."), 400
+
+
         if fname and lname and zipcode and phone:
             dao = CustomerDAO()
             count = dao.modifyCustomerById(fname, lname, zipcode, phone, cid)
@@ -81,8 +90,8 @@ class CustomerHandler:
         else:
             return jsonify("Attributes cannot contain null fields."), 400
 
-
     def deleteCustomerById(self, cid):
+        """ TODO: Add validation (Can't delete if referenced in a transaction)"""
         dao = CustomerDAO()
         count = dao.deleteCustomerById(cid)
         if count == 0:
