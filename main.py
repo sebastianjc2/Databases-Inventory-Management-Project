@@ -12,6 +12,7 @@ from Backend.handler.racks import RackHandler
 from Backend.handler.incomingTransaction import IncomingTransactionHandler
 from Backend.handler.transferTransaction import TransferTransactionHandler
 from Backend.handler.supplies import SuppliesHandler
+from Backend.handler.transaction import TransactionHandler
 
 
 # App initialization
@@ -243,6 +244,21 @@ def transferTransactionById(transferid):
         return TransferTransactionHandler().getTransferTransactionById(transferid)
     elif request.method == "PUT":
         return jsonify("Cannot modify transactions"), 400
+    else:
+        return jsonify("Not supported"), 405
+    
+
+@app.route("/sqlytes/transaction", methods=["GET"])
+def allTransactions():
+    if request.method == "GET":
+        return TransactionHandler().getAllTransactions()
+    else:
+        return jsonify("Not supported"), 405
+
+@app.route("/sqlytes/transaction/<int:tid>", methods=["GET"])
+def transactionByID(tid):
+    if request.method == "GET":
+        return TransactionHandler().getTransactionById(tid)
     else:
         return jsonify("Not supported"), 405
 
