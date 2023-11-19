@@ -79,7 +79,7 @@ class RackHandler:
             rid = dao.addRack(name, capacity)
             data['rid'] = rid
             # if everything above went right, we have to add this record to the stored_in table
-            StoredInDAO().modify_quantity_or_insert(wid, pid, rid, parts_qty)
+            StoredInDAO().modify_quantity(wid, pid, rid, parts_qty)
             return jsonify(data), 201
         else:
             return jsonify("Unexpected attribute values."), 400
