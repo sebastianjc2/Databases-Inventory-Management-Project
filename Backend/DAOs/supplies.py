@@ -53,3 +53,15 @@ class SuppliesDao(DAO):
         except psycopg2.errors.Error as e:
             print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
             return None
+
+    def get_parts_supplied(self):
+        cursor = self.conn.cursor()
+        res = []
+        query = """
+        SELECT pid, pname, pcolor, pmaterial, msrp, sid, stock
+        FROM parts NATURAL INNER JOIN supplies"""
+        cursor.execute(query)
+
+        for row in cursor:
+            res.append(row)  # adding the rows
+        return res
