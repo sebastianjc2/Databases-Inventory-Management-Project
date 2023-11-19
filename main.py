@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from Backend import dbconfig as config
 # Import handlers
 from Backend.handler.outgoingTransaction import OutgoingTransactionHandler
@@ -137,7 +137,7 @@ def getUsers():
         return jsonify(Error='Method not allowed'), 405
     
 @app.route('/sqlytes/users/<int:uid>', methods=['GET','PUT','DELETE'])
-def getUserById(uid:int):
+def getUserById(uid: int):
     if request.method == 'GET':
         return UserHandler().getUserByID(uid)
     elif request.method == 'PUT':
@@ -158,7 +158,7 @@ def getWarehouses():
     
     
 @app.route('/sqlytes/warehouse/<int:wid>', methods=['GET','PUT','DELETE'])
-def getWarehouseById(wid:int):
+def getWarehouseById(wid: int):
     if request.method == 'GET':
         return WarehouseHandler().getWarehouseById(wid)
     elif request.method == 'PUT':
@@ -234,6 +234,99 @@ def transferTransactionById(transferid):
     else:
         return jsonify("Not supported"), 405
 
+# Global Statistics
+@app.route("/sqlytes/most/rack", methods=["GET"])
+def warehousesWithMostRacks():
+    if request.method == "GET":
+        return WarehouseHandler().getTopRacks()
+    else:
+        return jsonify("Not supported"), 405
+
+@app.route("/sqlytes/most/deliver", methods=["GET"])
+def warehousesWithMostTransfers():
+    if request.method == "GET":
+        return WarehouseHandler().getTopExchanges()
+    else:
+        return jsonify("Not supported"), 405
+
+@app.route("/sqlytes/least/outgoing", methods=["GET"])
+def warehousesWithLeastOutgoing():
+    if request.method == "GET":
+        return WarehouseHandler().getLeastOutgoing()
+    else:
+        return jsonify("Not supported"), 405
+
+@app.route("/sqlytes/most/incoming", methods=["GET"])
+def warehousesWithMostIncoming():
+    if request.method == "GET":
+        return WarehouseHandler().getTopIncoming()
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route("/sqlytes/most/transactions", methods=["GET"])
+def usersWithMostTransactions():
+    if request.method == "GET":
+        return UserHandler().getTopTransactions()
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route("/sqlytes/most/city", methods=["GET"])
+def warehouseMostCityTransactions():
+    if request.method == "GET":
+        return WarehouseHandler().getTopCity()
+    else:
+        return jsonify("Not Supported"), 405
+
+
+# Local Statistics
+@app.route("/sqlytes/warehouse/<int:wid>/profit", methods=["POST"])
+def warehouseProfit(wid):
+    if request.method == "POST":
+        return WarehouseHandler().getYearlyProfit(wid, request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route("/sqlytes/warehouse/<int:wid>/rack/material", methods=["POST"])
+def warehouseBottomRacks(wid):
+    if request.method == "POST":
+        return WarehouseHandler().getBottomRacks(wid, request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route("/sqlytes/warehouse/<int:wid>/users/receivesmost", methods=["POST"])
+def warehouseTopUserExchanges(wid):
+    if request.method == "POST":
+        return WarehouseHandler().getTopUserExchanges(wid, request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route("/sqlytes/warehouse/<int:wid>/rack/expensive", methods=["POST"])
+def warehouseTopExpensiveRacks(wid):
+    if request.method == "POST":
+        return WarehouseHandler().getTopExpensiveRacks(wid, request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route("/sqlytes/warehouse/<int:wid>/transaction/suppliers", methods=["POST"])
+def warehouseTopSuppliers(wid):
+    if request.method == "POST":
+        return WarehouseHandler().getTopSuppliers(wid, request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route("/sqlytes/warehouse/<int:wid>/transaction/leastcost", methods=["POST"])
+def warehouseSmallestIncomingCost(wid):
+    if request.method == "POST":
+        return WarehouseHandler().getLowestDayCost(wid, request.json)
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route("/sqlytes/warehouse/<int:wid>/rack/lowstock", methods=["POST"])
+def warehouseLowestStockRack(wid):
+    if request.method == "POST":
+        return WarehouseHandler().getLowestRackStock(wid, request.json)
+    else:
+        return jsonify("Not Supported"), 405
 
 
 if __name__ == '__main__':
