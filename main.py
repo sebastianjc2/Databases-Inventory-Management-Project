@@ -25,7 +25,7 @@ def greeting():
 
 
 # route to get all parts or add a part
-@app.route('/sqlytes/parts', methods=['GET', 'POST'])
+@app.route('/sqlytes/part', methods=['GET', 'POST'])
 def getAllParts():
     if request.method == "GET":
         return PartHandler().getAllParts()
@@ -37,7 +37,7 @@ def getAllParts():
 
 
 # route to find a specific part
-@app.route('/sqlytes/parts/<int:pid>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/sqlytes/part/<int:pid>', methods=['GET', 'PUT', 'DELETE'])
 def searchPartByID(pid):
     if request.method == "GET":  # performs select-project-join queries
         return PartHandler().searchByID(pid)
@@ -98,7 +98,7 @@ def rackById(rid):
 
 
 
-@app.route('/sqlytes/suppliers', methods=['GET', 'POST'])
+@app.route('/sqlytes/supplier', methods=['GET', 'POST'])
 def getAllSuppliers():
     if request.method == "GET":
         return SupplierHandler().getAllSuppliers()
@@ -109,7 +109,7 @@ def getAllSuppliers():
         return jsonify('Not supported'), 405
 
 
-@app.route('/sqlytes/suppliers/<int:sid>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/sqlytes/supplier/<int:sid>', methods=['GET', 'PUT', 'DELETE'])
 def searchSupplierByID(sid):
     if request.method == "GET":  # performs select-project-join queries
         return SupplierHandler().searchByID(sid)
@@ -124,7 +124,7 @@ def searchSupplierByID(sid):
     else:
         return jsonify('Not supported'), 405
     
-@app.route('/sqlytes/users',methods=['GET','POST'])
+@app.route('/sqlytes/user',methods=['GET','POST'])
 def getUsers():
     """Returns all users from the Users Table in the database 
        or it creates a new user in the Users Table
@@ -136,7 +136,7 @@ def getUsers():
     else:
         return jsonify(Error='Method not allowed'), 405
     
-@app.route('/sqlytes/users/<int:uid>', methods=['GET','PUT','DELETE'])
+@app.route('/sqlytes/user/<int:uid>', methods=['GET','PUT','DELETE'])
 def getUserById(uid: int):
     if request.method == 'GET':
         return UserHandler().getUserByID(uid)
@@ -170,7 +170,7 @@ def getWarehouseById(wid: int):
     
 
 
-@app.route("/sqlytes/incomingTransaction", methods=["POST", "GET"])
+@app.route("/sqlytes/incoming", methods=["POST", "GET"])
 def allIncomingTransactions():
     if request.method == "POST":
         data = request.json
@@ -181,7 +181,7 @@ def allIncomingTransactions():
         return jsonify("Not supported"), 405
 
 
-@app.route("/sqlytes/incomingTransaction/<int:itid>", methods=["GET", "PUT"])
+@app.route("/sqlytes/incoming/<int:itid>", methods=["GET", "PUT"])
 def incomingTransactionById(itid):
     if request.method == "GET":
         return IncomingTransactionHandler().getIncomingTransactionById(itid)
@@ -192,7 +192,7 @@ def incomingTransactionById(itid):
     
 
 
-@app.route("/sqlytes/outgoingTransaction", methods=["POST", "GET"])
+@app.route("/sqlytes/outgoing", methods=["POST", "GET"])
 def allOutgoingTransactions():
     if request.method == "POST":
         data = request.json
@@ -203,7 +203,7 @@ def allOutgoingTransactions():
         return jsonify("Not supported"), 405
 
 
-@app.route("/sqlytes/outgoingTransaction/<int:otid>", methods=["GET", "PUT"])
+@app.route("/sqlytes/outgoing/<int:otid>", methods=["GET", "PUT"])
 def outgoingTransactionById(otid):
     if request.method == "GET":
         return OutgoingTransactionHandler().getOutgoingTransactionById(otid)
@@ -214,7 +214,7 @@ def outgoingTransactionById(otid):
 
 
 
-@app.route("/sqlytes/transferTransaction", methods=["POST", "GET"])
+@app.route("/sqlytes/exchange", methods=["POST", "GET"])
 def allTransferTransactions():
     if request.method == "POST":
         data = request.json
@@ -225,7 +225,7 @@ def allTransferTransactions():
         return jsonify("Not supported"), 405
 
 
-@app.route("/sqlytes/transferTransaction/<int:transferid>", methods=["GET", "PUT"])
+@app.route("/sqlytes/exchange/<int:transferid>", methods=["GET", "PUT"])
 def transferTransactionById(transferid):
     if request.method == "GET":
         return TransferTransactionHandler().getTransferTransactionById(transferid)
