@@ -20,7 +20,7 @@ class WarehouseHandler:
 
         Returns:
             dict: A dictionary that contains all the information mapped to
-        the correct keys. This is so that later the dictionary can be 
+        the correct keys. This is so that later the dictionary can be
         transformed into JSON format.
         """
         warehouse_dict = {}
@@ -36,7 +36,7 @@ class WarehouseHandler:
 
     def getAllWarehouses(self):
         """Returns all warehouses from the Warehouses Table in the database.
-    
+
         Return: JSON object that contains all the warehouses from the Warehouses Table that were found in the database.
         """
 
@@ -48,12 +48,12 @@ class WarehouseHandler:
 
     def insertWarehouse(self, data) -> object:
         """Insert a new warehouse in the Warehouses Table in the database.
-        
+
         Keyword arguments:
         argument: Data to be sent to the DAO.
         Return: JSON object that contains the warehouse ID that was inserted.
         """
-        # Check that we received the expected quantity of data.
+        # Check that we received the expect quantity of data.
         if len(data) != 7:
             return jsonify(Error='Missing data to insert a warehouse.'), 400
 
@@ -67,8 +67,8 @@ class WarehouseHandler:
             warehouse_zipcode = data['wzipcode']
             warehouse_budget = data['wbudget']
         except KeyError:
-            return jsonify(Error='Unexpected or Incorrect attribute in post request. Check that the fields of the request are correct'), 400
-
+            return jsonify(
+                Error='Unexpected or Incorrect attribute in post request. Check that the fields of the request are correct'), 400
 
         # Check that there are no empty attributes and return which noe failed to the client.
         for key in data:
@@ -77,11 +77,11 @@ class WarehouseHandler:
 
         # Check that all fields except budget are strings.
         for key in data:
-                if key != 'wbudget' and not isinstance(data[key],str):
-                    return jsonify(Error='{} has to be a string.'.format(key)),400
+            if key != 'wbudget' and not isinstance(data[key], str):
+                return jsonify(Error='{} has to be a string.'.format(key)), 400
 
         # Check that budget is a double.
-        if not isinstance(warehouse_budget,float):
+        if not isinstance(warehouse_budget, float):
             return jsonify(Error='Field {} has to be a double'.format(warehouse_budget)), 400
 
         # Budget can not be a negative value or zero.
@@ -97,8 +97,8 @@ class WarehouseHandler:
                                                 warehouse_budget)
         data['wid'] = wid
         return jsonify(data), 201
-        
-    def getWarehouseById(self,wid:int) -> object:
+
+    def getWarehouseById(self, wid: int) -> object:
         """Execute a query to get a warehouse from the Warehouses Table in the database with the given ID.
 
         Args:
@@ -118,13 +118,13 @@ class WarehouseHandler:
         """Update a warehouse in the Warehouses Table in the database by the given ID.
 
         Args:
-            wid (int): ID of the warehouse to be deleted. 
+            wid (int): ID of the warehouse to be deleted.
             data (object): JSON object containing information of the warehouse to be updated.
 
         Returns:
             ID of the user that was updated in JSON format.
         """
-         # Check that we received the expect quantity of data.
+        # Check that we received the expect quantity of data.
         if len(data) != 7:
             return jsonify(Error='Incorrect amount of data has been sent.'), 400
 
@@ -147,25 +147,26 @@ class WarehouseHandler:
 
         # Check that all fields except budget are strings.
         for key in data:
-            if key != 'wbudget' and not isinstance(data[key],str):
-                return jsonify(Error='{} has to be a string.'.format(key)),400
+            if key != 'wbudget' and not isinstance(data[key], str):
+                return jsonify(Error='{} has to be a string.'.format(key)), 400
 
         # Check that budget is a double.
-        if not isinstance(warehouse_budget,float):
+        if not isinstance(warehouse_budget, float):
             return jsonify(Error='Field {} has to be a double'.format(warehouse_budget)), 400
 
         # Budget can not be a negative value or zero.
         elif warehouse_budget <= 0:
             return jsonify(Error='Budget can not be a value less or equal to 0'), 400
 
-        flag = self.warehouseDAO.updateWarehouseByID(wid,warehouse_name,warehouse_country,warehouse_region,warehouse_city,
-                                                    warehouse_street,warehouse_zipcode,warehouse_budget)
+        flag = self.warehouseDAO.updateWarehouseByID(wid, warehouse_name, warehouse_country, warehouse_region,
+                                                     warehouse_city,
+                                                     warehouse_street, warehouse_zipcode, warehouse_budget)
         if flag:
             return jsonify(data), 200
         else:
             return jsonify(Error='Warehouse Not Found'), 404
-        
-    def deleteWarehouseByID(self,wid:int) -> object:
+
+    def deleteWarehouseByID(self, wid: int) -> object:
         """Delete a warehouse from the Warehouses Table in the database by the given ID.
 
         Args:
@@ -276,6 +277,7 @@ class WarehouseHandler:
             else:
                 return jsonify(profit_results), 200
 
+    # Statistics
     def getBottomRacks(self, wid: int, data: object) -> object:
         """Part of the local statistics. Returns bottom 3 racks by material/type in a warehouse."""
         if type(wid) != int:

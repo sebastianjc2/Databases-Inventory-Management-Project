@@ -155,7 +155,6 @@ class WarehouseDAO(DAO):
             print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
             return None
 
-
     def increase_budget(self, wid, delta):
         """
         Increases the budget by the given delta.
