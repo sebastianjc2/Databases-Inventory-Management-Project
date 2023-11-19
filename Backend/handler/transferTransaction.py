@@ -45,71 +45,63 @@ class TransferTransactionHandler:
         # Check that all fields are integers.
         for key in data:
                 if key != "transactionDate" and not isinstance(data[key],int):
-                    return jsonify(Error='{} has to be a integer.'.format(key)),400
-                    
-        if not isinstance(data["transactionDate"],str):
-            return jsonify(Error='{} has to be a string.'.format("transactionDate")),400
+                    return jsonify(Error='{} has to be a integer.'.format(key)), 400
         
+        # Verify types
+        if not isinstance(data["transactionDate"],str):
+            return jsonify(Error='{} has to be a string.'.format("transactionDate")), 400
         elif partAmount <= 0:
             return jsonify("partAmount must be a positive number greater than 0"), 400
-        
         elif not self.user_dao.getUserByID(userID):
             return jsonify("Invalid Tranfer. The user who sent the transfer does not exist."), 400
-        
         elif not self.user_dao.getUserByID(userRequester):
-            return jsonify("Invalid Transfer. The user who requested the transfer does not exist."),400
-        
+            return jsonify("Invalid Transfer. The user who requested the transfer does not exist."), 400
         elif not self.part_dao.searchByID(partID):
-            return jsonify("Invalid Transfer. The part does not exist."),400
-        
+            return jsonify("Invalid Transfer. The part does not exist."), 400
         elif not self.warehouse_dao.getWarehouseByID(warehouseID):
-            return jsonify("Invalid Transfer. The warehouse who sent the transfer does not exist."),400
-        
+            return jsonify("Invalid Transfer. The warehouse who sent the transfer does not exist."), 400
         elif not self.warehouse_dao.getWarehouseByID(toWarehouse):
             return jsonify("Invalid Transfer. The warehouse that requested the warehouse does not exist."), 400
-        else:
-            sender_parts_total = self.stored_in_dao.get_quantity(warehouseID, partID)
-            if sender_parts_total < partAmount:
-                return jsonify("Invalid Transfer. The sender warehouse does not have enough parts to send.")
-            # Get the rack from where the parts came from.
-            sender_parts_rack = self.stored_in_dao.get_rack_with_pid_wid(warehouseID, partID)
-            if not sender_parts_rack:
-                return jsonify("Invalid Transfer. The sender warehouse does not have the rack.")
-            # if that part transferred was not already in the receiving warehouse, 
-            # we add it in stored_in tying it to that wid (and rid). 
-            # If it was already in that warehouse, we have to find it and increase the parts_qty
-            if not self.stored_in_dao.isPartInWarehouse(partID, toWarehouse):
-                # If part no in warehouse, we add it to the warehouse
-                # For this a new rack is needed.
-                # Create a rack for the warehouse to contain the part.
-                new_rack_rid = self.rack_dao.addRack("{} Rack created on {} for warehouse {}".format(partID,transactionDate,toWarehouse),
-                                                     partAmount * 2)
-             # Connect the part to the new rack in the stored_in table.
-            else: 
-                new_rack_rid = self.stored_in_dao.get_rack_with_pid_wid(toWarehouse, partID)
-                to_warehouse_total = self.stored_in_dao.get_quantity(toWarehouse, partID)
-                flag = self.stored_in_dao.modify_quantity(toWarehouse, 
-                                                      partID, 
-                                                      new_rack_rid, 
-                                                      to_warehouse_total+partAmount)
-                if not flag:
-                    return jsonify(Error="Internal Server Error"), 500
-                # Update part quantity of the sender warehouse
-                self.stored_in_dao.modify_quantity(warehouseID, partID, sender_parts_rack, 
-                                                    sender_parts_total - partAmount)
-                transferid = self.transferTransactionDAO.addTransferTransaction(
-                                                            to_warehouse=toWarehouse,
-                                                            user_requester=userRequester,
-                                                            tdate=transactionDate,
-                                                            part_amount=partAmount,
-                                                            pid=partID,
-                                                            uid=userID,
-                                                            wid=warehouseID)
+
+        # Verify that the relationship exists in stored_in
+        sender_rackID = self.stored_in_dao.get_rack_with_pid_wid(warehouseID, partID)
+        if not sender_rackID:
+            return jsonify(f"There is no rack for source warehouse ({warehouseID}) and part ({partID})"), 400
+
+        # Make sure theres enough parts to send
+        sender_parts_total = self.stored_in_dao.get_quantity(wid=warehouseID, pid=partID, rid=sender_rackID)
+        if sender_parts_total < partAmount:
+            return jsonify(
+                "Invalid Transfer. The sender warehouse does not have enough parts to send ({sender_parts_total})."
+                ), 400
                 
-                if transferid:
-                    data["transferid"] = transferid
-                    return jsonify(data), 201
-        return jsonify("Internal Server Error"), 500
+        # Make sure the destination has a rack that accepts the given part 
+        new_rack_rid = self.stored_in_dao.get_rack_with_pid_wid(toWarehouse, partID)
+        if not new_rack_rid:
+            return jsonify(f"There is no rack for destination warehouse ({toWarehouse}) and part ({partID})"), 400
+
+        # update part quantity in destination
+        to_warehouse_total = self.stored_in_dao.get_quantity(wid=toWarehouse, pid=partID, rid=new_rack_rid)
+        flag = self.stored_in_dao.modify_quantity(toWarehouse, partID, new_rack_rid, to_warehouse_total + partAmount)
+        if not flag: return jsonify(Error="Internal Server Error: Failed to modify destination quantity"), 500
+
+        # Update part quantity of the sender warehouse
+        flag = self.stored_in_dao.modify_quantity(warehouseID, partID, sender_rackID, sender_parts_total - partAmount)
+        if not flag: return jsonify(Error="Internal Server Error: Failed to modify source quantity"), 500
+
+        transferid = self.transferTransactionDAO.addTransferTransaction(
+                                                    to_warehouse=toWarehouse,
+                                                    user_requester=userRequester,
+                                                    tdate=transactionDate,
+                                                    part_amount=partAmount,
+                                                    pid=partID,
+                                                    uid=userID,
+                                                    wid=warehouseID)
+        
+        if transferid:
+            data["transferid"] = transferid
+            return jsonify(data), 201
+        return jsonify("Internal Server Error: TRONKA"), 500
 
     
     def getAllTransferTransaction(self):

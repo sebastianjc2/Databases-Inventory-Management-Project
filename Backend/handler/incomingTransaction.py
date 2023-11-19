@@ -74,16 +74,19 @@ class IncomingTransactionHandler:
             return jsonify(
                 f"Warehouse budget (${budget}) not enough to buy {partAmount} unit(s) at ${unitBuyPrice} per unit."
                 ), 400
-        
-        # Verfiy against rack
-        stored_in_DAO = StoredInDAO()
-        rack_capacity = RackDAO().get_capacity(rid=rackID)
-        current_amount_in_rack = stored_in_DAO.get_quantity(wid=warehouseID, pid=partID, rid=rackID)
-        # Verify against warehouse stock
-        # - if rack DNE in stored_in, create it
-        # - if rack is present, with other attributes, explode
 
-        if not rack_capacity: return jsonify(f"Internal Server Error: Rack {rackID} does not exist"), 500 # TODO it won't return None
+        # Verfiy rack exists
+        rack_capacity = RackDAO().get_capacity(rid=rackID)
+        if not rack_capacity: return jsonify(f"Internal Server Error: Rack {rackID} does not exist"), 500
+
+        # Ensure the rack is not being used for another type of part
+        stored_in_DAO = StoredInDAO()
+        wid, pid = stored_in_DAO.get_entry_with_rid(rid=rackID)
+        if not (wid == warehouseID and pid == partID):
+            return jsonify(f"Rack ({rackID}) not assigned to warehouse ({warehouseID}) and part ({partID})"), 400
+
+        # Check that the amount fits
+        current_amount_in_rack = stored_in_DAO.get_quantity(wid=warehouseID, pid=partID, rid=rackID)
         rack_delta = rack_capacity - current_amount_in_rack
         if partAmount > rack_delta:
             leftover = rack_delta if rack_delta >= 0 else 0

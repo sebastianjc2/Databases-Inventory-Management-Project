@@ -1,4 +1,5 @@
 from Backend.DAOs.DAO import DAO
+import psycopg2
 
 
 class RackDAO(DAO):
@@ -15,7 +16,11 @@ class RackDAO(DAO):
     def addRack(self, rname, rcapacity):
         cur = self.conn.cursor()
         query = "INSERT INTO racks(rname, rcapacity) VALUES (%s, %s) returning rid;"
-        cur.execute(query, (rname, rcapacity))
+        try:
+            cur.execute(query, (rname, rcapacity))
+        except psycopg2.errors.Error as e:
+            print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
+            return None
         rid = cur.fetchone()[0]
         self.conn.commit()
         return rid

@@ -51,10 +51,15 @@ class OutgoingTransactionHandler:
             return jsonify("unitSalePrice must be a positive number"), 400
         if partAmount < 0:
             return jsonify("partAmount must be a positive number"), 400
+        
+        # Get the rid for the 
+        stored_in_DAO = StoredInDAO()
+        rackID = stored_in_DAO.get_rack_with_pid_wid(wid=warehouseID, pid=partID)
+        if not rackID:
+            return jsonify(f"No rack assigned to warehouse ({warehouseID}) and part ({partID})"), 400
 
         # Verify against quantity in warehouse
-        stored_in_DAO = StoredInDAO()
-        available_quantity = stored_in_DAO.get_quantity(wid=warehouseID, pid=partID)
+        available_quantity = stored_in_DAO.get_quantity(wid=warehouseID, pid=partID, rid=rackID)
         if available_quantity < partAmount:
             return jsonify(f"Not enough stock ({available_quantity}) in warehouse ({warehouseID})"), 400
 
@@ -75,7 +80,7 @@ class OutgoingTransactionHandler:
 
         # Update stored_in
         quantity_delta = available_quantity - partAmount
-        count = stored_in_DAO.modify_quantity(wid=warehouseID, pid=partID, rid=None, new_quantity=quantity_delta)
+        count = stored_in_DAO.modify_quantity(wid=warehouseID, pid=partID, rid=rackID, new_quantity=quantity_delta)
         if not count:
             return jsonify(
                 f"Internal Server Error: Failed to modify quantity of part ({partID}) in warehouse ({warehouseID})"

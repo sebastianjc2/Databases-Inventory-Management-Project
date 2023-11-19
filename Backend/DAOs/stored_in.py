@@ -90,7 +90,18 @@ class StoredInDAO(DAO):
                                             AND pid = %s;
                                             """,
                                             substitutions=(pid,wid))
-        print("Query result",res)
-        if not res: return 0
+        if not res: return None
         return res[0][0]
+    
+
+    def get_entry_with_rid(self, rid):
+        res = self._generic_retrieval_query(query="""
+                                            SELECT wid, pid
+                                            FROM stored_in
+                                            WHERE rid = %s
+                                            """,
+                                            substitutions=(rid))
+        if not res: return None
+        return res[0]
+     
     
