@@ -239,7 +239,7 @@ class WarehouseDAO(DAO):
         return True if result[0][0]==0 else False
 
     def worksIn(self, wid: int, uid: str) -> bool:
-        """Returns a bool indicating whether a user works in a warehouse or not"""
+        """Returns a bool indicating whether a user works in a warehouse or not."""
         query = """SELECT username
                     FROM users
                     WHERE uid = %s AND wid = %s;"""
