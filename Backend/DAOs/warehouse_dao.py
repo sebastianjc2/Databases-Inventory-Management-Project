@@ -155,6 +155,7 @@ class WarehouseDAO(DAO):
             print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
             return None
 
+    # For Global/Local statistics
     def get_top_racks(self):
         """Part of the global statistics. Gets the top 10 warehouses with the most racks."""
         query = """SELECT wname as warehouse, COUNT(rid) as rack_count
@@ -200,17 +201,15 @@ class WarehouseDAO(DAO):
         return self._generic_retrieval_query(query)
 
     def get_most_city(self):
-        """Part of the global statistics. Top 5 warehouses with the most incoming transactions."""
+        """Part of the global statistics. Top 3 warehouse cities with the most transactions."""
         query = """SELECT wcity as warehouse_city, COUNT(*) as total_transactions
                     FROM warehouse
                     NATURAL INNER JOIN transactions
                     GROUP BY wcity
                     ORDER BY total_transactions DESC
                     LIMIT 3;
-"""
+                    """
         return self._generic_retrieval_query(query)
-
-
 
     def get_profit_yearly(self, wid: int):
         """Part of the local statistics. Returns specified warehouse's profit by year."""
@@ -233,7 +232,6 @@ class WarehouseDAO(DAO):
                 WHERE wid = %s
                 GROUP BY year, wname
                 ORDER BY year DESC;"""
-
         return self._generic_retrieval_query(query, substitutions=(wid,))
 
     def get_bottom_racks(self, wid: int):
@@ -250,7 +248,6 @@ class WarehouseDAO(DAO):
                 FROM part_types
                 ORDER BY part_count ASC
                 LIMIT 3;"""
-
         return self._generic_retrieval_query(query, substitutions=(wid,))
 
     def get_most_user_exchanges(self, wid: int):
@@ -267,7 +264,6 @@ class WarehouseDAO(DAO):
                 SELECT * FROM user_exchanges
                 ORDER BY transfer_count DESC
                 LIMIT 3;"""
-
         return self._generic_retrieval_query(query, substitutions=(wid,))
 
     def get_most_expensive_racks(self, wid: int):
@@ -281,13 +277,12 @@ class WarehouseDAO(DAO):
                     GROUP BY wname, rname
                     ORDER BY rack_price DESC
                     LIMIT 5;"""
-
         return self._generic_retrieval_query(query, substitutions=(wid,))
 
     def get_least_daily_cost(self, wid: int):
-        """Part of the local statistics.Top 3 days with the smallest incoming transactions’ cost."""
+        """Part of the local statistics. Top 3 days with the smallest incoming transactions’ cost."""
         query = """WITH daily_costs AS (
-                        SELECT tdate,
+                        SELECT tdate as transaction_date,
                         SUM(unit_buy_price * part_amount) AS total_incoming_cost
                         FROM transactions
                         NATURAL INNER JOIN incoming_transaction
@@ -299,13 +294,12 @@ class WarehouseDAO(DAO):
                     FROM daily_costs
                     ORDER BY total_incoming_cost ASC
                     LIMIT 3;"""
-
         return self._generic_retrieval_query(query, substitutions=(wid,))
 
     def get_least_rack_stock(self, wid: int):
         """Part of the local statistics. Top 5 racks with quantity under the 25% capacity threshold."""
         query = """
-                SELECT rname, rcapacity * 0.25 AS low_capacity, parts_qty
+                SELECT rname as rack, rcapacity * 0.25 AS low_capacity, parts_qty
                 FROM racks
                 NATURAL INNER JOIN stored_in
                 NATURAL INNER JOIN parts
@@ -314,10 +308,10 @@ class WarehouseDAO(DAO):
                 ORDER BY parts_qty DESC
                 LIMIT 5;
                 """
-
         return self._generic_retrieval_query(query, substitutions=(wid,))
+
     def get_most_suppliers(self, wid: int):
-        """Part of the local statistics. Top 5 racks with quantity under the 25% capacity threshold."""
+        """Part of the local statistics. Top 3 suppliers that supplied to the given warehouse."""
         query = """
                 WITH suppliers AS (
                     SELECT sname AS supplier_name, COUNT(wid) AS supply_count
@@ -332,7 +326,6 @@ class WarehouseDAO(DAO):
                 ORDER BY supply_count DESC
                 LIMIT 3;
                 """
-
         return self._generic_retrieval_query(query, substitutions=(wid,))
 
 

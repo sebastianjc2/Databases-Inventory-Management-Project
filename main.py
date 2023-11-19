@@ -316,6 +316,7 @@ def warehouseTopSuppliers(wid):
         return WarehouseHandler().getTopSuppliers(wid, request.json)
     else:
         return jsonify("Not Supported"), 405
+
 @app.route("/sqlytes/warehouse/<int:wid>/transaction/leastcost", methods=["POST"])
 def warehouseSmallestIncomingCost(wid):
     if request.method == "POST":
@@ -329,6 +330,7 @@ def warehouseLowestStockRack(wid):
         return WarehouseHandler().getLowestRackStock(wid, request.json)
     else:
         return jsonify("Not Supported"), 405
+
 
 if __name__ == '__main__':
     app.run(debug=True)
