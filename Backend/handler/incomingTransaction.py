@@ -1,10 +1,12 @@
-import json
 from Backend.DAOs.incomingTransaction import IncomingTransactionDAO
 from Backend.DAOs.stored_in import StoredInDAO
 from Backend.DAOs.supplies import SuppliesDao
 from Backend.DAOs.warehouse_dao import WarehouseDAO
 from Backend.DAOs.racks import RackDAO
+from Backend.DAOs.user_dao import UserDAO
 from flask import jsonify
+
+from Backend.handler.user_handler import UserHandler
 
 
 class IncomingTransactionHandler:
@@ -74,6 +76,13 @@ class IncomingTransactionHandler:
             return jsonify(
                 f"Warehouse budget (${budget}) not enough to buy {partAmount} unit(s) at ${unitBuyPrice} per unit."
                 ), 400
+
+        # Verify user is in warehouse
+        tuple = UserDAO().getUserByID(uid=userID)
+        if not tuple: return jsonify(f"Internal server error: Failed to get user with id {userID}"), 500
+        warehouse_for_user = tuple[0][6]
+        if warehouse_for_user != warehouseID:
+            return jsonify(f"User ({userID}) works at warehouse {warehouse_for_user}, not {warehouseID}"), 400
 
         # Verfiy rack exists
         rack_capacity = RackDAO().get_capacity(rid=rackID)

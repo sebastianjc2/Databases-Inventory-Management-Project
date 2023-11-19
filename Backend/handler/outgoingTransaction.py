@@ -1,6 +1,7 @@
 from Backend.DAOs.outgoingTransaction import OutgoingTransactionDAO
 from Backend.DAOs.stored_in import StoredInDAO
 from Backend.DAOs.warehouse_dao import WarehouseDAO
+from Backend.DAOs.user_dao import UserDAO
 from flask import jsonify
 
 
@@ -44,6 +45,14 @@ class OutgoingTransactionHandler:
             return jsonify(f"Invalid type for unitBuyPrice ({unitSalePrice})"), 400
         if not isinstance(transactionDate, str):
             return jsonify(f"Invalid type for transaction date ({transactionDate})"), 400
+
+
+        # Verify user is in warehouse
+        tuple = UserDAO().getUserByID(uid=userID)
+        if not tuple: return jsonify(f"Internal server error: Failed to get user with id {userID}"), 500
+        warehouse_for_user = tuple[0][6]
+        if warehouse_for_user != warehouseID:
+            return jsonify(f"User ({userID}) works at warehouse {warehouse_for_user}, not {warehouseID}"), 400
 
 
         # Verify values are valid
