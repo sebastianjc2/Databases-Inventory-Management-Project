@@ -40,7 +40,7 @@ class TransferTransactionHandler:
             warehouseID = data["warehouseID"]
             userID = data["userID"]
         except KeyError as e:
-            return jsonify({"Unexpected attribute values": e.args}), 400
+            return jsonify({"Invalid argument names!": e.args}), 400
         
         # Check that all fields are integers.
         for key in data:
@@ -62,6 +62,13 @@ class TransferTransactionHandler:
             return jsonify("Invalid Transfer. The warehouse who sent the transfer does not exist."), 400
         elif not self.warehouse_dao.getWarehouseByID(toWarehouse):
             return jsonify("Invalid Transfer. The warehouse that requested the warehouse does not exist."), 400
+        elif not self.warehouse_dao.worksIn(warehouseID, userID):
+            return jsonify("Invalid Transfer. The user who sent the transfer does not work in the warehouse that "
+                           "will be sending the transfer."), 400
+        elif not self.warehouse_dao.worksIn(toWarehouse, userRequester):
+            return jsonify("Invalid Transfer. The user who requested the transfer does not work in the warehouse that "
+                           "will be receiving the transfer."), 400
+
 
         # Verify that the relationship exists in stored_in
         sender_rackID = self.stored_in_dao.get_rack_with_pid_wid(warehouseID, partID)
