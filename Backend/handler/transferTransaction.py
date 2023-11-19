@@ -71,7 +71,7 @@ class TransferTransactionHandler:
 
 
         # Verify that the relationship exists in stored_in
-        sender_rackID = self.stored_in_dao.get_rack_with_pid_wid(warehouseID, partID)
+        sender_rackID = self.stored_in_dao.get_rack_with_pid_wid(partID, warehouseID)
         if not sender_rackID:
             return jsonify(f"There is no rack for source warehouse ({warehouseID}) and part ({partID})"), 400
 
@@ -83,7 +83,7 @@ class TransferTransactionHandler:
                 ), 400
                 
         # Make sure the destination has a rack that accepts the given part 
-        new_rack_rid = self.stored_in_dao.get_rack_with_pid_wid(toWarehouse, partID)
+        new_rack_rid = self.stored_in_dao.get_rack_with_pid_wid(partID, toWarehouse)
         if not new_rack_rid:
             return jsonify(f"There is no rack for destination warehouse ({toWarehouse}) and part ({partID})"), 400
 
