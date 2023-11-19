@@ -266,7 +266,7 @@ def warehousesWithMostIncoming():
 @app.route("/sqlytes/most/transactions", methods=["GET"])
 def usersWithMostTransactions():
     if request.method == "GET":
-        return UserHandler().getTopTransactions()
+        return WarehouseHandler().getTopUserTransactions()
     else:
         return jsonify("Not Supported"), 405
 

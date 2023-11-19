@@ -238,7 +238,6 @@ class WarehouseDAO(DAO):
                                               """, substitutions=wid)
         return True if result[0][0]==0 else False
 
-
     # For Global/Local statistics
     def get_top_racks(self):
         """Part of the global statistics. Gets the top 10 warehouses with the most racks."""
@@ -259,6 +258,16 @@ class WarehouseDAO(DAO):
                     GROUP BY wname
                     ORDER BY total_transfers DESC
                     LIMIT 5;"""
+        return self._generic_retrieval_query(query)
+
+    def get_top_user_transactions(self):
+        """Part of the global statistics. Gets the top 3 users that made the most transactions."""
+        query = """SELECT ufname as first_name, ulname as last_name, COUNT(*) as transaction_count
+                    FROM users
+                    NATURAL INNER JOIN transactions
+                    GROUP BY ufname, ulname
+                    ORDER BY transaction_count DESC
+                    LIMIT 3;"""
         return self._generic_retrieval_query(query)
 
     def get_least_outgoing(self):

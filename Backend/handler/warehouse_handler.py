@@ -210,6 +210,14 @@ class WarehouseHandler:
         else:
             return jsonify(transfer_results), 200
 
+    def getTopUserTransactions(self):
+        """Part of the global statistics. Gets the top 3 users that made the most transactions."""
+        user_transaction_results = self.warehouseDAO.get_top_user_transactions()
+        if not user_transaction_results:
+            return jsonify(Error='No results were returned.'), 404
+        else:
+            return jsonify(user_transaction_results), 200
+
     def getLeastOutgoing(self):
         """Part of the global statistics. Gets the top 3 warehouses
         with the least outgoing transactions."""
