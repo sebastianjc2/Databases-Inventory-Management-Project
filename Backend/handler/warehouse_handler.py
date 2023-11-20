@@ -1,5 +1,4 @@
 from flask import jsonify
-from Backend.DAOs import warehouse_dao
 from Backend.DAOs.warehouse_dao import WarehouseDAO
 
 
