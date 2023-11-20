@@ -9,7 +9,7 @@ class DAO:
     """
     def __init__(self):
         connection_url = (
-            f'host = ec2-34-193-110-25.compute-1.amazonaws.com dbname={(pg_config["dbname"])} '
+            f'host = {pg_config["host"]} dbname={(pg_config["dbname"])} '
             f'user={pg_config["user"]} password={pg_config["password"]}'
         )
         print("Connection url:", connection_url)
