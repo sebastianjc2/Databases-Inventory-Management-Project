@@ -4,6 +4,17 @@ import psycopg2
 
 class WarehouseDAO(DAO):
 
+    def name_city_combo_exists(self, wname, wcity):
+        count = self._generic_retrieval_query(query="""
+                                              SELECT COUNT(*)
+                                              FROM warehouse
+                                              WHERE wname = %s
+                                              AND wcity = %s
+                                              """,
+                                              substitutions=(wname, wcity))
+        if not count: return None
+        return count[0][0] > 0
+
     def getAllWarehouses(self):
         """Execute a query to get all the warehouses from the Warehouses Table in the database.
         

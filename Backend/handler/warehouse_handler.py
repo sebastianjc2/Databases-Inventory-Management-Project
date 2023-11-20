@@ -1,4 +1,5 @@
 from flask import jsonify
+from Backend.DAOs import warehouse_dao
 from Backend.DAOs.warehouse_dao import WarehouseDAO
 
 
@@ -87,6 +88,15 @@ class WarehouseHandler:
         elif warehouse_budget <= 0:
             return jsonify(Error='Budget can not be a value less or equal to 0'), 400
 
+        warehouse_with_name_and_city_exists = self.warehouseDAO.name_city_combo_exists(wname=warehouse_name,
+                                                                                       wcity=warehouse_city)
+        if warehouse_with_name_and_city_exists is None:
+            return jsonify(Error='Failed to validate against existing warehouses'), 500
+        elif warehouse_with_name_and_city_exists:
+            return jsonify(
+                Error=f'Can only have 1 warehouse with name ({warehouse_name}) in city ({warehouse_city})'
+                ), 400
+
         wid = self.warehouseDAO.insertWarehouse(warehouse_name,
                                                 warehouse_country,
                                                 warehouse_region,
@@ -94,6 +104,8 @@ class WarehouseHandler:
                                                 warehouse_street,
                                                 warehouse_zipcode,
                                                 warehouse_budget)
+        if not wid:
+            return jsonify(Error='Failed to add warehouse'), 500
         data['wid'] = wid
         return jsonify(data), 201
 
@@ -156,6 +168,15 @@ class WarehouseHandler:
         # Budget can not be a negative value or zero.
         elif warehouse_budget <= 0:
             return jsonify(Error='Budget can not be a value less or equal to 0'), 400
+
+        warehouse_with_name_and_city_exists = self.warehouseDAO.name_city_combo_exists(wname=warehouse_name,
+                                                                                       wcity=warehouse_city)
+        if warehouse_with_name_and_city_exists is None:
+            return jsonify(Error='Failed to validate against existing warehouses'), 500
+        elif warehouse_with_name_and_city_exists:
+            return jsonify(
+                Error=f'Can only have 1 warehouse with name ({warehouse_name}) in city ({warehouse_city})'
+                ), 400
 
         flag = self.warehouseDAO.updateWarehouseByID(wid, warehouse_name, warehouse_country, warehouse_region,
                                                      warehouse_city,
