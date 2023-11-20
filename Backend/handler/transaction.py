@@ -25,7 +25,7 @@ class TransactionHandler:
                 result.append(self.mapToDict(tup))
             return jsonify(result)
         else:
-            return jsonify("Internal Server Error"), 500
+            return jsonify("Internal Server Error: Failed to load transactions"), 500
     
 
     def getTransactionById(self, tid):

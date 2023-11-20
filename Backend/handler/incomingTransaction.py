@@ -146,7 +146,7 @@ class IncomingTransactionHandler:
                 result.append(self.mapToDict(tup))
             return jsonify(result)
         else:
-            return jsonify("Internal Server Error"), 500
+            return jsonify("Internal Server Error: Failed to load transactions"), 500
     
 
     def getIncomingTransactionById(self, itid):
@@ -158,7 +158,7 @@ class IncomingTransactionHandler:
                 result.append(self.mapToDict(tup))
             return jsonify(result)
         else:
-            return jsonify("Internal Server Error"), 500
+            return jsonify("Internal Server Error: Could not find matching incoming transaction"), 500
 
 
     def modifyIncomingTransactionByID(self, itid, data):

@@ -108,7 +108,7 @@ class TransferTransactionHandler:
         if transferid:
             data["transferid"] = transferid
             return jsonify(data), 201
-        return jsonify("Internal Server Error: TRONKA"), 500
+        return jsonify("Internal Server Error: Failed to add transfer transaction"), 500
 
     
     def getAllTransferTransaction(self):
@@ -120,7 +120,7 @@ class TransferTransactionHandler:
                 result.append(self.mapToDict(tup))
             return jsonify(result)
         else:
-            return jsonify("Internal Server Error"), 500
+            return jsonify("Internal Server Error: Failed to load transfer transaction"), 500
     
 
     def getTransferTransactionById(self, transferid):

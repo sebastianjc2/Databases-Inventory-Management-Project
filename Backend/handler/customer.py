@@ -22,7 +22,7 @@ class CustomerHandler:
                 result.append(self.mapToDict(tup))
             return jsonify(result)
         else:
-            return jsonify("Internal Server Error"), 500
+            return jsonify("Internal Server Error: Failed to load customers"), 500
 
 
     def addCustomer(self, data):
@@ -45,7 +45,7 @@ class CustomerHandler:
                 data["cid"] = cid
                 return jsonify(data), 201
             else:
-                return jsonify("Internal Server Error"), 500
+                return jsonify("Internal Server Error: Failed to add customer"), 500
         else:
             # TODO: add validation and error handling and map to dict 
             return jsonify("Unexpected attribute values."), 400
@@ -61,7 +61,7 @@ class CustomerHandler:
                 result.append(self.mapToDict(tup))
             return jsonify(result)
         else:
-            return jsonify("Internal Server Error"), 500
+            return jsonify("Internal Server Error: Could not find matching customer"), 500
 
 
     def modifyCustomerById(self, cid, data):
@@ -86,7 +86,7 @@ class CustomerHandler:
             elif count == 1:
                 return jsonify(data), 200
             else:
-                return jsonify("Internal Server Error"), 500
+                return jsonify(f"Internal Server Error: Multiple customers matched with id {cid}"), 500
         else:
             return jsonify("Attributes cannot contain null fields."), 400
 
@@ -99,4 +99,4 @@ class CustomerHandler:
         elif count == 1:
             return jsonify(f'Deleted customer with id: {cid}'), 200
         else:
-            return jsonify("Internal Server Error"), 500
+            return jsonify(f"Internal Server Error: Multiple customers matched with id {cid}"), 500
