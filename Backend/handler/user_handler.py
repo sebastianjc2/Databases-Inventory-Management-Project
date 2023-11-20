@@ -167,7 +167,7 @@ class UserHandler:
             return jsonify(Error="User can not belong to a Warehouses that does not exist"), 404
         else:
             updated_user = self.userDAO.updateUserByID(uid, ufname, ulname, username, uemail, upassword, wid)
-            return jsonify("Updated user with id: {}, ".format(updated_user)), 200
+            return jsonify("Updated user with id: {}, ".format(uid)), 200
 
     def deleteUserByID(self, uid: int) -> object:
         """Delete a user from the Users table with the given uid.
