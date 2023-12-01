@@ -12,6 +12,14 @@ class CustomerHandler:
         my_dict["Phone"] = tup[4]
         return my_dict
 
+    @staticmethod
+    def customer_exists(cphone, dao=None):
+        if not dao: dao = CustomerDAO()
+        # Can't insert/update a customer with an existing phone #
+        existing_phone = dao.searchByPhone(cphone) is not None
+        if existing_phone:
+            return {"Error": f"Error: The customer phone number '{cphone}' already exists!"}
+        return {}
 
     def getAllCustomers(self):
         dao = CustomerDAO()
@@ -40,6 +48,8 @@ class CustomerHandler:
 
         if fname and lname and zipcode and phone:
             dao = CustomerDAO()
+            cant_add = self.customer_exists(phone, dao).get("Error")
+            if cant_add: return jsonify(cant_add), 404
             cid = dao.addCustomer(fname, lname, zipcode, phone)
             if cid:
                 data["cid"] = cid
@@ -77,9 +87,10 @@ class CustomerHandler:
             if not isinstance(attr, str):
                 return jsonify(f"Error: Invalid attribute for type 'str': {attr}."), 400
 
-
         if fname and lname and zipcode and phone:
             dao = CustomerDAO()
+            cant_update = self.customer_exists(phone, dao).get("Error")
+            if cant_update: return jsonify(cant_update), 404
             count = dao.modifyCustomerById(fname, lname, zipcode, phone, cid)
             if count == 0:
                 return jsonify(f'No customer with id: {cid}'), 404

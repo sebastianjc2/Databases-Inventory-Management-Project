@@ -3,8 +3,8 @@
 		"_postman_id": "c9392ff1-6796-4536-bf15-3e6e798d942c",
 		"name": "Heroku",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "30871783",
-		"_collection_link": "https://speeding-crater-582929.postman.co/workspace/SQLytes-Environment~ef10cf56-672c-460e-9ca9-1b82fda5b67e/collection/30872160-c9392ff1-6796-4536-bf15-3e6e798d942c?action=share&source=collection_link&creator=30871783"
+		"_exporter_id": "30871619",
+		"_collection_link": "https://speeding-crater-582929.postman.co/workspace/SQLytes-Environment~ef10cf56-672c-460e-9ca9-1b82fda5b67e/collection/30872160-c9392ff1-6796-4536-bf15-3e6e798d942c?action=share&source=collection_link&creator=30871619"
 	},
 	"item": [
 		{
@@ -620,7 +620,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"ufname\":\"Sofía\",\n    \"ulname\":\"Martinez\",\n    \"username\":\"sofiam\",\n    \"uemail\":\"sofia@email.com\",\n    \"upassword\":\"tH1s1sW4Yb3tT3r!\",\n    \"wid\":1\n}",
+							"raw": "{\n    \"ufname\":\"Sofía\",\n    \"ulname\":\"Martinez\",\n    \"username\":\"sofiam\",\n    \"uemail\":\"sofia@upr.edu\",\n    \"upassword\":\"tH1s1sW4Yb3tT3r!\",\n    \"wid\":1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1117,7 +1117,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user\": \"10\"\r\n}",
+							"raw": "{\r\n    \"user\": 10\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1149,7 +1149,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user\": \"10\"\r\n}",
+							"raw": "{\r\n    \"user\": 10\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1182,7 +1182,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user\": \"10\"\r\n}",
+							"raw": "{\r\n    \"user\": 10\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1215,7 +1215,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user\": \"10\"\r\n}",
+							"raw": "{\r\n    \"user\": 10\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1248,7 +1248,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user\": \"10\"\r\n}",
+							"raw": "{\r\n    \"user\": 10\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1281,7 +1281,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user\": \"10\"\r\n}",
+							"raw": "{\r\n    \"user\": 10\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1314,7 +1314,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user\": \"10\"\r\n}",
+							"raw": "{\r\n    \"user\": 10\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1335,6 +1335,137 @@
 								"11",
 								"users",
 								"receivesmost"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "customer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://sqlytes-inventory-app-c6c81e457261.herokuapp.com/sqlytes/customer",
+							"protocol": "https",
+							"host": [
+								"sqlytes-inventory-app-c6c81e457261",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"sqlytes",
+								"customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customer update",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"FirstName\": \"Erenh\",\n    \"LastName\": \"Yaeger\",\n    \"Zipcode\": \"09678\",\n    \"Phone\": \"888-999-7766\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://sqlytes-inventory-app-c6c81e457261.herokuapp.com/sqlytes/customer",
+							"protocol": "https",
+							"host": [
+								"sqlytes-inventory-app-c6c81e457261",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"sqlytes",
+								"customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customer/<id>",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://sqlytes-inventory-app-c6c81e457261.herokuapp.com/sqlytes/customer/13",
+							"protocol": "https",
+							"host": [
+								"sqlytes-inventory-app-c6c81e457261",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"sqlytes",
+								"customer",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customer/<id>",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"FirstName\": \"Eren\",\n    \"LastName\": \"Yaeger\",\n    \"Zipcode\": \"09678\",\n    \"Phone\": \"8889997766\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://sqlytes-inventory-app-c6c81e457261.herokuapp.com/sqlytes/customer/90",
+							"protocol": "https",
+							"host": [
+								"sqlytes-inventory-app-c6c81e457261",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"sqlytes",
+								"customer",
+								"90"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customer/<id>",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://sqlytes-inventory-app-c6c81e457261.herokuapp.com/sqlytes/customer/90",
+							"protocol": "https",
+							"host": [
+								"sqlytes-inventory-app-c6c81e457261",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"sqlytes",
+								"customer",
+								"90"
 							]
 						}
 					},

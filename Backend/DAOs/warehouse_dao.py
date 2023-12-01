@@ -249,9 +249,9 @@ class WarehouseDAO(DAO):
                                               """, substitutions=wid)
         return True if result[0][0]==0 else False
 
-    def worksIn(self, wid: int, uid: str) -> bool:
+    def worksIn(self, wid: int, uid: int) -> bool:
         """Returns a bool indicating whether a user works in a warehouse or not."""
-        query = """SELECT username
+        query = """SELECT username  
                     FROM users
                     WHERE uid = %s AND wid = %s;"""
 
@@ -345,7 +345,7 @@ class WarehouseDAO(DAO):
                 WHERE wid = %s
                 GROUP BY year, wname
                 ORDER BY year DESC;"""
-        return self._generic_retrieval_query(query, substitutions=(wid,))
+        return self._generic_retrieval_query(query, substitutions=wid)
 
     def get_bottom_racks(self, wid: int):
         """Part of the local statistics. Returns bottom 3 racks by material/type in a warehouse."""
@@ -361,7 +361,7 @@ class WarehouseDAO(DAO):
                 FROM part_types
                 ORDER BY part_count ASC
                 LIMIT 3;"""
-        return self._generic_retrieval_query(query, substitutions=(wid,))
+        return self._generic_retrieval_query(query, substitutions=wid)
 
     def get_most_user_exchanges(self, wid: int):
         """Part of the local statistics. Returns top 3 users that received the most
@@ -377,7 +377,7 @@ class WarehouseDAO(DAO):
                 SELECT * FROM user_exchanges
                 ORDER BY transfer_count DESC
                 LIMIT 3;"""
-        return self._generic_retrieval_query(query, substitutions=(wid,))
+        return self._generic_retrieval_query(query, substitutions=wid)
 
     def get_most_expensive_racks(self, wid: int):
         """Part of the local statistics. Top 5 most expensive racks in the warehouse."""
@@ -390,7 +390,7 @@ class WarehouseDAO(DAO):
                     GROUP BY wname, rname
                     ORDER BY rack_price DESC
                     LIMIT 5;"""
-        return self._generic_retrieval_query(query, substitutions=(wid,))
+        return self._generic_retrieval_query(query, substitutions=wid)
 
     def get_least_daily_cost(self, wid: int):
         """Part of the local statistics. Top 3 days with the smallest incoming transactions’ cost."""
@@ -407,7 +407,7 @@ class WarehouseDAO(DAO):
                     FROM daily_costs
                     ORDER BY total_incoming_cost ASC
                     LIMIT 3;"""
-        return self._generic_retrieval_query(query, substitutions=(wid,))
+        return self._generic_retrieval_query(query, substitutions=wid)
 
     def get_least_rack_stock(self, wid: int):
         """Part of the local statistics. Top 5 racks with quantity under the 25% capacity threshold."""
@@ -421,7 +421,7 @@ class WarehouseDAO(DAO):
                 ORDER BY parts_qty DESC
                 LIMIT 5;
                 """
-        return self._generic_retrieval_query(query, substitutions=(wid,))
+        return self._generic_retrieval_query(query, substitutions=wid)
 
     def get_most_suppliers(self, wid: int):
         """Part of the local statistics. Top 3 suppliers that supplied to the given warehouse."""
@@ -439,4 +439,4 @@ class WarehouseDAO(DAO):
                 ORDER BY supply_count DESC
                 LIMIT 3;
                 """
-        return self._generic_retrieval_query(query, substitutions=(wid,))
+        return self._generic_retrieval_query(query, substitutions=wid)
