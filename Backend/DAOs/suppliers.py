@@ -28,6 +28,19 @@ class SupplierDAO(DAO):
         res = cur.fetchone()
         return res
 
+    def searchByName(self, sname):
+        cur = self.conn.cursor()
+        query = """SELECT sid FROM supplier WHERE sname = %s;"""
+        cur.execute(query, (sname,))
+        res = cur.fetchone()
+        return res
+    def searchByPhone(self, sphone):
+        cur = self.conn.cursor()
+        query = """SELECT sid FROM supplier WHERE sphone = %s;"""
+        cur.execute(query, (sphone,))
+        res = cur.fetchone()
+        return res
+
     def deleteByID(self, sid):
         cur = self.conn.cursor()
         query = "DELETE FROM supplier WHERE sid = %s"

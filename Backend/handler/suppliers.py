@@ -3,7 +3,8 @@ from Backend.DAOs.suppliers import SupplierDAO
 
 
 class SupplierHandler:
-    def mapToDict(self, tup):
+    @staticmethod
+    def mapToDict(tup):
         my_dict = {}
         my_dict['id'] = tup[0]
         my_dict['name'] = tup[1]
@@ -13,6 +14,20 @@ class SupplierHandler:
         my_dict['zipcode'] = tup[5]
         my_dict['phone'] = tup[6]
         return my_dict
+
+
+    @staticmethod
+    def supplier_data_exists(sname, sphone, dao=None):
+        if not dao: dao = SupplierDAO()
+        # Can't insert/update a supplier with an existing phone # or name
+        existing_name = dao.searchByName(sname) is not None
+        existing_phone = dao.searchByPhone(sphone) is not None
+        if existing_name:
+            return {"Error": f"Error: The supplier name '{sname}' already exists!"}
+
+        if existing_phone:
+            return {"Error": f"Error: The supplier phone number '{sphone}' already exists!"}
+        return {}
 
     def getAllSuppliers(self):
         dao = SupplierDAO()
@@ -53,6 +68,8 @@ class SupplierHandler:
 
         if name and country and city and street and zipcode and phone:
             dao = SupplierDAO()
+            cant_add = self.supplier_data_exists(name, phone, dao).get('Error')
+            if cant_add: return jsonify(cant_add), 404
             sid = dao.insertSupplier(name, country, city, street, zipcode, phone)
             data['sid'] = sid
             return jsonify(data), 201
@@ -116,6 +133,8 @@ class SupplierHandler:
 
         if sid and name and country and city and street and zipcode and phone:
             dao = SupplierDAO()
+            cant_update = self.supplier_data_exists(name, phone, dao).get('Error')
+            if cant_update: return jsonify(cant_update), 404
             flag = dao.updateByID(sid, name, country, city, street, zipcode, phone)
             if flag:
                 return jsonify(data), 200

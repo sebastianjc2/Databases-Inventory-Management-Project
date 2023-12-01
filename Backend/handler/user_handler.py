@@ -53,6 +53,19 @@ class UserHandler:
             all_users_result.append(self.build_user_dict(record))
         return jsonify(Users=all_users_result)
 
+    @staticmethod
+    def user_data_exists(username, umail, dao=None):
+        if not dao: dao = UserDAO()
+        # Can't insert/update a customer with an existing phone #
+        existing_uname = dao.searchUserByUsername(username) is not None
+        existing_umail = dao.searchUserByEmail(umail) is not None
+        if existing_uname:
+            return {"Error": f"Error: The username '{username}' already exists!"}
+
+        if existing_umail:
+            return {"Error": f"Error: The user email '{umail}' already exists!"}
+        return {}
+
     def getUserByID(self, uid: int) -> object:
         """ Return a record, or series of records that correspond to the user with the given uid.
 
@@ -114,8 +127,9 @@ class UserHandler:
             return jsonify(Error="User can not belong to a Warehouses that does not exist"), 404
         # Data has been verified  up to this point. It is safe to insert it in the DB
         else:
+            cant_add = self.user_data_exists(username, uemail).get("Error")
+            if cant_add: return jsonify(cant_add), 404
             uid = self.userDAO.insertUser(ufname, ulname, username, uemail, upassword, wid)
-            # TODO: Refactor this so it is not hardcoded.
             inserted_user = {}
             inserted_user['uid'] = uid
             inserted_user['ufname'] = ufname
@@ -166,7 +180,9 @@ class UserHandler:
         elif not self.warehouseDAO.getWarehouseByID(wid):
             return jsonify(Error="User can not belong to a Warehouses that does not exist"), 404
         else:
-            updated_user = self.userDAO.updateUserByID(uid, ufname, ulname, username, uemail, upassword, wid)
+            cant_update = self.user_data_exists(username, uemail).get("Error")
+            if cant_update: return jsonify(cant_update), 404
+            self.userDAO.updateUserByID(uid, ufname, ulname, username, uemail, upassword, wid)
             return jsonify(f"Updated user with id: {uid}"), 200
 
     def deleteUserByID(self, uid: int) -> object:

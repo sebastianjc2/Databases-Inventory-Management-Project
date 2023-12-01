@@ -1,6 +1,7 @@
 from Backend.DAOs.DAO import DAO
 import psycopg2
 
+
 class StoredInDAO(DAO):
     def get_quantity(self, wid, pid, rid):
         """
@@ -53,7 +54,7 @@ class StoredInDAO(DAO):
         else: # no rid, no insertion
             return None
         try:
-            cursor.execute(query, values  )
+            cursor.execute(query, values)
             count = cursor.rowcount
             self.conn.commit()
             return count

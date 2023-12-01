@@ -6,6 +6,13 @@ class CustomerDAO(DAO):
         return self._getAllEntries(table_name="customer",
                                    columns=("cid", "cfname", "clname", "czipcode", "cphone"))
 
+    def searchByPhone(self, cphone):
+        cur = self.conn.cursor()
+        query = """SELECT cid FROM customer WHERE cphone = %s;"""
+        cur.execute(query, (cphone,))
+        res = cur.fetchone()
+        return res
+
     def getCustomerById(self, cid):
         return self._getEntryByID(table_name="customer",
                                   id_name="cid",
