@@ -78,9 +78,13 @@ auto-activate your venv each time the IDE is fired up. More info on how to confi
 ## Docker Postgres Setup
 Install [Docker Desktop](https://docs.docker.com/desktop/). The following are the commands specific to our DB during the setup. It's useful to utilize the GUI to view console outputs when running commands. 
 #### Initial Setup
+First time setup:
 ```shell
 docker pull postgres # ensure it shows up on Docker Desktop
-docker-compose build # build container
+docker-compose build # build container (whenever changes are made to composer or Dockerfile)
+```
+When testing:
+```shell
 docker-compose up -d # start container
 docker exec -it inventory-tracking-app-sqlytes-db-1 psql -U docker_admin -d sqlytes-inventory-app # access container
 ```
