@@ -34,110 +34,19 @@ class WarehouseHandler:
         warehouse_dict['wbudget'] = row[7]
         return warehouse_dict
 
-    # Dicts for statistics
     @staticmethod
-    def _build_top_racks_dict(results: Iterable) -> dict:
-        top_racks = []
+    def _build_statistics_dict(results: Iterable, dict_name: str, dict_val_names: tuple) -> dict:
+        """Constructs a dictionary for the local/global statistics based on the results
+        returned from a query, the name of the dict, and the name of each value in the dict."""
+        values = []
         for res in results:
-            mapped_values = {"Warehouse Name": res[0], "Rack Count": res[1]}
-            top_racks.append(mapped_values)
-        return {"Top Racks per Warehouse": top_racks}
-
-    @staticmethod
-    def _build_most_exchanges_dict(results: Iterable) -> dict:
-        most_exchanges = []
-        for res in results:
-            mapped_values = {"Warehouse Name": res[0], "Total Transfers": res[1]}
-            most_exchanges.append(mapped_values)
-        return {"Most Transfers": most_exchanges}
-
-    @staticmethod
-    def _build_top_user_transactions_dict(results: Iterable) -> dict:
-        user_transactions = []
-        for res in results:
-            mapped_values = {"First Name": res[0], "Last Name": res[1], "Transaction Count": res[2]}
-            user_transactions.append(mapped_values)
-        return {"Top User Transactions": user_transactions}
-
-    @staticmethod
-    def _build_least_outgoing_dict(results: Iterable) -> dict:
-        least_outgoing = []
-        for res in results:
-            mapped_values = {"Warehouse Name": res[0], "Total Outgoing Transactions": res[1]}
-            least_outgoing.append(mapped_values)
-        return {"Least Outgoing Transactions": least_outgoing}
-
-    @staticmethod
-    def _build_most_incoming_dict(results: Iterable) -> dict:
-        most_incoming = []
-        for res in results:
-            mapped_values = {"Warehouse Name": res[0], "Total Incoming Transactions": res[1]}
-            most_incoming.append(mapped_values)
-        return {"Most Incoming Transactions": most_incoming}
-
-    @staticmethod
-    def _build_most_city_dict(results: Iterable) -> dict:
-        most_city = []
-        for res in results:
-            mapped_values = {"Warehouse City": res[0], "Total Transactions": res[1]}
-            most_city.append(mapped_values)
-        return {"Most Transactions per City": most_city}
-
-    @staticmethod
-    def _build_profit_yearly_dict(results: Iterable) -> dict:
-        most_city = []
-        for res in results:
-            mapped_values = {"Year": res[0], "Warehouse": res[1], "Net Profit": res[2]}
-            most_city.append(mapped_values)
-        return {"Yearly Profit": most_city}
-
-    @staticmethod
-    def _build_bottom_racks_dict(results: Iterable) -> dict:
-        bottom_racks = []
-        for res in results:
-            mapped_values = {"Part": res[0], "Type": res[1], "Part Count": res[2]}
-            bottom_racks.append(mapped_values)
-        return {"Bottom Racks": bottom_racks}
-
-    @staticmethod
-    def _build_most_user_exchanges_dict(results: Iterable) -> dict:
-        most_exchanges = []
-        for res in results:
-            mapped_values = {"First Name": res[0], "Last Name": res[1], "Transfer Count": res[2]}
-            most_exchanges.append(mapped_values)
-        return {"Most User Exchanges": most_exchanges}
-
-    @staticmethod
-    def _build_most_expensive_racks_dict(results: Iterable) -> dict:
-        expensive_racks = []
-        for res in results:
-            mapped_values = {"Warehouse": res[0], "Rack": res[1], "Rack Price": res[2]}
-            expensive_racks.append(mapped_values)
-        return {"Most Expensive Racks": expensive_racks}
-
-    @staticmethod
-    def _build_least_daily_cost_dict(results: Iterable) -> dict:
-        least_cost = []
-        for res in results:
-            mapped_values = {"Transaction Date": res[0], "Total Incoming Cost": res[1]}
-            least_cost.append(mapped_values)
-        return {"Least Incoming Trans. Costs": least_cost}
-
-    @staticmethod
-    def _build_least_rack_stock_dict(results: Iterable) -> dict:
-        rack_stock = []
-        for res in results:
-            mapped_values = {"Rack": res[0], "Low Capacity Threshold": res[1], "Parts Quantity": res[2]}
-            rack_stock.append(mapped_values)
-        return {"Lowest Threshold Racks": rack_stock}
-
-    @staticmethod
-    def _build_most_suppliers_dict(results: Iterable) -> dict:
-        top_suppliers = []
-        for res in results:
-            mapped_values = {"Supplier Name": res[0], "Supply Count": res[1]}
-            top_suppliers.append(mapped_values)
-        return {"Top Warehouse Suppliers": top_suppliers}
+            mapped_values = {}
+            if len(res) != len(dict_val_names):
+                raise ValueError(f"There are more row names than value names! Error building '{dict_name}' dictionary.")
+            for i in range(len(res)):
+                mapped_values[dict_val_names[i]] = res[i]
+            values.append(mapped_values)
+        return {dict_name: values}
 
     def getAllWarehouses(self):
         """Returns all warehouses from the Warehouses Table in the database.
@@ -325,7 +234,9 @@ class WarehouseHandler:
         if not rack_results:
             return jsonify(Error='No results were returned.'), 404
         else:
-            return jsonify(self._build_top_racks_dict(rack_results)), 200
+            rows = ("Warehouse", "Rack Count")
+            rack_results = self._build_statistics_dict(rack_results, "Top Racks per Warehouse", rows)
+            return jsonify(rack_results), 200
 
     def getTopExchanges(self):
         """Part of the global statistics. Gets the top 5 warehouses
@@ -334,15 +245,19 @@ class WarehouseHandler:
         if not transfer_results:
             return jsonify(Error='No results were returned.'), 404
         else:
-            return jsonify(self._build_most_exchanges_dict(transfer_results)), 200
+            rows = ("Warehouse", "Total Transfers")
+            transfer_results = self._build_statistics_dict(transfer_results, "Most Transfers", rows)
+            return jsonify(transfer_results), 200
 
     def getTopUserTransactions(self):
         """Part of the global statistics. Gets the top 3 users that made the most transactions."""
-        user_transaction_results = self.warehouseDAO.get_top_user_transactions()
-        if not user_transaction_results:
+        transaction_results = self.warehouseDAO.get_top_user_transactions()
+        if not transaction_results:
             return jsonify(Error='No results were returned.'), 404
         else:
-            return jsonify(self._build_top_user_transactions_dict(user_transaction_results)), 200
+            rows = ("First Name", "Last Name", "Transaction Count")
+            transaction_results = self._build_statistics_dict(transaction_results, "Top User Transactions", rows)
+            return jsonify(transaction_results), 200
 
     def getLeastOutgoing(self):
         """Part of the global statistics. Gets the top 3 warehouses
@@ -351,7 +266,9 @@ class WarehouseHandler:
         if not outgoing_results:
             return jsonify(Error='No results were returned.'), 404
         else:
-            return jsonify(self._build_least_outgoing_dict(outgoing_results)), 200
+            rows = ("Warehouse", "Total Outgoing Transactions")
+            outgoing_results = self._build_statistics_dict(outgoing_results, "Least Outgoing Transactions", rows)
+            return jsonify(outgoing_results), 200
 
     def getTopIncoming(self):
         """Part of the global statistics. Top 5 warehouses with the most incoming transactions."""
@@ -359,7 +276,9 @@ class WarehouseHandler:
         if not incoming_results:
             return jsonify(Error='No results were returned.'), 404
         else:
-            return jsonify(self._build_most_incoming_dict(incoming_results)), 200
+            rows = ("Warehouse", "Total Incoming Transactions")
+            incoming_results = self._build_statistics_dict(incoming_results, "Most Incoming Transactions", rows)
+            return jsonify(incoming_results), 200
 
     def getTopCity(self):
         """Part of the global statistics. Top 3 warehouse cities with the most transactions."""
@@ -367,7 +286,9 @@ class WarehouseHandler:
         if not city_results:
             return jsonify(Error='No results were returned.'), 404
         else:
-            return jsonify(self._build_most_city_dict(city_results)), 200
+            rows = ("Warehouse City", "Total Transactions")
+            city_results = self._build_statistics_dict(city_results, "Most Transactions per City", rows)
+            return jsonify(city_results), 200
 
     # Local statistics
     def _validate_user(self, data: object, wid: int) -> dict:
@@ -410,7 +331,9 @@ class WarehouseHandler:
             if not profit_results:
                 return jsonify(Error='No results were returned.'), 404
             else:
-                return jsonify(self._build_profit_yearly_dict(profit_results)), 200
+                rows = ("Year", "Warehouse", "Net Profit")
+                profit_results = self._build_statistics_dict(profit_results, "Yearly Profit", rows)
+                return jsonify(profit_results), 200
 
     # Statistics
     def getBottomRacks(self, wid: int, data: object) -> object:
@@ -424,7 +347,9 @@ class WarehouseHandler:
             if not bottom_rack_results:
                 return jsonify(Error='No results were returned.'), 404
             else:
-                return jsonify(self._build_bottom_racks_dict(bottom_rack_results)), 200
+                rows = ("Part", "Type", "Part Count")
+                bottom_rack_results = self._build_statistics_dict(bottom_rack_results, "Bottom Racks", rows)
+                return jsonify(bottom_rack_results), 200
 
     def getTopUserExchanges(self, wid: int, data: object) -> object:
         """Part of the local statistics. Returns top 3 users that received the most
@@ -438,7 +363,9 @@ class WarehouseHandler:
             if not user_results:
                 return jsonify(Error='No results were returned.'), 404
             else:
-                return jsonify(self._build_most_user_exchanges_dict(user_results)), 200
+                rows = ("First Name", "Last Name", "Transfer Count")
+                user_results = self._build_statistics_dict(user_results, "Most User Exchanges", rows)
+                return jsonify(user_results), 200
 
     def getTopExpensiveRacks(self, wid: int, data: object) -> object:
         """Part of the local statistics. Top 5 most expensive racks in the warehouse."""
@@ -451,7 +378,9 @@ class WarehouseHandler:
             if not rack_results:
                 return jsonify(Error='No results were returned.'), 404
             else:
-                return jsonify(self._build_most_expensive_racks_dict(rack_results)), 200
+                rows = ("Warehouse", "Rack", "Rack Price")
+                rack_results = self._build_statistics_dict(rack_results, "Most Expensive Racks", rows)
+                return jsonify(rack_results), 200
 
     def getLowestDayCost(self, wid: int, data: object) -> object:
         """Part of the local statistics. Top 3 days with the smallest incoming transactions’ cost."""
@@ -464,7 +393,9 @@ class WarehouseHandler:
             if not day_results:
                 return jsonify(Error='No results were returned.'), 404
             else:
-                return jsonify(self._build_least_daily_cost_dict(day_results)), 200
+                rows = ("Transaction Date", "Total Incoming Cost")
+                day_results = self._build_statistics_dict(day_results, "Least Incoming Trans. Costs", rows)
+                return jsonify(day_results), 200
 
     def getLowestRackStock(self, wid: int, data: object) -> object:
         """Part of the local statistics. Top 5 racks with quantity under the 25% capacity threshold."""
@@ -473,11 +404,13 @@ class WarehouseHandler:
             return user_perms['error']
 
         elif user_perms['user_permissions']:
-            rack_results = self.warehouseDAO.get_least_rack_stock(wid)
-            if not rack_results:
+            stock_results = self.warehouseDAO.get_least_rack_stock(wid)
+            if not stock_results:
                 return jsonify(Error='No results were returned.'), 404
             else:
-                return jsonify(self._build_least_rack_stock_dict(rack_results)), 200
+                rows = ("Rack", "Low Capacity Threshold", "Parts Quantity")
+                stock_results = self._build_statistics_dict(stock_results, "Lowest Threshold Racks", rows)
+                return jsonify(stock_results), 200
 
     def getTopSuppliers(self, wid: int, data: object) -> object:
         """Part of the local statistics. Top 3 suppliers that supplied to the given warehouse."""
@@ -490,4 +423,6 @@ class WarehouseHandler:
             if not supplier_results:
                 return jsonify(Error='No results were returned.'), 404
             else:
-                return jsonify(self._build_most_suppliers_dict(supplier_results)), 200
+                rows = ("Supplier Name", "Supply Count")
+                supplier_results = self._build_statistics_dict(supplier_results, "Top Warehouse Suppliers", rows)
+                return jsonify(supplier_results), 200
