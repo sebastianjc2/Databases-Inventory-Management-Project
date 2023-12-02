@@ -357,13 +357,6 @@ def warehouseLowestStockRack(wid):
     else:
         return jsonify("Not Supported"), 405
 
-@app.route("/sqlytes/warehouse/<int:wid>/parts", methods=["GET"])
-def warehouseParts(wid):
-    if request.method == "GET":
-        return WarehouseHandler().getAllWarehouseParts(wid)
-    else:
-        return jsonify("Not Supported"), 405
-
 
 if __name__ == '__main__':
     app.run(debug=True)

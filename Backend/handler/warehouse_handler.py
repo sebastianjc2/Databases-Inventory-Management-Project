@@ -1,7 +1,6 @@
 from flask import jsonify
 from Backend.DAOs.warehouse_dao import WarehouseDAO
-from Backend.handler.parts import PartHandler
-
+from typing import Iterable
 
 
 class WarehouseHandler:
@@ -10,7 +9,6 @@ class WarehouseHandler:
 
     def __init__(self):
         self.warehouseDAO = WarehouseDAO()
-        self.parts_handler = PartHandler()
 
     def build_warehouse_dict(self, row: tuple) -> dict:
         """Builds dictionary that contains
@@ -428,30 +426,3 @@ class WarehouseHandler:
                 rows = ("Supplier Name", "Supply Count")
                 supplier_results = self._build_statistics_dict(supplier_results, "Top Warehouse Suppliers", rows)
                 return jsonify(supplier_results), 200
-
-    def getAllWarehouseParts(self,wid:int) -> object:
-        """Return all parts information for a given warehouse.
-        
-        Arguments:
-        wid(int): ID of the warehouse to return the parts from.
-        Return: JSON object that contains all the parts from the warehouse.
-        """
-        
-        # Validate that the wid is an integer.
-        if not isinstance(wid, int):
-            return jsonify(Error='wid has to be an integer.'), 400
-        # Validate the wid is a valid integer.
-        elif wid <= 0:
-            return jsonify(Error='wid has to be a positive integer.'), 400
-        # Validate that the warehouse exists.
-        elif not self.warehouseDAO.getWarehouseByID(wid):
-            return jsonify(Error='Warehouse Not Found. Give an ID for an existing warehouse.'), 404
-        else:
-            all_parts = self.warehouseDAO.getAllWarehouseParts(wid)
-            if not all_parts:
-                return jsonify(Error='No parts were found in the warehouse.'), 404
-            else:
-                result = []
-                for tup in all_parts:
-                    result.append(self.parts_handler.mapToDict(tup)) 
-                return jsonify(WarehouseParts=result), 200
