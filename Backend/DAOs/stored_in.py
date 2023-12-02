@@ -22,29 +22,19 @@ class StoredInDAO(DAO):
     def modify_quantity(self, wid, pid, rid, new_quantity):
         """
         Sets the quantity to the given value.
-        If the new quantity is 0, the entry is removed.
         If the entry did not previously exist, it is inserted.
         Returns the new number of affected rows.
         """
         cursor = self.conn.cursor()
         if self.get_quantity(wid, pid, rid): # check if entry exists
-            if new_quantity == 0: # must delete entry
-                query = """
-                DELETE FROM stored_in
-                WHERE wid = %s
-                AND pid = %s
-                AND rid = %s
-                """
-                values = (wid, pid, rid)
-            else: # simply update the entry
-                query = """
-                UPDATE stored_in
-                SET parts_qty = %s
-                WHERE wid = %s
-                AND pid = %s
-                AND rid = %s
-                """
-                values = (new_quantity, wid, pid, rid)
+            query = """
+            UPDATE stored_in
+            SET parts_qty = %s
+            WHERE wid = %s
+            AND pid = %s
+            AND rid = %s
+            """
+            values = (new_quantity, wid, pid, rid)
         elif rid: # can't insert w/o an rid
             query = """
             INSERT INTO stored_in (wid, pid, rid, parts_qty)

@@ -14,8 +14,6 @@ class TransactionHandler:
         return my_dict
 
 
-
-    
     def getAllTransactions(self):
         dao = TransactionDAO()
         dbtuples = dao.getAllTransactions()
@@ -23,7 +21,7 @@ class TransactionHandler:
             result = []
             for tup in dbtuples:
                 result.append(self.mapToDict(tup))
-            return jsonify(result)
+            return jsonify(Result=result)
         else:
             return jsonify("Internal Server Error: Failed to load transactions"), 500
     
@@ -32,9 +30,6 @@ class TransactionHandler:
         dao = TransactionDAO()
         dbtuples = dao.getTransactionByID(tid)
         if dbtuples:
-            result = []
-            for tup in dbtuples:
-                result.append(self.mapToDict(tup))
-            return jsonify(result)
+            return jsonify(Result=self.mapToDict(dbtuples[0]))
         else:
             return jsonify("Failed to find matching transaction"), 404

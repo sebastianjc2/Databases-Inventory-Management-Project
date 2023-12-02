@@ -39,8 +39,9 @@ class TransferTransactionHandler:
             partID = data["partID"]
             warehouseID = data["warehouseID"]
             userID = data["userID"]
+            toRack = data["toRack"]
         except KeyError as e:
-            return jsonify({"Invalid argument names!": e.args}), 400
+            return jsonify(Error={"Invalid argument names!": e.args}), 400
         
         # Check that all fields are integers.
         for key in data:
@@ -51,50 +52,60 @@ class TransferTransactionHandler:
         if not isinstance(data["transactionDate"],str):
             return jsonify(Error='{} has to be a string.'.format("transactionDate")), 400
         elif partAmount <= 0:
-            return jsonify("partAmount must be a positive number greater than 0"), 400
+            return jsonify(Error="partAmount must be a positive number greater than 0"), 400
         elif not self.user_dao.getUserByID(userID):
-            return jsonify("Invalid Tranfer. The user who sent the transfer does not exist."), 400
+            return jsonify(Error="Invalid Tranfer. The user who sent the transfer does not exist."), 400
         elif not self.user_dao.getUserByID(userRequester):
-            return jsonify("Invalid Transfer. The user who requested the transfer does not exist."), 400
+            return jsonify(Error="Invalid Transfer. The user who requested the transfer does not exist."), 400
         elif not self.part_dao.searchByID(partID):
-            return jsonify("Invalid Transfer. The part does not exist."), 400
+            return jsonify(Error="Invalid Transfer. The part does not exist."), 400
         elif not self.warehouse_dao.getWarehouseByID(warehouseID):
-            return jsonify("Invalid Transfer. The warehouse who sent the transfer does not exist."), 400
+            return jsonify(Error="Invalid Transfer. The warehouse who sent the transfer does not exist."), 400
         elif not self.warehouse_dao.getWarehouseByID(toWarehouse):
-            return jsonify("Invalid Transfer. The warehouse that requested the warehouse does not exist."), 400
+            return jsonify(Error="Invalid Transfer. The warehouse that requested the warehouse does not exist."), 400
         elif not self.warehouse_dao.worksIn(warehouseID, userID):
-            return jsonify("Invalid Transfer. The user who sent the transfer does not work in the warehouse that "
-                           "will be sending the transfer."), 400
+            return jsonify(Error="Invalid Transfer. The user who sent the transfer does not work in the "
+                           "warehouse that will be sending the transfer."), 400
         elif not self.warehouse_dao.worksIn(toWarehouse, userRequester):
-            return jsonify("Invalid Transfer. The user who requested the transfer does not work in the warehouse that "
-                           "will be receiving the transfer."), 400
+            return jsonify(Error="Invalid Transfer. The user who requested the transfer does not work in the "
+                           "warehouse that will be receiving the transfer."), 400
 
 
-        # Verify that the relationship exists in stored_in
+        # Verify that the relationship exists in stored_in for the sender
+        # Naturally, if it doesn't we can't perform the transfer
         sender_rackID = self.stored_in_dao.get_rack_with_pid_wid(partID, warehouseID)
         if not sender_rackID:
-            return jsonify(f"There is no rack for source warehouse ({warehouseID}) and part ({partID})"), 400
+            return jsonify(Error=f"There is no rack for source warehouse ({warehouseID}) and part ({partID})"), 400
 
         # Make sure theres enough parts to send
         sender_parts_total = self.stored_in_dao.get_quantity(wid=warehouseID, pid=partID, rid=sender_rackID)
         if sender_parts_total < partAmount:
-            return jsonify(
+            return jsonify(Error=
                 "Invalid Transfer. The sender warehouse does not have enough parts to send ({sender_parts_total})."
                 ), 400
-                
-        # Make sure the destination has a rack that accepts the given part 
-        new_rack_rid = self.stored_in_dao.get_rack_with_pid_wid(partID, toWarehouse)
-        if not new_rack_rid:
-            return jsonify(f"There is no rack for destination warehouse ({toWarehouse}) and part ({partID})"), 400
 
-        # update part quantity in destination
-        to_warehouse_total = self.stored_in_dao.get_quantity(wid=toWarehouse, pid=partID, rid=new_rack_rid)
-        flag = self.stored_in_dao.modify_quantity(toWarehouse, partID, new_rack_rid, to_warehouse_total + partAmount)
-        if not flag: return jsonify(Error="Internal Server Error: Failed to modify destination quantity"), 500
+        # Verfiy receiver rack exists
+        rack_capacity = RackDAO().get_capacity(rid=toRack)
+        if not rack_capacity: return jsonify(Error=f"Rack {toRack} does not exist"), 500
+
+        # Ensure the rack is not being used for another type of part
+        stored_in_DAO = StoredInDAO()
+        result = stored_in_DAO.get_entry_with_rid(rid=toRack)
+        # If the entry exists and doesn't match, error
+        if result and not (result[0] == toWarehouse and result[1] == partID):
+            return jsonify(Error=f"Rack ({toRack}) not assigned to warehouse ({warehouseID}) and part ({partID})"), 400
+        rid = stored_in_DAO.get_rack_with_pid_wid(pid=partID, wid=toWarehouse)
+        if rid and rid != toRack:
+            return jsonify(Error=f"Warehouse ({warehouseID}) and part ({partID}) assigned to rack {rid}, not {toRack}"), 400
+
+        # Update part quantity in destination
+        to_warehouse_total = self.stored_in_dao.get_quantity(wid=toWarehouse, pid=partID, rid=toRack)
+        flag = self.stored_in_dao.modify_quantity(toWarehouse, partID, toRack, to_warehouse_total + partAmount)
+        if not flag: return jsonify(Error="Failed to modify destination quantity"), 500
 
         # Update part quantity of the sender warehouse
         flag = self.stored_in_dao.modify_quantity(warehouseID, partID, sender_rackID, sender_parts_total - partAmount)
-        if not flag: return jsonify(Error="Internal Server Error: Failed to modify source quantity"), 500
+        if not flag: return jsonify(Error="Failed to modify source quantity"), 500
 
         transferid = self.transferTransactionDAO.addTransferTransaction(
                                                     to_warehouse=toWarehouse,
@@ -107,8 +118,8 @@ class TransferTransactionHandler:
         
         if transferid:
             data["transferid"] = transferid
-            return jsonify(data), 201
-        return jsonify("Internal Server Error: Failed to add transfer transaction"), 500
+            return jsonify(Result=data), 201
+        return jsonify(Error="Failed to add transfer transaction"), 500
 
     
     def getAllTransferTransaction(self):
@@ -118,51 +129,15 @@ class TransferTransactionHandler:
             result = []
             for tup in dbtuples:
                 result.append(self.mapToDict(tup))
-            return jsonify(result)
+            return jsonify(Result=result)
         else:
-            return jsonify("Internal Server Error: Failed to load transfer transaction"), 500
+            return jsonify(Error="Failed to load transfer transaction"), 500
     
 
     def getTransferTransactionById(self, transferid):
         dao = TransferTransactionDAO()
         dbtuples = dao.getTransferTransactionById(transferid)
         if dbtuples:
-            result = []
-            for tup in dbtuples:
-                result.append(self.mapToDict(tup))
-            return jsonify(result)
+            return jsonify(Result=self.mapToDict(dbtuples[0]))
         else:
-            return jsonify("Transfer {} does not exist".format(transferid)), 400
-
-
-    def modifyTransferTransactionByID(self, transferid, data):
-        try:
-            transactionDate = data["transactionDate"]
-            partAmount = data["partAmount"]
-            toWarehouse = data["toWarehouse"]
-            userRequester = data["userRequester"]
-            partID = data["partID"]
-            warehouseID = data["warehouseID"]
-            userID = data["userID"]
-        except KeyError as e:
-            return jsonify({"Unexpected attribute values": e.args}), 400
-        
-        if partAmount < 0:
-            return jsonify("partAmount must be a positive number"), 400
-
-        if (transactionDate and partAmount and partID and warehouseID and userID):
-            dao = TransferTransactionDAO()
-            flag = dao.modifyTransferTransactionById(to_warehouse=toWarehouse,
-                                                     user_requester=userRequester,
-                                                     tdate=transactionDate,
-                                                     part_amount=partAmount,
-                                                     pid=partID,
-                                                     uid=userID,
-                                                     wid=warehouseID,
-                                                     transferid=transferid)
-            if flag:
-                return jsonify(data), 200
-            else:
-                return jsonify("Not Found"), 404
-        else:
-            return jsonify("Attributes cannot contain null fields."), 400
+            return jsonify(Error="Transfer {} does not exist".format(transferid)), 400
