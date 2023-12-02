@@ -439,4 +439,10 @@ class WarehouseDAO(DAO):
                 ORDER BY supply_count DESC
                 LIMIT 3;
                 """
-        return self._generic_retrieval_query(query, substitutions=wid)
+        return self._generic_retrieval_query(query, substitutions=(wid,))
+    
+    def getAllWarehouseParts(self,wid:int):
+        query = """
+        select pid,pname,pcolor,pmaterial,msrp from stored_in natural inner join parts
+        where wid = %s """
+        return self._generic_retrieval_query(query, substitutions=(wid,))
