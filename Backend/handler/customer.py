@@ -13,8 +13,7 @@ class CustomerHandler:
         return my_dict
 
     @staticmethod
-    def customer_exists(cphone, dao=None):
-        if not dao: dao = CustomerDAO()
+    def customer_exists(cphone, dao=CustomerDAO()):
         # Can't insert/update a customer with an existing phone #
         existing_phone = dao.searchByPhone(cphone) is not None
         if existing_phone:

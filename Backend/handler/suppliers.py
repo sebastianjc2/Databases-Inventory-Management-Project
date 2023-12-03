@@ -17,8 +17,7 @@ class SupplierHandler:
 
 
     @staticmethod
-    def supplier_data_exists(sname, sphone, dao=None):
-        if not dao: dao = SupplierDAO()
+    def supplier_data_exists(sname, sphone, dao=SupplierDAO()):
         # Can't insert/update a supplier with an existing phone # or name
         existing_name = dao.searchByName(sname) is not None
         existing_phone = dao.searchByPhone(sphone) is not None

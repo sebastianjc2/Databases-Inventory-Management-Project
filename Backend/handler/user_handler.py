@@ -54,8 +54,7 @@ class UserHandler:
         return jsonify(Users=all_users_result)
 
     @staticmethod
-    def user_data_exists(username, umail, dao=None):
-        if not dao: dao = UserDAO()
+    def user_data_exists(username, umail, dao=UserDAO()):
         # Can't insert/update a customer with an existing phone #
         existing_uname = dao.searchUserByUsername(username) is not None
         existing_umail = dao.searchUserByEmail(umail) is not None
