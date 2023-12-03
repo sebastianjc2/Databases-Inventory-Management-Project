@@ -157,3 +157,43 @@ class IncomingTransactionHandler:
             return jsonify(Result=self.mapToDict(dbtuples[0]))
         else:
             return jsonify(Error="Could not find matching incoming transaction"), 500
+        
+        
+    def modifyIncomingTransactionByID(self, itid, data):
+        try:
+            transactionDate = data["transactionDate"]
+            partAmount = data["partAmount"]
+            unitBuyPrice = data["unitBuyPrice"]
+            partID = data["partID"]
+            warehouseID = data["warehouseID"]
+            rackID = data["rackID"]
+            supplierID = data["supplierID"]
+            userID = data["userID"]
+        except KeyError as e:
+            return jsonify({"Unexpected attribute values": e.args}), 400
+        
+        if unitBuyPrice < 0:
+            return jsonify("unitBuyPrice must be a positive number"), 400
+        if partAmount < 0:
+            return jsonify("partAmount must be a positive number"), 400
+
+        no_values_are_none = (transactionDate and partAmount and unitBuyPrice and partID
+                              and warehouseID and rackID and supplierID and userID)
+
+        if no_values_are_none:
+            dao = IncomingTransactionDAO()
+            flag = dao.modifyIncomingTransactionById(unit_buy_price=unitBuyPrice,
+                                                     sid=supplierID,
+                                                     rid=rackID,
+                                                     tdate=transactionDate,
+                                                     part_amount=partAmount,
+                                                     pid=partID,
+                                                     uid=userID,
+                                                     wid=warehouseID,
+                                                     itid=itid)
+            if flag:
+                return jsonify(data), 200
+            else:
+                return jsonify("Not Found"), 404
+        else:
+            return jsonify("Attributes cannot contain null fields."), 400

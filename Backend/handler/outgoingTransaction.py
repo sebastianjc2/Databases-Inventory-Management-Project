@@ -118,3 +118,41 @@ class OutgoingTransactionHandler:
             return jsonify(Result=self.mapToDict(dbtuples[0]))
         else:
             return jsonify(Error="Could not find matching outgoing transaction"), 500
+        
+
+    def modifyOutgoingTransactionByID(self, otid, data):
+        try:
+            transactionDate = data["transactionDate"]
+            partAmount = data["partAmount"]
+            unitSalePrice = data["unitSalePrice"]
+            partID = data["partID"]
+            warehouseID = data["warehouseID"]
+            customerID = data["customerID"]
+            userID = data["userID"]
+        except KeyError as e:
+            return jsonify({"Unexpected attribute values": e.args}), 400
+        
+        if unitSalePrice < 0:
+            return jsonify("unitSalePrice must be a positive number"), 400
+        if partAmount < 0:
+            return jsonify("partAmount must be a positive number"), 400
+
+        no_values_are_none = (transactionDate and partAmount and unitSalePrice and partID
+                              and warehouseID and customerID and userID)
+
+        if no_values_are_none:
+            dao = OutgoingTransactionDAO()
+            flag = dao.modifyOutgoingTransactionById(unit_sale_price=unitSalePrice,
+                                                     cid=customerID,
+                                                     tdate=transactionDate,
+                                                     part_amount=partAmount,
+                                                     pid=partID,
+                                                     uid=userID,
+                                                     wid=warehouseID,
+                                                     otid=otid)
+            if flag:
+                return jsonify(data), 200
+            else:
+                return jsonify("Not Found"), 404
+        else:
+            return jsonify("Attributes cannot contain null fields."), 400

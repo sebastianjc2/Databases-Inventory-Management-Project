@@ -141,3 +141,36 @@ class TransferTransactionHandler:
             return jsonify(Result=self.mapToDict(dbtuples[0]))
         else:
             return jsonify(Error="Transfer {} does not exist".format(transferid)), 400
+        
+
+    def modifyTransferTransactionByID(self, transferid, data):
+        try:
+            transactionDate = data["transactionDate"]
+            partAmount = data["partAmount"]
+            toWarehouse = data["toWarehouse"]
+            userRequester = data["userRequester"]
+            partID = data["partID"]
+            warehouseID = data["warehouseID"]
+            userID = data["userID"]
+        except KeyError as e:
+            return jsonify({"Unexpected attribute values": e.args}), 400
+        
+        if partAmount < 0:
+            return jsonify("partAmount must be a positive number"), 400
+
+        if (transactionDate and partAmount and partID and warehouseID and userID):
+            dao = TransferTransactionDAO()
+            flag = dao.modifyTransferTransactionById(to_warehouse=toWarehouse,
+                                                     user_requester=userRequester,
+                                                     tdate=transactionDate,
+                                                     part_amount=partAmount,
+                                                     pid=partID,
+                                                     uid=userID,
+                                                     wid=warehouseID,
+                                                     transferid=transferid)
+            if flag:
+                return jsonify(data), 200
+            else:
+                return jsonify("Not Found"), 404
+        else:
+            return jsonify("Attributes cannot contain null fields."), 400
