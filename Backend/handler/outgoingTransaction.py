@@ -2,10 +2,11 @@ from Backend.DAOs.outgoingTransaction import OutgoingTransactionDAO
 from Backend.DAOs.stored_in import StoredInDAO
 from Backend.DAOs.warehouse_dao import WarehouseDAO
 from Backend.DAOs.user_dao import UserDAO
+from Backend.handler.validation import ValidResponse, InvalidResponse, ValidationResponse, ValidatableTransaction
 from flask import jsonify
 
 
-class OutgoingTransactionHandler:
+class OutgoingTransactionHandler(ValidatableTransaction):
     def mapToDict(self, tup):
         my_dict = {}
         my_dict["otid"] = tup[0]
@@ -21,56 +22,26 @@ class OutgoingTransactionHandler:
 
 
     def addOutgoingTransaction(self, data):
-        try:
-            transactionDate = data["transactionDate"]
-            partAmount = data["partAmount"]
-            unitSalePrice = data["unitSalePrice"]
-            partID = data["partID"]
-            warehouseID = data["warehouseID"]
-            customerID = data["customerID"]
-            userID = data["userID"]
-        except KeyError as e:
-            return jsonify(Error={"Unexpected parameter names": e.args}), 400
+        """
+        Validates and adds a new outgoing transaction.
+        """
+        response = self._validate_data(data)
+        if response.isValid():
+            transactionDate, partAmount, unitSalePrice, partID, warehouseID, customerID, userID = response.value
+        else: return response.value
         
-        # Verify nulls
-        if not (transactionDate and partAmount and unitSalePrice and partID
-                and warehouseID and customerID and userID):
-            return jsonify(Error="Attributes cannot contain null fields."), 400
+        response = self._validate_user_in_warehouse(userID, warehouseID)
+        if not response.isValid(): return response.value
 
-        # Verify types
-        for attr in (partID, warehouseID, customerID, userID, partAmount):
-            if not isinstance(attr, int):
-                return jsonify(Error=f"Invalid attritube for type 'int' ({attr})"), 400
-        if not isinstance(unitSalePrice, float) and not isinstance(unitSalePrice, int):
-            return jsonify(Error=f"Invalid type for unitBuyPrice ({unitSalePrice})"), 400
-        if not isinstance(transactionDate, str):
-            return jsonify(Error=f"Invalid type for transaction date ({transactionDate})"), 400
-
-
-        # Verify user is in warehouse
-        tuple = UserDAO().getUserByID(uid=userID)
-        if not tuple: return jsonify(Error=f"Internal server error: Failed to get user with id {userID}"), 500
-        warehouse_for_user = tuple[0][6]
-        if warehouse_for_user != warehouseID:
-            return jsonify(Error=f"User ({userID}) works at warehouse {warehouse_for_user}, not {warehouseID}"), 400
-
-
-        # Verify values are valid
-        if unitSalePrice < 0:
-            return jsonify(Error="unitSalePrice must be a positive number"), 400
-        if partAmount < 0:
-            return jsonify(Error="partAmount must be a positive number"), 400
-        
         # Get the rid for the warehouse and part
         stored_in_DAO = StoredInDAO()
         rackID = stored_in_DAO.get_rack_with_pid_wid(wid=warehouseID, pid=partID)
         if not rackID:
             return jsonify(Error=f"No rack assigned to warehouse ({warehouseID}) and part ({partID})"), 400
 
-        # Verify against quantity in warehouse
-        available_quantity = stored_in_DAO.get_quantity(wid=warehouseID, pid=partID, rid=rackID)
-        if available_quantity < partAmount:
-            return jsonify(Error=f"Not enough stock ({available_quantity}) in warehouse ({warehouseID})"), 400
+        response = self._validate_enough_quantity_in_warehouse(warehouseID, partID, rackID, partAmount)
+        if response.isValid(): available_quantity = response.value
+        else: return response.value
 
         # Add transaction
         otid = OutgoingTransactionDAO().addOutgoingTransaction(unit_sale_price=unitSalePrice,
@@ -100,6 +71,9 @@ class OutgoingTransactionHandler:
 
     
     def getAllOutgoingTransaction(self):
+        """
+        Returns all outgoing transactions.
+        """
         dao = OutgoingTransactionDAO()
         dbtuples = dao.getAllOutgoingTransaction()
         if dbtuples:
@@ -112,15 +86,53 @@ class OutgoingTransactionHandler:
     
 
     def getOutgoingTransactionById(self, otid):
+        """
+        Returns the outgoing transaction with the given id.
+        """
         dao = OutgoingTransactionDAO()
         dbtuples = dao.getOutgoingTransactionById(otid)
-        if dbtuples:
-            return jsonify(Result=self.mapToDict(dbtuples[0]))
-        else:
-            return jsonify(Error="Could not find matching outgoing transaction"), 500
+        if not dbtuples: return jsonify(Error="Could not find matching outgoing transaction"), 500
+        return jsonify(Result=self.mapToDict(dbtuples[0]))
+            
         
 
     def modifyOutgoingTransactionByID(self, otid, data):
+        """
+        Modifies the given outgoing transaction.
+        Performs basic validation but does not update other tables.
+        """
+        response = self._validate_data(data)
+        if response.isValid():
+            transactionDate, partAmount, unitSalePrice, partID, warehouseID, customerID, userID = response.value
+        else: return response.value
+
+        response = self._validate_user_in_warehouse(userID, warehouseID)
+        if not response.isValid(): return response.value
+
+        # Get the rid for the warehouse and part
+        stored_in_DAO = StoredInDAO()
+        rackID = stored_in_DAO.get_rack_with_pid_wid(wid=warehouseID, pid=partID)
+        if not rackID:
+            return jsonify(Error=f"No rack assigned to warehouse ({warehouseID}) and part ({partID})"), 400
+
+        dao = OutgoingTransactionDAO()
+        count = dao.modifyOutgoingTransactionById(unit_sale_price=unitSalePrice,
+                                                  cid=customerID,
+                                                  tdate=transactionDate,
+                                                  part_amount=partAmount,
+                                                  pid=partID,
+                                                  uid=userID,
+                                                  wid=warehouseID,
+                                                  otid=otid)
+        if not count: return jsonify("Not Found"), 404
+        return jsonify(data), 200
+            
+
+    def _validate_data(self, data) -> ValidationResponse:
+        """
+        Checks whether the data is valid.
+        Returns the data if the response is valid.
+        """
         try:
             transactionDate = data["transactionDate"]
             partAmount = data["partAmount"]
@@ -130,29 +142,22 @@ class OutgoingTransactionHandler:
             customerID = data["customerID"]
             userID = data["userID"]
         except KeyError as e:
-            return jsonify({"Unexpected attribute values": e.args}), 400
-        
+            return InvalidResponse(jsonify(Error={"Unexpected parameter names": e.args}), 400)
+        # Verify nulls
+        if not (transactionDate and partAmount and unitSalePrice and partID
+                and warehouseID and customerID and userID):
+            return InvalidResponse(jsonify(Error="Attributes cannot contain null fields."), 400)
+        # Verify types
+        for attr in (partID, warehouseID, customerID, userID, partAmount):
+            if not isinstance(attr, int):
+                return InvalidResponse(jsonify(Error=f"Invalid attritube for type 'int' ({attr})"), 400)
+        if not isinstance(unitSalePrice, float) and not isinstance(unitSalePrice, int):
+            return InvalidResponse(jsonify(Error=f"Invalid type for unitBuyPrice ({unitSalePrice})"), 400)
+        if not isinstance(transactionDate, str):
+            return InvalidResponse(jsonify(Error=f"Invalid type for transaction date ({transactionDate})"), 400)
+        # Verify values are valid
         if unitSalePrice < 0:
-            return jsonify("unitSalePrice must be a positive number"), 400
+            return InvalidResponse(jsonify(Error="unitSalePrice must be a positive number"), 400)
         if partAmount < 0:
-            return jsonify("partAmount must be a positive number"), 400
-
-        no_values_are_none = (transactionDate and partAmount and unitSalePrice and partID
-                              and warehouseID and customerID and userID)
-
-        if no_values_are_none:
-            dao = OutgoingTransactionDAO()
-            flag = dao.modifyOutgoingTransactionById(unit_sale_price=unitSalePrice,
-                                                     cid=customerID,
-                                                     tdate=transactionDate,
-                                                     part_amount=partAmount,
-                                                     pid=partID,
-                                                     uid=userID,
-                                                     wid=warehouseID,
-                                                     otid=otid)
-            if flag:
-                return jsonify(data), 200
-            else:
-                return jsonify("Not Found"), 404
-        else:
-            return jsonify("Attributes cannot contain null fields."), 400
+            return InvalidResponse(jsonify(Error="partAmount must be a positive number"), 400)
+        return ValidResponse(transactionDate, partAmount, unitSalePrice, partID, warehouseID, customerID, userID)

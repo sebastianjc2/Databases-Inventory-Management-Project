@@ -186,82 +186,123 @@ def getWarehouseById(wid: int):
 
 @app.route("/sqlytes/incoming", methods=["POST", "GET"])
 def allIncomingTransactions():
-    if request.method == "POST":
-        data = request.json
-        return IncomingTransactionHandler().addIncomingTransaction(data)
-    elif request.method == "GET":
-        return IncomingTransactionHandler().getAllIncomingTransaction()
-    else:
-        return jsonify("Not supported"), 405
+    try:
+        if request.method == "POST":
+            data = request.json
+            return IncomingTransactionHandler().addIncomingTransaction(data)
+        elif request.method == "GET":
+            return IncomingTransactionHandler().getAllIncomingTransaction()
+        else:
+            return jsonify(Error="Not supported"), 405
+    except Exception as e:
+        print(e)
+        return jsonify(Error="An unkown error occurred"), 500
 
 
 @app.route("/sqlytes/incoming/<int:itid>", methods=["GET", "PUT"])
 def incomingTransactionById(itid):
-    if request.method == "GET":
-        return IncomingTransactionHandler().getIncomingTransactionById(itid)
-    elif request.method == "PUT":
-        return jsonify("Cannot modify transactions"), 400
-    else:
-        return jsonify("Not supported"), 405
+    try:
+        if request.method == "GET":
+            return IncomingTransactionHandler().getIncomingTransactionById(itid)
+        elif request.method == "PUT":
+            data = request.json
+            return IncomingTransactionHandler().modifyIncomingTransactionByID(itid, data)
+        else:
+            return jsonify(Error="Not supported"), 405
+    except Exception as e:
+        print(e)
+        return jsonify(Error="An unkown error occurred"), 500
     
 
 
 @app.route("/sqlytes/outgoing", methods=["POST", "GET"])
 def allOutgoingTransactions():
-    if request.method == "POST":
-        data = request.json
-        return OutgoingTransactionHandler().addOutgoingTransaction(data)
-    elif request.method == "GET":
-        return OutgoingTransactionHandler().getAllOutgoingTransaction()
-    else:
-        return jsonify("Not supported"), 405
+    try:
+        if request.method == "POST":
+            data = request.json
+            return OutgoingTransactionHandler().addOutgoingTransaction(data)
+        elif request.method == "GET":
+            return OutgoingTransactionHandler().getAllOutgoingTransaction()
+        else:
+            return jsonify(Error="Not supported"), 405
+    except Exception as e:
+        print(e)
+        return jsonify(Error="An unkown error occurred"), 500
+
 
 
 @app.route("/sqlytes/outgoing/<int:otid>", methods=["GET", "PUT"])
 def outgoingTransactionById(otid):
-    if request.method == "GET":
-        return OutgoingTransactionHandler().getOutgoingTransactionById(otid)
-    elif request.method == "PUT":
-        return jsonify("Cannot modify transactions"), 400
-    else:
-        return jsonify("Not supported"), 405
+    try:
+        if request.method == "GET":
+            return OutgoingTransactionHandler().getOutgoingTransactionById(otid)
+        elif request.method == "PUT":
+            data = request.json
+            return OutgoingTransactionHandler().modifyOutgoingTransactionByID(otid, data)
+        else:
+            return jsonify(Error="Not supported"), 405
+    except Exception as e:
+        print(e)
+        return jsonify(Error="An unkown error occurred"), 500
+
 
 
 
 @app.route("/sqlytes/exchange", methods=["POST", "GET"])
 def allTransferTransactions():
-    if request.method == "POST":
-        data = request.json
-        return TransferTransactionHandler().addTransferTransaction(data)
-    elif request.method == "GET":
-        return TransferTransactionHandler().getAllTransferTransaction()
-    else:
-        return jsonify("Not supported"), 405
+    try:
+        if request.method == "POST":
+            data = request.json
+            return TransferTransactionHandler().addTransferTransaction(data)
+        elif request.method == "GET":
+            return TransferTransactionHandler().getAllTransferTransaction()
+        else:
+            return jsonify(Error="Not supported"), 405
+    except Exception as e:
+        print(e)
+        return jsonify(Error="An unkown error occurred"), 500
+
 
 
 @app.route("/sqlytes/exchange/<int:transferid>", methods=["GET", "PUT"])
 def transferTransactionById(transferid):
-    if request.method == "GET":
-        return TransferTransactionHandler().getTransferTransactionById(transferid)
-    elif request.method == "PUT":
-        return jsonify("Cannot modify transactions"), 400
-    else:
-        return jsonify("Not supported"), 405
+    try:
+        if request.method == "GET":
+            return TransferTransactionHandler().getTransferTransactionById(transferid)
+        elif request.method == "PUT":
+            data = request.json
+            return TransferTransactionHandler().modifyTransferTransactionByID(transferid, data)
+        else:
+            return jsonify(Error="Not supported"), 405
+    except Exception as e:
+        print(e)
+        return jsonify(Error="An unkown error occurred"), 500
+
     
 
 @app.route("/sqlytes/transaction", methods=["GET"])
 def allTransactions():
-    if request.method == "GET":
-        return TransactionHandler().getAllTransactions()
-    else:
-        return jsonify("Not supported"), 405
+    try:
+        if request.method == "GET":
+            return TransactionHandler().getAllTransactions()
+        else:
+            return jsonify(Error="Not supported"), 405
+    except Exception as e:
+        print(e)
+        return jsonify(Error="An unkown error occurred"), 500
+
 
 @app.route("/sqlytes/transaction/<int:tid>", methods=["GET"])
 def transactionByID(tid):
-    if request.method == "GET":
-        return TransactionHandler().getTransactionById(tid)
-    else:
-        return jsonify("Not supported"), 405
+    try:
+        if request.method == "GET":
+            return TransactionHandler().getTransactionById(tid)
+        else:
+            return jsonify(Error="Not supported"), 405
+    except Exception as e:
+        print(e)
+        return jsonify(Error="An unkown error occurred"), 500
+
 
 # Global Statistics
 @app.route("/sqlytes/most/rack", methods=["GET"])

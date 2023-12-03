@@ -36,7 +36,7 @@ class IncomingTransactionDAO(DAO):
 
 
     def modifyIncomingTransactionById(self, unit_buy_price, sid, rid, tdate, part_amount, pid, uid, wid, itid):
-        tid = self._generic_retrieval_query(
+        result = self._generic_retrieval_query(
             query="""
             SELECT tid
             FROM transactions
@@ -44,9 +44,9 @@ class IncomingTransactionDAO(DAO):
             WHERE itid = %s;
             """,
             substitutions=itid
-        )[0]
-        if not tid:
-            return None
+        )
+        if not result: return None
+        tid = result[0]
         rowcountTransactions = self._modifyEntryByID(table_name="transactions",
                                                      id_name="tid",
                                                      id_value=tid,

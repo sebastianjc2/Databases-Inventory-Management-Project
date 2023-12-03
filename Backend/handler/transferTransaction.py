@@ -4,10 +4,11 @@ from Backend.DAOs.parts import PartDAO
 from Backend.DAOs.user_dao import UserDAO
 from Backend.DAOs.stored_in import StoredInDAO
 from Backend.DAOs.racks import RackDAO
+from Backend.handler.validation import ValidResponse, InvalidResponse, ValidationResponse, ValidatableTransaction
 from flask import jsonify
 
 
-class TransferTransactionHandler:
+class TransferTransactionHandler(ValidatableTransaction):
     def __init__(self):
         self.transferTransactionDAO = TransferTransactionDAO()
         self.warehouse_dao = WarehouseDAO()
@@ -28,73 +29,32 @@ class TransferTransactionHandler:
         my_dict["userID"] = tup[7]
         my_dict["warehouseID"] = tup[8]
         return my_dict
-
+    
 
     def addTransferTransaction(self, data):
-        try:
-            transactionDate = data["transactionDate"]
-            partAmount = data["partAmount"]
-            toWarehouse = data["toWarehouse"]
-            userRequester = data["userRequester"]
-            partID = data["partID"]
-            warehouseID = data["warehouseID"]
-            userID = data["userID"]
-            toRack = data["toRack"]
-        except KeyError as e:
-            return jsonify(Error={"Invalid argument names!": e.args}), 400
-        
-        # Check that all fields are integers.
-        for key in data:
-                if key != "transactionDate" and not isinstance(data[key],int):
-                    return jsonify(Error='{} has to be a integer.'.format(key)), 400
-        
-        # Verify types
-        if not isinstance(data["transactionDate"],str):
-            return jsonify(Error='{} has to be a string.'.format("transactionDate")), 400
-        elif partAmount <= 0:
-            return jsonify(Error="partAmount must be a positive number greater than 0"), 400
-        elif not self.user_dao.getUserByID(userID):
-            return jsonify(Error="Invalid Tranfer. The user who sent the transfer does not exist."), 400
-        elif not self.user_dao.getUserByID(userRequester):
-            return jsonify(Error="Invalid Transfer. The user who requested the transfer does not exist."), 400
-        elif not self.part_dao.searchByID(partID):
-            return jsonify(Error="Invalid Transfer. The part does not exist."), 400
-        elif not self.warehouse_dao.getWarehouseByID(warehouseID):
-            return jsonify(Error="Invalid Transfer. The warehouse who sent the transfer does not exist."), 400
-        elif not self.warehouse_dao.getWarehouseByID(toWarehouse):
-            return jsonify(Error="Invalid Transfer. The warehouse that requested the warehouse does not exist."), 400
-        elif not self.warehouse_dao.worksIn(warehouseID, userID):
-            return jsonify(Error="Invalid Transfer. The user who sent the transfer does not work in the "
-                           "warehouse that will be sending the transfer."), 400
-        elif not self.warehouse_dao.worksIn(toWarehouse, userRequester):
-            return jsonify(Error="Invalid Transfer. The user who requested the transfer does not work in the "
-                           "warehouse that will be receiving the transfer."), 400
+        """
+        Validates and adds a new transfer transaction.
+        """
+        response = self._validate_data(data)
+        if response.isValid():
+            transactionDate, partAmount, toWarehouse, userRequester, partID, warehouseID, userID, toRack = response.value
+        else: return response.value
 
-
-        # Verify that the relationship exists in stored_in for the sender
-        # Naturally, if it doesn't we can't perform the transfer
         sender_rackID = self.stored_in_dao.get_rack_with_pid_wid(partID, warehouseID)
         if not sender_rackID:
             return jsonify(Error=f"There is no rack for source warehouse ({warehouseID}) and part ({partID})"), 400
 
-        # Make sure theres enough parts to send
-        sender_parts_total = self.stored_in_dao.get_quantity(wid=warehouseID, pid=partID, rid=sender_rackID)
-        if sender_parts_total < partAmount:
-            return jsonify(Error=
-                "Invalid Transfer. The sender warehouse does not have enough parts to send ({sender_parts_total})."
-                ), 400
+        response = self._validate_enough_quantity_in_warehouse(warehouseID, partID, sender_rackID, partAmount)
+        if response.isValid(): sender_parts_total = response.value
+        else: return response.value
 
-        # Verfiy receiver rack exists
-        rack_capacity = RackDAO().get_capacity(rid=toRack)
-        if not rack_capacity: return jsonify(Error=f"Rack {toRack} does not exist"), 500
+        response = self._validate_rack_exists(rackID=toRack)
+        if not response.isValid(): return response.value
 
-        # Ensure the rack is not being used for another type of part
-        stored_in_DAO = StoredInDAO()
-        result = stored_in_DAO.get_entry_with_rid(rid=toRack)
-        # If the entry exists and doesn't match, error
-        if result and not (result[0] == toWarehouse and result[1] == partID):
-            return jsonify(Error=f"Rack ({toRack}) not assigned to warehouse ({warehouseID}) and part ({partID})"), 400
-        rid = stored_in_DAO.get_rack_with_pid_wid(pid=partID, wid=toWarehouse)
+        response = self._validate_rack_is_not_in_use_for_different_part(toRack, toWarehouse, partID)
+        if not response.isValid(): return response.value
+
+        rid = StoredInDAO().get_rack_with_pid_wid(pid=partID, wid=toWarehouse)
         if rid and rid != toRack:
             return jsonify(Error=f"Warehouse ({warehouseID}) and part ({partID}) assigned to rack {rid}, not {toRack}"), 400
 
@@ -116,10 +76,9 @@ class TransferTransactionHandler:
                                                     uid=userID,
                                                     wid=warehouseID)
         
-        if transferid:
-            data["transferid"] = transferid
-            return jsonify(Result=data), 201
-        return jsonify(Error="Failed to add transfer transaction"), 500
+        if not transferid: return jsonify(Error="Failed to add transfer transaction"), 500
+        data["transferid"] = transferid
+        return jsonify(Result=data), 201
 
     
     def getAllTransferTransaction(self):
@@ -144,6 +103,53 @@ class TransferTransactionHandler:
         
 
     def modifyTransferTransactionByID(self, transferid, data):
+        """
+        Modifies the given transfer transaction.
+        Performs basic validation but does not update other tables.
+        """
+        response = self._validate_data(data)
+        if response.isValid():
+            transactionDate, partAmount, toWarehouse, userRequester, partID, warehouseID, userID, toRack = response.value
+        else: return response.value
+
+        response = self._validate_data(data)
+        if response.isValid():
+            transactionDate, partAmount, toWarehouse, userRequester, partID, warehouseID, userID, toRack = response.value
+        else: return response.value
+
+        sender_rackID = self.stored_in_dao.get_rack_with_pid_wid(partID, warehouseID)
+        if not sender_rackID:
+            return jsonify(Error=f"There is no rack for source warehouse ({warehouseID}) and part ({partID})"), 400
+
+        response = self._validate_rack_exists(rackID=toRack)
+        if not response.isValid(): return response.value
+
+        response = self._validate_rack_is_not_in_use_for_different_part(toRack, toWarehouse, partID)
+        if not response.isValid(): return response.value
+
+        rid = StoredInDAO().get_rack_with_pid_wid(pid=partID, wid=toWarehouse)
+        if rid and rid != toRack:
+            return jsonify(Error=f"Warehouse ({warehouseID}) and part ({partID}) assigned to rack {rid}, not {toRack}"), 400
+
+        dao = TransferTransactionDAO()
+        count = dao.modifyTransferTransactionById(to_warehouse=toWarehouse,
+                                                  user_requester=userRequester,
+                                                  tdate=transactionDate,
+                                                  part_amount=partAmount,
+                                                  pid=partID,
+                                                  uid=userID,
+                                                  wid=warehouseID,
+                                                  transferid=transferid)
+        if not count: return jsonify("Not Found"), 404
+        return jsonify(data), 200
+        
+
+
+    def _validate_data(self, data) -> ValidationResponse:
+        """
+        Checks whether the data is valid.
+        Returns the data if the response is valid.
+        """
         try:
             transactionDate = data["transactionDate"]
             partAmount = data["partAmount"]
@@ -152,25 +158,34 @@ class TransferTransactionHandler:
             partID = data["partID"]
             warehouseID = data["warehouseID"]
             userID = data["userID"]
+            toRack = data["toRack"]
         except KeyError as e:
-            return jsonify({"Unexpected attribute values": e.args}), 400
+            return InvalidResponse(jsonify(Error={"Invalid argument names!": e.args}), 400)
         
-        if partAmount < 0:
-            return jsonify("partAmount must be a positive number"), 400
-
-        if (transactionDate and partAmount and partID and warehouseID and userID):
-            dao = TransferTransactionDAO()
-            flag = dao.modifyTransferTransactionById(to_warehouse=toWarehouse,
-                                                     user_requester=userRequester,
-                                                     tdate=transactionDate,
-                                                     part_amount=partAmount,
-                                                     pid=partID,
-                                                     uid=userID,
-                                                     wid=warehouseID,
-                                                     transferid=transferid)
-            if flag:
-                return jsonify(data), 200
-            else:
-                return jsonify("Not Found"), 404
-        else:
-            return jsonify("Attributes cannot contain null fields."), 400
+        # Check that all fields are integers.
+        for key in data:
+                if key != "transactionDate" and not isinstance(data[key],int):
+                    return InvalidResponse(jsonify(Error='{} has to be a integer.'.format(key)), 400)
+        
+        # Verify types
+        if not isinstance(data["transactionDate"],str):
+            return InvalidResponse(jsonify(Error='{} has to be a string.'.format("transactionDate")), 400)
+        elif partAmount <= 0:
+            return InvalidResponse(jsonify(Error="partAmount must be a positive number greater than 0"), 400)
+        elif not self.user_dao.getUserByID(userID):
+            return InvalidResponse(jsonify(Error="Invalid Tranfer. The user who sent the transfer does not exist."), 400)
+        elif not self.user_dao.getUserByID(userRequester):
+            return InvalidResponse(jsonify(Error="Invalid Transfer. The user who requested the transfer does not exist."), 400)
+        elif not self.part_dao.searchByID(partID):
+            return InvalidResponse(jsonify(Error="Invalid Transfer. The part does not exist."), 400)
+        elif not self.warehouse_dao.getWarehouseByID(warehouseID):
+            return InvalidResponse(jsonify(Error="Invalid Transfer. The warehouse who sent the transfer does not exist."), 400)
+        elif not self.warehouse_dao.getWarehouseByID(toWarehouse):
+            return InvalidResponse(jsonify(Error="Invalid Transfer. The warehouse that requested the warehouse does not exist."), 400)
+        elif not self.warehouse_dao.worksIn(warehouseID, userID):
+            return InvalidResponse(jsonify(Error="Invalid Transfer. The user who sent the transfer does not work in the "
+                           "warehouse that will be sending the transfer."), 400)
+        elif not self.warehouse_dao.worksIn(toWarehouse, userRequester):
+            return InvalidResponse(jsonify(Error="Invalid Transfer. The user who requested the transfer does not work in the "
+                           "warehouse that will be receiving the transfer."), 400)
+        return ValidResponse(transactionDate, partAmount, toWarehouse, userRequester, partID, warehouseID, userID, toRack)
