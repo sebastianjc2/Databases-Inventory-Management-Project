@@ -97,10 +97,11 @@ docker exec -it inventory-tracking-app-sqlytes-db-1 psql -U docker_admin -d sqly
 - View the tables within that DB with `\dt`. 
 - When finished, stop the current container via: `docker-compose down`. Add `-v` to destroy volumes. 
 
-#### Voila
-In order to run *voilá* to display the front page of the application make sure you follow these steps:
+## Voila
+In order to get *Voilá* to display the front page of the application:
 
-
-1) Make sure you have downloaded the latest `requirements.txt` packages.
-2) *voilá* web applications display contents of markdown cells as well as any cell's output. This means that if you want to add more content to the frontend you can do it by adding new code that outputs something into a new cell or add text to a markdown file.
-3) In order to compile new changes, just refresh the page in the browser.
+1) Make sure to download the latest `requirements.txt` packages via: ```pip install -r requirements.txt```
+2) *Voilá* web applications display contents of Markdown cells as well as any cell's output. This means that if you want 
+   to add more content to the Frontend, you can do it by adding new code that outputs something into a new cell.
+   Alternatively, add text to a Markdown file.
+3) In order to compile your new changes, just refresh the page in your browser.
