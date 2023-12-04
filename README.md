@@ -100,7 +100,10 @@ docker exec -it inventory-tracking-app-sqlytes-db-1 psql -U docker_admin -d sqly
 ## Voila
 In order to get *Voilá* to display the front page of the application:
 
-1) Make sure to download the latest `requirements.txt` packages via: ```pip install -r requirements.txt```
+1) Make sure to download the latest `requirements.txt` packages via: 
+   ```
+   pip install -r requirements.txt
+   ```
 2) *Voilá* web applications display contents of Markdown cells as well as any cell's output. This means that if you want 
    to add more content to the Frontend, you can do it by adding new code that outputs something into a new cell.
    Alternatively, add text to a Markdown file.
