@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS supplier (
 
 CREATE TABLE IF NOT EXISTS racks (
     rid SERIAL PRIMARY KEY,
-    rname VARCHAR(255) UNIQUE NOT NULL,
+    rname VARCHAR(255) NOT NULL,
     rcapacity INTEGER NOT NULL
 );
 
@@ -97,5 +97,5 @@ CREATE TABLE IF NOT EXISTS stored_in(
      parts_qty INTEGER NOT NULL,
      UNIQUE (wid, pid),
      UNIQUE (rid),
-     PRIMARY KEY (wid, pid, rid)
+     PRIMARY KEY (wid, pid)
 );

@@ -1,7 +1,7 @@
 from flask import jsonify
 from Backend.DAOs.warehouse_dao import WarehouseDAO
 from Backend.handler.parts import PartHandler
-
+from typing import Iterable
 
 
 class WarehouseHandler:

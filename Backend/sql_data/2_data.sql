@@ -18,73 +18,99 @@ INSERT INTO warehouse (wname, wcountry, wregion, wcity, wstreet, wzipcode, wbudg
 
 INSERT INTO racks (rname, rcapacity) VALUES
 -- Power Tools
-('Power Drill Rack', 50),
+('Power Drill Rack', 50), --1
+('Power Drill Rack', 70),
 ('Circular Saw Rack', 40),
+('Circular Saw Rack', 80),
+('Circular Saw Rack', 120), --5
 ('Screwdriver Set Rack', 30),
 ('Angle Grinder Rack', 25),
+('Angle Grinder Rack', 50),
 ('Jigsaw Rack', 50),
+('Jigsaw Rack', 60), --10
 ('Tool Battery Rack', 20),
+('Tool Battery Rack', 40),
 ('Impact Wrench Rack', 15),
-('Rotary Tool Rack', 25),
+('Impact Wrench Rack', 30),
+('Rotary Tool Rack', 25), --15
 ('Heat Gun Rack', 50),
 ('Bench Grinder Rack', 30),
 
 -- Plumbing
 ('Pipe Fittings Rack', 200),
 ('Plunger Rack', 100),
+('Plunger Rack' , 120), --20
 ('Pipe Wrench Rack', 70),
 ('Torch Kit Rack', 220),
-('Pipe Cutter Rack', 350),
+('Torch Kit Rack', 280),
+('Torch Kit Rack', 300),
+('Pipe Cutter Rack', 350), --25
+('Pipe Cutter Rack', 450),
+
 
 -- Paint
 ('Paintbrush Rack', 200),
 ('Paint Roller Rack', 300),
 ('Painter Tape Rack', 250),
+('Painter Tape Rack', 300), --30
+('Painter Tape Rack', 320),
+('Painter Tape Rack', 340),
 ('Spray Paint Rack', 150),
 ('Paint Tray Rack', 70),
+('Paint Tray Rack', 90), --35
 
 -- Misc.
 ('Toolbox Rack', 100),
+('Toolbox Rack', 110),
+('Toolbox Rack', 120),
 ('Safety Equipment Rack', 120),
-('Measuring Tools Rack', 150),
+('Measuring Tools Rack', 150), --40
 ('Hardware Organizer Rack', 70),
+('Hardware Organizer Rack', 100),
 ('Cord Management Rack', 300),
 ('Flashlight Rack', 100),
-('Tool Belt Rack', 200),
+('Tool Belt Rack', 200), --45
+('Tool Belt Rack', 210),
 ('Work Gloves Rack', 300),
 ('Ladder Rack', 50),
-('Extension Cord Rack', 100),
+('Ladder Rack', 80),
+('Extension Cord Rack', 100), --50
+('Extension Cord Rack', 110),
 ('Toolbox Accessories Rack', 60),
 
 -- Outdoor Tools
 ('Lawn Mower Rack', 60),
 ('Leaf Blower Rack', 110),
-('Hedge Trimmer Rack', 100),
+('Hedge Trimmer Rack', 100), --55
+('Hedge Trimmer Rack', 120),
 ('Garden Hose Rack', 200),
 ('Wheelbarrow Rack', 55),
 
 -- Lighting
 ('Ceiling Light Fixtures Rack', 600),
-('Table Lamps Rack', 400),
+('Table Lamps Rack', 400), --60
 ('Floor Lamps Rack', 500),
 ('Wall Sconces Rack', 500),
 ('Outdoor Lighting Rack', 150),
+('Outdoor Lighting Rack', 200),
+('Outdoor Lighting Rack', 250), --65
 
 -- Extra/Not connected Racks
 ('Left For Dead Rack', 12),
 ('Spaghetti Rack', 10000),
 ('Mood Lights Rack', 200),
-('Tech Gadgets Rack', 150),
+('Mood Lights Rack', 300),
+('Tech Gadgets Rack', 150), --70
 ('Outdoor Adventure Rack', 180),
 ('Kitchen Essentials Rack', 100),
 ('Fitness Gear Rack', 120),
 ('Entertainment Center Rack', 250),
-('Pet Supplies Rack', 120),
+('Pet Supplies Rack', 120), --75
 ('Book Lovers Rack', 150),
 ('Smart Home Devices Rack', 200),
 ('DIY Tools Rack', 160),
 ('Travel Accessories Rack', 140),
-('Art and Craft Supplies Rack', 130);
+('Art and Craft Supplies Rack', 130); --80
 
 
 INSERT INTO parts (pname, pcolor, pmaterial, MSRP) VALUES
@@ -255,28 +281,28 @@ INSERT INTO transactions (tdate, part_amount, pid, uid, wid) VALUES
 ('2021-11-19', 15, (SELECT pid FROM parts WHERE pname = 'Step Ladder'), (SELECT uid FROM users WHERE uemail = 'mariana@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions')),
 ('2021-11-20', 4, (SELECT pid FROM parts WHERE pname = 'Jigsaw'), (SELECT uid FROM users WHERE uemail = 'sebastian@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution')),
 ('2021-11-21', 7, (SELECT pid FROM parts WHERE pname = 'Tool Belt'), (SELECT uid FROM users WHERE uemail = 'daniel@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution')),
-('2023-11-23', 11, (SELECT pid FROM parts WHERE pname = 'Plunger'), (SELECT uid FROM users WHERE uemail = 'jean@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage')),
+('2023-11-23', 11, (SELECT pid FROM parts WHERE pname = 'Toolbox'), (SELECT uid FROM users WHERE uemail = 'jean@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage')),
 ('2023-11-25', 1, (SELECT pid FROM parts WHERE pname = 'Jigsaw'), (SELECT uid FROM users WHERE uemail = 'yadiel@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution')),
 ('2023-11-26', 1, (SELECT pid FROM parts WHERE pname = 'Jigsaw'), (SELECT uid FROM users WHERE uemail = 'yadiel@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution')),
-('2021-08-22', 6, (SELECT pid FROM parts WHERE pname = 'Heat Gun'), (SELECT uid FROM users WHERE uemail = 'yadiel@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage')),
-('2022-02-27', 8, (SELECT pid FROM parts WHERE pname = 'Circular Saw'), (SELECT uid FROM users WHERE uemail = 'mariana@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Bayamon Database Centers')),
-('2022-06-05', 3, (SELECT pid FROM parts WHERE pname = 'Cord Organizer'), (SELECT uid FROM users WHERE uemail = 'sebastian@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Las Montañas No-Aseguradoras')),
+('2021-08-22', 6, (SELECT pid FROM parts WHERE pname = 'Table Lamp Set'), (SELECT uid FROM users WHERE uemail = 'yadiel@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage')),
+('2022-02-27', 8, (SELECT pid FROM parts WHERE pname = 'Bench Grinder'), (SELECT uid FROM users WHERE uemail = 'mariana@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Bayamon Database Centers')),
+('2022-06-05', 3, (SELECT pid FROM parts WHERE pname = 'Painters Tape'), (SELECT uid FROM users WHERE uemail = 'sebastian@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Las Montañas No-Aseguradoras')),
 ('2022-09-18', 7, (SELECT pid FROM parts WHERE pname = 'Screwdriver Set'), (SELECT uid FROM users WHERE uemail = 'sebastian@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center')),
-('2022-12-25', 5, (SELECT pid FROM parts WHERE pname = 'Safety Glasses'), (SELECT uid FROM users WHERE uemail = 'daniel@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter')),
-('2019-03-07', 12, (SELECT pid FROM parts WHERE pname = 'Pipe Wrench'), (SELECT uid FROM users WHERE uemail = 'carlos@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions')),
-('2019-06-15', 2, (SELECT pid FROM parts WHERE pname = 'Extension Cord'), (SELECT uid FROM users WHERE uemail = 'carlos@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions')),
+('2022-12-25', 5, (SELECT pid FROM parts WHERE pname = 'Paintbrush Set'), (SELECT uid FROM users WHERE uemail = 'daniel@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter')),
+('2019-03-07', 12, (SELECT pid FROM parts WHERE pname = 'Impact Wrench'), (SELECT uid FROM users WHERE uemail = 'carlos@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions')),
+('2019-06-15', 2, (SELECT pid FROM parts WHERE pname = 'Painters Tape'), (SELECT uid FROM users WHERE uemail = 'carlos@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions')),
 ('2021-09-28', 11, (SELECT pid FROM parts WHERE pname = 'Plunger'), (SELECT uid FROM users WHERE uemail = 'carlos@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Las Montañas Aseguradoras')),
 ('2018-12-10', 9, (SELECT pid FROM parts WHERE pname = 'Pipe Fittings Assortment'), (SELECT uid FROM users WHERE uemail = 'alejandra@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Bayamon Database Centers')),
 ('2020-03-22', 4, (SELECT pid FROM parts WHERE pname = 'Extension Cord'), (SELECT uid FROM users WHERE uemail = 'mariana@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter')),
-('2022-04-12', 2, (SELECT pid FROM parts WHERE pname = 'Modern Ceiling Light Fixture'), (SELECT uid FROM users WHERE uemail = 'mariana@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter')),
+('2022-04-12', 2, (SELECT pid FROM parts WHERE pname = 'Extension Cord'), (SELECT uid FROM users WHERE uemail = 'mariana@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter')),
 ('2022-08-10', 1, (SELECT pid FROM parts WHERE pname = 'Electric Hedge Trimmer'), (SELECT uid FROM users WHERE uemail = 'mariana@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter')),
 ('2023-10-07', 5, (SELECT pid FROM parts WHERE pname = 'Extension Cord'), (SELECT uid FROM users WHERE uemail = 'mariana@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter')),
-('2017-03-24', 5, (SELECT pid FROM parts WHERE pname = 'Paint Roller Set'), (SELECT uid FROM users WHERE uemail = 'alejandra@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Los Altísimos de Almacenamiento')),
-('2019-12-31', 8, (SELECT pid FROM parts WHERE pname = 'Jigsaw'), (SELECT uid FROM users WHERE uemail = 'alejandra@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage')),
-('2023-07-14', 6, (SELECT pid FROM parts WHERE pname = 'Power Drill'), (SELECT uid FROM users WHERE uemail = 'sebastian@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage')),
+('2017-03-24', 5, (SELECT pid FROM parts WHERE pname = 'Gas Lawn Mower'), (SELECT uid FROM users WHERE uemail = 'alejandra@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Los Altísimos de Almacenamiento')),
+('2019-12-31', 8, (SELECT pid FROM parts WHERE pname = 'Modern Ceiling Light Fixture'), (SELECT uid FROM users WHERE uemail = 'alejandra@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage')),
+('2023-07-14', 6, (SELECT pid FROM parts WHERE pname = 'Mood Lights'), (SELECT uid FROM users WHERE uemail = 'sebastian@email.com'), (SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage')),
 ('2022-09-08', 3, (SELECT pid FROM parts WHERE pname = 'Power Drill'), (SELECT uid FROM users WHERE uemail = 'jean@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center')),
-('2021-04-25', 8, (SELECT pid FROM parts WHERE pname = 'Safety Glasses'), (SELECT uid FROM users WHERE uemail = 'alejandra@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus')),
-('2022-12-02', 5, (SELECT pid FROM parts WHERE pname = 'Outdoor Solar Lights Set'), (SELECT uid FROM users WHERE uemail = 'yadiel@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions')),
+('2021-04-25', 8, (SELECT pid FROM parts WHERE pname = 'Pipe Cutter'), (SELECT uid FROM users WHERE uemail = 'alejandra@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus')),
+('2022-12-02', 5, (SELECT pid FROM parts WHERE pname = 'Paint Tray'), (SELECT uid FROM users WHERE uemail = 'yadiel@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions')),
 ('2020-10-15', 12, (SELECT pid FROM parts WHERE pname = 'Hardware Organizer'), (SELECT uid FROM users WHERE uemail = 'yadiel@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center')),
 ('2023-03-18', 2, (SELECT pid FROM parts WHERE pname = 'Angle Grinder'), (SELECT uid FROM users WHERE uemail = 'isabella@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus')),
 ('2021-12-07', 7, (SELECT pid FROM parts WHERE pname = 'Painters Tape'), (SELECT uid FROM users WHERE uemail = 'sofia@email.com'), (SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions')),
@@ -303,44 +329,44 @@ INSERT INTO transactions (tdate, part_amount, pid, uid, wid) VALUES
 
 -- Outgoing Transactions
 INSERT INTO outgoing_transaction (unit_sale_price, cid, tid) VALUES
-(49.99, (SELECT cid FROM customer WHERE cphone = '787-213-1234'), (SELECT tid FROM transactions WHERE tdate = '2019-12-31')),
-(299.99, (SELECT cid FROM customer WHERE cphone = '939-534-5678'), (SELECT tid FROM transactions WHERE tdate = '2023-11-15')),
-(5.99, (SELECT cid FROM customer WHERE cphone = '787-632-2345'), (SELECT tid FROM transactions WHERE tdate = '2022-11-16')),
-(7.99, (SELECT cid FROM customer WHERE cphone = '939-645-6789'), (SELECT tid FROM transactions WHERE tdate = '2021-11-20')),
-(12.99, (SELECT cid FROM customer WHERE cphone = '787-133-3456'), (SELECT tid FROM transactions WHERE tdate = '2021-11-21')),
-(7.99, (SELECT cid FROM customer WHERE cphone = '939-222-7890'), (SELECT tid FROM transactions WHERE tdate = '2022-09-18')),
-(34.99, (SELECT cid FROM customer WHERE cphone = '787-432-4567'), (SELECT tid FROM transactions WHERE tdate = '2019-11-14')),
-(19.99, (SELECT cid FROM customer WHERE cphone = '787-876-5678'), (SELECT tid FROM transactions WHERE tdate = '2021-11-19')),
-(3.99, (SELECT cid FROM customer WHERE cphone = '939-987-8901'), (SELECT tid FROM transactions WHERE tdate = '2022-12-25')),
-(14.99, (SELECT cid FROM customer WHERE cphone = '787-765-1234'), (SELECT tid FROM transactions WHERE tdate = '2017-03-24')),
-(9.99, (SELECT cid FROM customer WHERE cphone = '939-654-2345'), (SELECT tid FROM transactions WHERE tdate = '2019-03-07')),
-(29.99, (SELECT cid FROM customer WHERE cphone = '787-888-5678'), (SELECT tid FROM transactions WHERE tdate = '2021-08-22')),
-(9.99, (SELECT cid FROM customer WHERE cphone = '939-654-2345'), (SELECT tid FROM transactions WHERE tdate = '2023-11-25')),
-(9.99, (SELECT cid FROM customer WHERE cphone = '939-654-2345'), (SELECT tid FROM transactions WHERE tdate = '2023-11-23')),
-(29.99, (SELECT cid FROM customer WHERE cphone = '787-888-5678'), (SELECT tid FROM transactions WHERE tdate = '2023-11-26'));
+(49.99, (SELECT cid FROM customer WHERE cphone = '787-213-1234'), (SELECT tid FROM transactions WHERE tdate = '2019-12-31')), --fixed
+(299.99, (SELECT cid FROM customer WHERE cphone = '939-534-5678'), (SELECT tid FROM transactions WHERE tdate = '2023-11-15')), --added rack to mayaguez
+(5.99, (SELECT cid FROM customer WHERE cphone = '787-632-2345'), (SELECT tid FROM transactions WHERE tdate = '2022-11-16')), --fine
+(7.99, (SELECT cid FROM customer WHERE cphone = '939-645-6789'), (SELECT tid FROM transactions WHERE tdate = '2021-11-20')),--added jigsaw rack
+(12.99, (SELECT cid FROM customer WHERE cphone = '787-133-3456'), (SELECT tid FROM transactions WHERE tdate = '2021-11-21')), --added tool belt rack
+(7.99, (SELECT cid FROM customer WHERE cphone = '939-222-7890'), (SELECT tid FROM transactions WHERE tdate = '2022-09-18')), --already is there
+(34.99, (SELECT cid FROM customer WHERE cphone = '787-432-4567'), (SELECT tid FROM transactions WHERE tdate = '2019-11-14')), --already there
+(19.99, (SELECT cid FROM customer WHERE cphone = '787-876-5678'), (SELECT tid FROM transactions WHERE tdate = '2021-11-19')), --added
+(3.99, (SELECT cid FROM customer WHERE cphone = '939-987-8901'), (SELECT tid FROM transactions WHERE tdate = '2022-12-25')), --changed tp paintbrush
+(14.99, (SELECT cid FROM customer WHERE cphone = '787-765-1234'), (SELECT tid FROM transactions WHERE tdate = '2017-03-24')), --changed to gas lawn mower
+(9.99, (SELECT cid FROM customer WHERE cphone = '939-654-2345'), (SELECT tid FROM transactions WHERE tdate = '2019-03-07')), -- changed to impact wrench
+(29.99, (SELECT cid FROM customer WHERE cphone = '787-888-5678'), (SELECT tid FROM transactions WHERE tdate = '2021-08-22')), --changed to table lamp set
+(9.99, (SELECT cid FROM customer WHERE cphone = '939-654-2345'), (SELECT tid FROM transactions WHERE tdate = '2023-11-25')), --jigsaw
+(9.99, (SELECT cid FROM customer WHERE cphone = '939-654-2345'), (SELECT tid FROM transactions WHERE tdate = '2023-11-23')), --toolbox
+(29.99, (SELECT cid FROM customer WHERE cphone = '787-888-5678'), (SELECT tid FROM transactions WHERE tdate = '2023-11-26')); --fine
 
 -- Incoming Transactions
 INSERT INTO incoming_transaction (unit_buy_price, sid, rid, tid) VALUES
-(39.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), (SELECT rid FROM racks WHERE rname = 'Paintbrush Rack'), (SELECT tid FROM transactions WHERE tdate = '2022-06-05')),
-(2.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Heat Gun Rack'), (SELECT tid FROM transactions WHERE tdate = '2019-06-15')),
-(7.99, (SELECT sid FROM supplier WHERE sphone = '787-173-9101'), (SELECT rid FROM racks WHERE rname = 'Measuring Tools Rack'), (SELECT tid FROM transactions WHERE tdate = '2021-09-28')),
-(12.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), (SELECT rid FROM racks WHERE rname = 'Flashlight Rack'), (SELECT tid FROM transactions WHERE tdate = '2022-11-17')),
-(8.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Work Gloves Rack'), (SELECT tid FROM transactions WHERE tdate = '2020-03-22')),
-(24.99, (SELECT sid FROM supplier WHERE sphone = '787-173-9101'), (SELECT rid FROM racks WHERE rname = 'Toolbox Accessories Rack'), (SELECT tid FROM transactions WHERE tdate = '2018-12-10')),
-(5.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), (SELECT rid FROM racks WHERE rname = 'Leaf Blower Rack'), (SELECT tid FROM transactions WHERE tdate = '2022-04-12')),
-(29.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Ceiling Light Fixtures Rack'), (SELECT tid FROM transactions WHERE tdate = '2022-02-27')),
-(51.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), (SELECT rid FROM racks WHERE rname = 'Leaf Blower Rack'), (SELECT tid FROM transactions WHERE tdate = '2022-08-10')),
-(35.99, (SELECT sid FROM supplier WHERE sphone = '939-425-1278'), (SELECT rid FROM racks WHERE rname = 'Table Lamps Rack'), (SELECT tid FROM transactions WHERE tdate = '2021-10-10')),
-(40.99, (SELECT sid FROM supplier WHERE sphone = '939-425-1278'), (SELECT rid FROM racks WHERE rname = 'Table Lamps Rack'), (SELECT tid FROM transactions WHERE tdate = '2021-10-16')),
-(25.99, (SELECT sid FROM supplier WHERE sphone = '939-425-1278'), (SELECT rid FROM racks WHERE rname = 'Table Lamps Rack'), (SELECT tid FROM transactions WHERE tdate = '2021-10-20')),
-(16.99, (SELECT sid FROM supplier WHERE sphone = '939-425-1278'), (SELECT rid FROM racks WHERE rname = 'Table Lamps Rack'), (SELECT tid FROM transactions WHERE tdate = '2021-10-24')),
-(10.99, (SELECT sid FROM supplier WHERE sphone = '787-173-9101'), (SELECT rid FROM racks WHERE rname = 'Floor Lamps Rack'), (SELECT tid FROM transactions WHERE tdate = '2021-11-10')),
-(12.99, (SELECT sid FROM supplier WHERE sphone = '787-173-9101'), (SELECT rid FROM racks WHERE rname = 'Floor Lamps Rack'), (SELECT tid FROM transactions WHERE tdate = '2021-11-12')),
-(14.99, (SELECT sid FROM supplier WHERE sphone = '787-173-9101'), (SELECT rid FROM racks WHERE rname = 'Floor Lamps Rack'), (SELECT tid FROM transactions WHERE tdate = '2021-11-14')),
-(12.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Wall Sconces Rack'), (SELECT tid FROM transactions WHERE tdate = '2021-04-12')),
-(14.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Wall Sconces Rack'), (SELECT tid FROM transactions WHERE tdate = '2021-04-14')),
-(18.99, (SELECT sid FROM supplier WHERE sphone = '787-402-9967'), (SELECT rid FROM racks WHERE rname = 'Ceiling Light Fixtures Rack'), (SELECT tid FROM transactions WHERE tdate = '2021-03-24')),
-(1.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), (SELECT rid FROM racks WHERE rname = 'Ceiling Light Fixtures Rack'), (SELECT tid FROM transactions WHERE tdate = '2023-10-07'));
+(39.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), 30, (SELECT tid FROM transactions WHERE tdate = '2022-06-05')), --fixed check suppliers
+(2.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), 31, (SELECT tid FROM transactions WHERE tdate = '2019-06-15')), --fixed
+(7.99, (SELECT sid FROM supplier WHERE sphone = '787-173-9101'), 20, (SELECT tid FROM transactions WHERE tdate = '2021-09-28')), -- fixed added plunger
+(12.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), 36, (SELECT tid FROM transactions WHERE tdate = '2022-11-17')), --added new toolbox
+(8.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), 50, (SELECT tid FROM transactions WHERE tdate = '2020-03-22')), --added extension cord
+(24.99, (SELECT sid FROM supplier WHERE sphone = '787-173-9101'), 18, (SELECT tid FROM transactions WHERE tdate = '2018-12-10')), --already has
+(5.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), 50 , (SELECT tid FROM transactions WHERE tdate = '2022-04-12')), --changed to extension chord
+(29.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), 17 , (SELECT tid FROM transactions WHERE tdate = '2022-02-27')), --changed to bench grinder
+(51.99, (SELECT sid FROM supplier WHERE sphone = '787-523-1234'), 55 , (SELECT tid FROM transactions WHERE tdate = '2022-08-10')), --added hedge trimmer rack
+(35.99, (SELECT sid FROM supplier WHERE sphone = '939-425-1278'), 60, (SELECT tid FROM transactions WHERE tdate = '2021-10-10')), -- we have table lamps
+(40.99, (SELECT sid FROM supplier WHERE sphone = '939-425-1278'), 60, (SELECT tid FROM transactions WHERE tdate = '2021-10-16')), --table lamp
+(25.99, (SELECT sid FROM supplier WHERE sphone = '939-425-1278'), 60, (SELECT tid FROM transactions WHERE tdate = '2021-10-20')),
+(16.99, (SELECT sid FROM supplier WHERE sphone = '939-425-1278'), 60, (SELECT tid FROM transactions WHERE tdate = '2021-10-24')), --table lamps
+(10.99, (SELECT sid FROM supplier WHERE sphone = '787-173-9101'), 61, (SELECT tid FROM transactions WHERE tdate = '2021-11-10')), --floor lamps
+(12.99, (SELECT sid FROM supplier WHERE sphone = '787-173-9101'), 61, (SELECT tid FROM transactions WHERE tdate = '2021-11-12')),
+(14.99, (SELECT sid FROM supplier WHERE sphone = '787-173-9101'), 61, (SELECT tid FROM transactions WHERE tdate = '2021-11-14')), --floor lamps
+(12.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), 62, (SELECT tid FROM transactions WHERE tdate = '2021-04-12')), --wall sconces
+(14.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), 62, (SELECT tid FROM transactions WHERE tdate = '2021-04-14')), -- wall sconces already has
+(18.99, (SELECT sid FROM supplier WHERE sphone = '787-402-9967'), 65, (SELECT tid FROM transactions WHERE tdate = '2021-03-24')), -- ceiling light fixtures
+(1.99, (SELECT sid FROM supplier WHERE sphone = '939-423-5678'), 50, (SELECT tid FROM transactions WHERE tdate = '2023-10-07')); --extension cord light
 
 -- Transfers
 INSERT INTO transfer (to_warehouse, user_requester, tid) VALUES
@@ -363,37 +389,77 @@ INSERT INTO transfer (to_warehouse, user_requester, tid) VALUES
 
 -- Stored In
 INSERT INTO stored_in (wid, pid, rid, parts_qty) VALUES
-((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT pid FROM parts WHERE pname = 'Power Drill'), (SELECT rid FROM racks WHERE rname = 'Power Drill Rack'), 50),
-((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT pid FROM parts WHERE pname = 'Circular Saw'), (SELECT rid FROM racks WHERE rname = 'Circular Saw Rack'), 40),
-((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT pid FROM parts WHERE pname = 'Screwdriver Set'), (SELECT rid FROM racks WHERE rname = 'Screwdriver Set Rack'), 30),
-((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT pid FROM parts WHERE pname = 'Angle Grinder'), (SELECT rid FROM racks WHERE rname = 'Angle Grinder Rack'), 25),
-((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT pid FROM parts WHERE pname = 'Outdoor Solar Lights Set'), (SELECT rid FROM racks WHERE rname = 'Outdoor Lighting Rack'), 10),
-((SELECT wid FROM warehouse WHERE wname = 'Bayamon Database Centers'), (SELECT pid FROM parts WHERE pname = 'Rotary Tool'), (SELECT rid FROM racks WHERE rname = 'Rotary Tool Rack'), 25),
-((SELECT wid FROM warehouse WHERE wname = 'Bayamon Database Centers'), (SELECT pid FROM parts WHERE pname = 'Heat Gun'), (SELECT rid FROM racks WHERE rname = 'Heat Gun Rack'), 20),
-((SELECT wid FROM warehouse WHERE wname = 'Bayamon Database Centers'), (SELECT pid FROM parts WHERE pname = 'Bench Grinder'), (SELECT rid FROM racks WHERE rname = 'Bench Grinder Rack'), 30),
-((SELECT wid FROM warehouse WHERE wname = 'Bayamon Database Centers'), (SELECT pid FROM parts WHERE pname = 'Pipe Fittings Assortment'), (SELECT rid FROM racks WHERE rname = 'Pipe Fittings Rack'), 99),
-((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT pid FROM parts WHERE pname = 'Plunger'), (SELECT rid FROM racks WHERE rname = 'Plunger Rack'), 34),
-((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT pid FROM parts WHERE pname = 'Pipe Wrench'), (SELECT rid FROM racks WHERE rname = 'Pipe Wrench Rack'), 47),
-((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT pid FROM parts WHERE pname = 'Torch Kit'), (SELECT rid FROM racks WHERE rname = 'Torch Kit Rack'), 200),
-((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT pid FROM parts WHERE pname = 'Pipe Cutter'), (SELECT rid FROM racks WHERE rname = 'Pipe Cutter Rack'), 332),
-((SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter'), (SELECT pid FROM parts WHERE pname = 'Paintbrush Set'), (SELECT rid FROM racks WHERE rname = 'Paintbrush Rack'), 40),
-((SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter'), (SELECT pid FROM parts WHERE pname = 'Paint Roller Set'), (SELECT rid FROM racks WHERE rname = 'Paint Roller Rack'), 30),
-((SELECT wid FROM warehouse WHERE wname = 'Las Montañas No-Aseguradoras'), (SELECT pid FROM parts WHERE pname = 'Painters Tape'), (SELECT rid FROM racks WHERE rname = 'Painter Tape Rack'), 25),
-((SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions'), (SELECT pid FROM parts WHERE pname = 'Spray Paint Assortment'), (SELECT rid FROM racks WHERE rname = 'Spray Paint Rack'), 20),
-((SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions'), (SELECT pid FROM parts WHERE pname = 'Paint Tray'), (SELECT rid FROM racks WHERE rname = 'Paint Tray Rack'), 35),
-((SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution'), (SELECT pid FROM parts WHERE pname = 'Toolbox'), (SELECT rid FROM racks WHERE rname = 'Toolbox Rack'), 50),
-((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT pid FROM parts WHERE pname = 'Safety Glasses'), (SELECT rid FROM racks WHERE rname = 'Safety Equipment Rack'), 30),
-((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT pid FROM parts WHERE pname = 'Measuring Tape'), (SELECT rid FROM racks WHERE rname = 'Measuring Tools Rack'), 25),
-((SELECT wid FROM warehouse WHERE wname = 'Los Altísimos de Almacenamiento'), (SELECT pid FROM parts WHERE pname = 'Gas Lawn Mower'), (SELECT rid FROM racks WHERE rname = 'Lawn Mower Rack'), 44),
-((SELECT wid FROM warehouse WHERE wname = 'Los Altísimos de Almacenamiento'), (SELECT pid FROM parts WHERE pname = 'Cordless Leaf Blower'), (SELECT rid FROM racks WHERE rname = 'Leaf Blower Rack'), 90),
-((SELECT wid FROM warehouse WHERE wname = 'Los Altísimos de Almacenamiento'), (SELECT pid FROM parts WHERE pname = 'Electric Hedge Trimmer'), (SELECT rid FROM racks WHERE rname = 'Hedge Trimmer Rack'), 90),
-((SELECT wid FROM warehouse WHERE wname = 'Los Altísimos de Almacenamiento'), (SELECT pid FROM parts WHERE pname = 'Heavy-Duty Garden Hose'), (SELECT rid FROM racks WHERE rname = 'Garden Hose Rack'), 90),
-((SELECT wid FROM warehouse WHERE wname = 'Los Altísimos de Almacenamiento'), (SELECT pid FROM parts WHERE pname = 'Steel Wheelbarrow'), (SELECT rid FROM racks WHERE rname = 'Wheelbarrow Rack'), 34),
-((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Modern Ceiling Light Fixture'), (SELECT rid FROM racks WHERE rname = 'Ceiling Light Fixtures Rack'), 100),
-((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Table Lamp Set'), (SELECT rid FROM racks WHERE rname = 'Table Lamps Rack'), 101),
-((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Adjustable Floor Lamp'), (SELECT rid FROM racks WHERE rname = 'Floor Lamps Rack'), 99),
-((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Spaghetti'), (SELECT rid FROM racks WHERE rname = 'Spaghetti Rack'), 10),
-((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Left For Dead 2'), (SELECT rid FROM racks WHERE rname = 'Left For Dead Rack'), 1),
-((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Mood Lights'), (SELECT rid FROM racks WHERE rname = 'Mood Lights Rack'), 13),
-((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Wall Sconce Pair'), (SELECT rid FROM racks WHERE rname = 'Wall Sconces Rack'), 50),
-((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Toolbox'), (SELECT rid FROM racks WHERE rname = 'Tech Gadgets Rack'), 50);
+((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT pid FROM parts WHERE pname = 'Power Drill'), 1, 50),
+((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT pid FROM parts WHERE pname = 'Circular Saw'), 3, 40),
+((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT pid FROM parts WHERE pname = 'Screwdriver Set'), 6, 30),
+((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT pid FROM parts WHERE pname = 'Angle Grinder'), 7, 25),
+((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT pid FROM parts WHERE pname = 'Pipe Cutter'), 25, 10),
+((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT pid FROM parts WHERE pname = 'Hardware Organizer'), 41, 10),
+((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT pid FROM parts WHERE pname = 'Torch Kit'), 22 , 10),
+((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT pid FROM parts WHERE pname = 'Tool Battery'), 11, 10),
+((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT pid FROM parts WHERE pname = 'Outdoor Solar Lights Set'), 63, 10),
+((SELECT wid FROM warehouse WHERE wname = 'Aguadilla Logistics Center'), (SELECT pid FROM parts WHERE pname = 'Toolbox'), 36, 10),
+
+
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Database Centers'), (SELECT pid FROM parts WHERE pname = 'Rotary Tool'), 15, 25),
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Database Centers'), (SELECT pid FROM parts WHERE pname = 'Heat Gun'), 16, 20),
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Database Centers'), (SELECT pid FROM parts WHERE pname = 'Bench Grinder'), 17, 30),
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Database Centers'), (SELECT pid FROM parts WHERE pname = 'Pipe Fittings Assortment'), 18, 99),
+((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT pid FROM parts WHERE pname = 'Plunger'), 19, 34),
+((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT pid FROM parts WHERE pname = 'Pipe Wrench'), 21, 47),
+((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT pid FROM parts WHERE pname = 'Torch Kit'), 23, 200),
+((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT pid FROM parts WHERE pname = 'Pipe Cutter'), 26, 332),
+((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT pid FROM parts WHERE pname = 'Mood Lights'), 68, 100),
+((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT pid FROM parts WHERE pname = 'Paint Tray'), 34, 100),
+((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT pid FROM parts WHERE pname = 'Angle Grinder'), 8, 100),
+((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT pid FROM parts WHERE pname = 'Circular Saw'), 4, 100),
+((SELECT wid FROM warehouse WHERE wname = 'Mayagüez Distribution Nexus'), (SELECT pid FROM parts WHERE pname = 'Painters Tape'), 29, 20),
+
+
+
+((SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter'), (SELECT pid FROM parts WHERE pname = 'Paintbrush Set'), 27, 40),
+((SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter'), (SELECT pid FROM parts WHERE pname = 'Paint Roller Set'), 28, 30),
+((SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter'), (SELECT pid FROM parts WHERE pname = 'Extension Cord'), 50, 30),
+((SELECT wid FROM warehouse WHERE wname = 'Arecibo Aviation DataCenter'), (SELECT pid FROM parts WHERE pname = 'Electric Hedge Trimmer'), 55, 30),
+
+
+((SELECT wid FROM warehouse WHERE wname = 'Las Montañas No-Aseguradoras'), (SELECT pid FROM parts WHERE pname = 'Painters Tape'), 30, 25),
+((SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions'), (SELECT pid FROM parts WHERE pname = 'Spray Paint Assortment'), 33, 20),
+((SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions'), (SELECT pid FROM parts WHERE pname = 'Paint Tray'), 35, 35),
+((SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions'), (SELECT pid FROM parts WHERE pname = 'Hardware Organizer'), 42, 35),
+((SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions'), (SELECT pid FROM parts WHERE pname = 'Power Drill'), 2, 35),
+((SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions'), (SELECT pid FROM parts WHERE pname = 'Painters Tape'), 31, 35),
+((SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions'), (SELECT pid FROM parts WHERE pname = 'Impact Wrench'), 13, 15),
+((SELECT wid FROM warehouse WHERE wname = 'Fajardo Storage Solutions'), (SELECT pid FROM parts WHERE pname = 'Step Ladder'), 48, 15),
+
+
+((SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution'), (SELECT pid FROM parts WHERE pname = 'Toolbox'), 37, 50),
+((SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution'), (SELECT pid FROM parts WHERE pname = 'Jigsaw'), 9, 50),
+((SELECT wid FROM warehouse WHERE wname = 'El Campo Storage Solution'), (SELECT pid FROM parts WHERE pname = 'Tool Belt'), 45, 50),
+
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT pid FROM parts WHERE pname = 'Safety Glasses'), 39, 30),
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT pid FROM parts WHERE pname = 'Measuring Tape'), 40, 25),
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT pid FROM parts WHERE pname = 'Painters Tape'), 32, 25),
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT pid FROM parts WHERE pname = 'Torch Kit'), 24, 25),
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT pid FROM parts WHERE pname = 'Impact Wrench'), 14, 5),
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT pid FROM parts WHERE pname = 'Circular Saw'), 5, 5),
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT pid FROM parts WHERE pname = 'Tool Battery'), 12, 5),
+((SELECT wid FROM warehouse WHERE wname = 'Bayamon Storage NonSolutions'), (SELECT pid FROM parts WHERE pname = 'Outdoor Solar Lights Set'), 64, 5),
+
+((SELECT wid FROM warehouse WHERE wname = 'Las Montañas Aseguradoras'), (SELECT pid FROM parts WHERE pname = 'Plunger'), 20, 5),
+
+
+((SELECT wid FROM warehouse WHERE wname = 'Los Altísimos de Almacenamiento'), (SELECT pid FROM parts WHERE pname = 'Gas Lawn Mower'), 53, 44),
+((SELECT wid FROM warehouse WHERE wname = 'Los Altísimos de Almacenamiento'), (SELECT pid FROM parts WHERE pname = 'Cordless Leaf Blower'), 54, 90),
+((SELECT wid FROM warehouse WHERE wname = 'Los Altísimos de Almacenamiento'), (SELECT pid FROM parts WHERE pname = 'Electric Hedge Trimmer'), 56, 90),
+((SELECT wid FROM warehouse WHERE wname = 'Los Altísimos de Almacenamiento'), (SELECT pid FROM parts WHERE pname = 'Heavy-Duty Garden Hose'), 57, 90),
+((SELECT wid FROM warehouse WHERE wname = 'Los Altísimos de Almacenamiento'), (SELECT pid FROM parts WHERE pname = 'Steel Wheelbarrow'), 58, 34),
+((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Modern Ceiling Light Fixture'), 59, 100),
+((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Table Lamp Set'), 60, 101),
+((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Adjustable Floor Lamp'), 61, 99),
+((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Spaghetti'), 67, 10),
+((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Left For Dead 2'), 66, 1),
+((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Mood Lights'), 69, 13),
+((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Wall Sconce Pair'), 62, 50),
+((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Outdoor Solar Lights Set'), 65, 50),
+((SELECT wid FROM warehouse WHERE wname = 'El Morro Ancient Storage'), (SELECT pid FROM parts WHERE pname = 'Toolbox'), 38, 50);
