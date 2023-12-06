@@ -1,6 +1,8 @@
 from typing import Iterable
 from flask import jsonify
 from Backend.DAOs.warehouse_dao import WarehouseDAO
+from Backend.handler.parts import PartHandler
+
 
 class WarehouseHandler:
     """WarehouseHandler takes care of managing the communication between the

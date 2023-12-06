@@ -100,11 +100,13 @@ docker exec -it inventory-tracking-app-sqlytes-db-1 psql -U docker_admin -d sqly
 ## Voila
 In order to get *Voilá* to display the front page of the application:
 
-1) Make sure to download the latest `requirements.txt` packages via: 
-   ```
-   pip install -r requirements.txt
-   ```
+1) Make sure to download the latest `requirements.txt` packages.
 2) *Voilá* web applications display contents of Markdown cells as well as any cell's output. This means that if you want 
    to add more content to the Frontend, you can do it by adding new code that outputs something into a new cell.
    Alternatively, add text to a Markdown file.
-3) In order to compile your new changes, just refresh the page in your browser.
+3) In order to compile and run the application use:
+   ```
+   voila Frontend/sqlytes_inventory.ipynb 
+   ```
+   Note that both Docker and `main.py` must be running. Additionally, change dbconfig as needed to connect to 
+   localhost instead. Refer to `YarielVoilaChanges` branch (`dbconfig.py` and `DAO.py`) for how to set it up.
