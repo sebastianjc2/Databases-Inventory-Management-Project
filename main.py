@@ -127,13 +127,13 @@ def searchSupplierByID(sid):
     else:
         return jsonify('Not supported'), 405
 
-@app.route('/sqlytes/supplies', methods=['GET'])
-def getPartsSupplied():
+@app.route('/sqlytes/supplies/<int:sid>', methods=['GET'])
+def getPartsSupplied(sid):
     """ Lets you see all parts that are being supplied
         by a supplier.
     """
     if request.method == "GET":
-        return SuppliesHandler().getPartsSupplied()
+        return SuppliesHandler().getPartsSupplied(sid)
     else:
         return jsonify("Not Supported"), 405
 
