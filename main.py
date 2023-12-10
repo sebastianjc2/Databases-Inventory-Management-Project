@@ -280,11 +280,14 @@ def transferTransactionById(transferid):
 
     
 
-@app.route("/sqlytes/transaction", methods=["GET"])
+@app.route("/sqlytes/transaction", methods=["GET", "PUT"])
 def allTransactions():
     try:
         if request.method == "GET":
             return TransactionHandler().getAllTransactions()
+        elif request.method == "PUT":
+            data = request.json
+            return TransactionHandler().getTransactionsByWarehouse(data)
         else:
             return jsonify(Error="Not supported"), 405
     except Exception as e:
