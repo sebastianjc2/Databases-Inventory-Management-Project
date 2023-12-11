@@ -401,10 +401,19 @@ def warehouseLowestStockRack(wid):
     else:
         return jsonify("Not Supported"), 405
 
+
+# Voila
 @app.route("/sqlytes/warehouse/<int:wid>/parts", methods=["GET"])
 def warehouseParts(wid):
     if request.method == "GET":
         return WarehouseHandler().getAllWarehouseParts(wid)
+    else:
+        return jsonify("Not Supported"), 405
+
+@app.route("/sqlytes/warehouse/<int:uid>/worksin/<int:wid>/", methods=["GET"])
+def userWorksInWarehouse(wid, uid):
+    if request.method == "GET":
+        return WarehouseHandler().works_in(wid, uid)
     else:
         return jsonify("Not Supported"), 405
 

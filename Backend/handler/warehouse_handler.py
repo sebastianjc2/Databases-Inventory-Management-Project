@@ -455,3 +455,11 @@ class WarehouseHandler:
                 for tup in all_parts:
                     result.append(self.parts_handler.mapToDict(tup)) 
                 return jsonify(WarehouseParts=result), 200
+
+    # Voila
+    def works_in(self, wid: int, uid: int) -> bool:
+        if type(wid) != 'int' and type(uid) != 'int':
+            raise TypeError("Invalid types! All IDs must be ints.")
+
+        return WarehouseDAO().worksIn(wid, uid)
+
