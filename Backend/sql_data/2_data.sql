@@ -167,7 +167,7 @@ INSERT INTO parts (pname, pcolor, pmaterial, MSRP) VALUES
 ('Extension Cord', 'White', 'Copper', 12.99),
 ('Toolbox Accessories Kit', 'Assorted', 'Metal', 29.99),
 ('Mystery', 'Silver', 'Amorphous', 69.99),
-('Left For Dead 2', 'Green', 'Flesh', 19.99),
+('Left For Dead 2', 'Green', 'Plastic', 19.99),
 ('Spaghetti', 'Pasta' , 'Italian', 7.99),
 ('Mood Lights' , 'RGB', 'Glass', 19.99),
 ('Switch 2 OLED', 'Silver', 'Plastic', 399.99);
