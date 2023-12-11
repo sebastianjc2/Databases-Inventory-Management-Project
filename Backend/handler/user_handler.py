@@ -186,9 +186,9 @@ class UserHandler:
         elif not self.warehouseDAO.getWarehouseByID(wid):
             return jsonify(Error="User can not belong to a Warehouses that does not exist"), 404
         else:
-            username_exists = self.username_exists(username, uid=uid).get("Error")
+            username_exists = self.username_exists(username, uid=uid, dao=self.userDAO).get("Error")
             if username_exists: return jsonify(username_exists), 404
-            email_exists = self.user_email_exists(uemail, uid=uid).get("Error")
+            email_exists = self.user_email_exists(uemail, uid=uid, dao=self.userDAO).get("Error")
             if email_exists: return jsonify(email_exists), 404
             self.userDAO.updateUserByID(uid, ufname, ulname, username, uemail, upassword, wid)
             return jsonify(f"Updated user with id: {uid}"), 200
