@@ -20,20 +20,25 @@ class UserDAO(DAO):
         return self._getEntryByID(table_name="users", id_name="uid", id_value=str(uid),
                                   columns=["uid", "ufname", "ulname", "username", "uemail", "upassword", "wid"])
 
-
-    def searchUserByUsername(self, username: str) -> Iterable | None:
+    def searchUserByUsername(self, username: str, uid=None) -> Iterable | None:
         with self.conn.cursor() as cur:
-            cur = self.conn.cursor()
-            query = """SELECT uid FROM users WHERE username = %s;"""
-            cur.execute(query, (username,))
+            if uid:
+                query = """SELECT uid FROM users WHERE username = %s and uid != %s;"""
+                cur.execute(query, (username,uid))
+            else:
+                query = """SELECT uid FROM users WHERE username = %s;"""
+                cur.execute(query, (username,))
             res = cur.fetchone()
             return res
 
-    def searchUserByEmail(self, uemail: str) -> Iterable | None:
+    def searchUserByEmail(self, uemail: str, uid=None) -> Iterable | None:
         with self.conn.cursor() as cur:
-            cur = self.conn.cursor()
-            query = """SELECT uid FROM users WHERE uemail = %s;"""
-            cur.execute(query, (uemail,))
+            if uid:
+                query = """SELECT uid FROM users WHERE uemail = %s and uid != %s;"""
+                cur.execute(query, (uemail,uid))
+            else:
+                query = """SELECT uid FROM users WHERE uemail = %s;"""
+                cur.execute(query, (uemail,))
             res = cur.fetchone()
             return res
 

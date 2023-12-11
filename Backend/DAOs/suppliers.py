@@ -28,16 +28,26 @@ class SupplierDAO(DAO):
             res = cur.fetchone()
             return res
 
-    def searchByName(self, sname):
+    def searchByName(self, sname, sid=None):
         with self.conn.cursor() as cur:
-            query = """SELECT sid FROM supplier WHERE sname = %s;"""
-            cur.execute(query, (sname,))
+            if sid: #means we're updating, have to check that the previous name gets ignored (so it doesn't throw an error
+                    # if not changed
+                query = """SELECT sid FROM supplier WHERE sname = %s and sid != %s;"""
+                cur.execute(query, (sname,sid))
+            else: # only adding
+                query = """SELECT sid FROM supplier WHERE sname = %s;"""
+                cur.execute(query, (sname,))
             res = cur.fetchone()
-            return res
-    def searchByPhone(self, sphone):
+        return res
+
+    def searchByPhone(self, sphone, sid=None):
         with self.conn.cursor() as cur:
-            query = """SELECT sid FROM supplier WHERE sphone = %s;"""
-            cur.execute(query, (sphone,))
+            if sid:
+                query = """SELECT sid FROM supplier WHERE sphone = %s and sid != %s;"""
+                cur.execute(query, (sphone, sid))
+            else:
+                query = """SELECT sid FROM supplier WHERE sphone = %s;"""
+                cur.execute(query, (sphone,))
             res = cur.fetchone()
             return res
 
