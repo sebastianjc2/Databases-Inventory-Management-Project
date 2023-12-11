@@ -29,7 +29,7 @@ class CustomerHandler:
                 result.append(self.mapToDict(tup))
             return jsonify(result)
         else:
-            return jsonify("Internal Server Error: Failed to load customers"), 500
+            return jsonify(Error="Internal Server Error: Failed to load customers"), 500
 
 
     def addCustomer(self, data):
@@ -39,11 +39,11 @@ class CustomerHandler:
             zipcode = data["Zipcode"]
             phone = data["Phone"]
         except KeyError as e:
-            return jsonify({"Unexpected attribute values": e.args}), 400
+            return jsonify(Error={"Unexpected attribute values": e.args}), 400
 
         for attr in (fname, lname, zipcode, phone):
             if not isinstance(attr, str):
-                return jsonify(f"Error: Invalid attribute for type 'str': {attr}."), 400
+                return jsonify(Error=f"Error: Invalid attribute for type 'str': {attr}."), 400
 
         if fname and lname and zipcode and phone:
             dao = CustomerDAO()
@@ -57,7 +57,7 @@ class CustomerHandler:
                 return jsonify("Internal Server Error: Failed to add customer"), 500
         else:
             # TODO: add validation and error handling and map to dict 
-            return jsonify("Unexpected attribute values."), 400
+            return jsonify(Error="Unexpected attribute values."), 400
     
 
 
@@ -70,7 +70,7 @@ class CustomerHandler:
                 result.append(self.mapToDict(tup))
             return jsonify(result)
         else:
-            return jsonify("Internal Server Error: Could not find matching customer"), 500
+            return jsonify(Error="Customer does not exist"), 500
 
 
     def modifyCustomerById(self, cid, data):

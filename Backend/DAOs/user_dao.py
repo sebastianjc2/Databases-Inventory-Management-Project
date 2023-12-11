@@ -20,7 +20,6 @@ class UserDAO(DAO):
         return self._getEntryByID(table_name="users", id_name="uid", id_value=str(uid),
                                   columns=["uid", "ufname", "ulname", "username", "uemail", "upassword", "wid"])
 
-
     def searchUserByUsername(self, username: str, uid=None) -> Iterable | None:
         cur = self.conn.cursor()
         if uid:
