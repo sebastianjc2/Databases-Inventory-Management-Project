@@ -155,16 +155,16 @@ class WarehouseDAO(DAO):
         WARNING: If delta is negative, will return None and not execute any operations.
         """
         if delta < 0: return None
-        cursor = self.conn.cursor()
-        query = "UPDATE warehouse SET wbudget = wbudget-%s WHERE wid = %s AND wbudget >= %s"
-        try:
-            cursor.execute(query, (delta, wid, delta))
-            count = cursor.rowcount
-            self.conn.commit()
-            return count
-        except psycopg2.errors.Error as e:
-            print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
-            return None
+        with self.conn.cursor() as cursor:
+            query = "UPDATE warehouse SET wbudget = wbudget-%s WHERE wid = %s AND wbudget >= %s"
+            try:
+                cursor.execute(query, (delta, wid, delta))
+                count = cursor.rowcount
+                self.conn.commit()
+                return count
+            except psycopg2.errors.Error as e:
+                print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
+                return None
 
     def increase_budget(self, wid, delta):
         """
@@ -174,17 +174,17 @@ class WarehouseDAO(DAO):
         WARNING: If delta is negative, will return None and not execute any operations.
         """
         if delta < 0: return None
-        cursor = self.conn.cursor()
-        # integer overflow who?
-        query = "UPDATE warehouse SET wbudget = wbudget+%s WHERE wid = %s"
-        try:
-            cursor.execute(query, (delta, wid))
-            count = cursor.rowcount
-            self.conn.commit()
-            return count
-        except psycopg2.errors.Error as e:
-            print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
-            return None
+        with self.conn.cursor() as cursor:
+            # integer overflow who?
+            query = "UPDATE warehouse SET wbudget = wbudget+%s WHERE wid = %s"
+            try:
+                cursor.execute(query, (delta, wid))
+                count = cursor.rowcount
+                self.conn.commit()
+                return count
+            except psycopg2.errors.Error as e:
+                print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
+                return None
 
     def warehouseInUsers(self,wid:int) -> bool:
         """Check if a warehouse is in the Users Table in the database.

@@ -40,7 +40,7 @@ class SupplierHandler:
 
     def insertSupplier(self, data):
         if len(data) != 6:
-            return jsonify("Did not receive the correct amount of information needed for a Supplier record."), 400
+            return jsonify(Error="Did not receive the correct amount of information needed for a Supplier record."), 400
 
         try:
             name = data['name']
@@ -50,30 +50,30 @@ class SupplierHandler:
             zipcode = data['zipcode']
             phone = data['phone']
         except:
-            return jsonify("Error: Invalid argument names!"), 400
+            return jsonify(Error=f"Invalid argument names!"), 400
 
         if not isinstance(name, str):
-            return jsonify(f"Error: The inputted name '{name}' is not a string!"), 400
+            return jsonify(Error=f"Error: The inputted name '{name}' is not a string!"), 400
         if not isinstance(country, str):
-            return jsonify(f"Error: The inputted country '{country}' is not a string!"), 400
+            return jsonify(Error=f"Error: The inputted country '{country}' is not a string!"), 400
         if not isinstance(city, str):
-            return jsonify(f"Error: The inputted city '{city}' is not a string!"), 400
+            return jsonify(Error=f"Error: The inputted city '{city}' is not a string!"), 400
         if not isinstance(street, str):
-            return jsonify(f"Error: The inputted street name '{street}' is not a string!"), 400
+            return jsonify(Error=f"Error: The inputted street name '{street}' is not a string!"), 400
         if not isinstance(zipcode, str):
-            return jsonify(f"Error: The inputted zipcode '{zipcode}' is not a string!"), 400
+            return jsonify(Error=f"Error: The inputted zipcode '{zipcode}' is not a string!"), 400
         if not isinstance(phone, str):
-            return jsonify(f"Error: The inputted phone number '{phone}' is not a string!"), 400
+            return jsonify(Error=f"Error: The inputted phone number '{phone}' is not a string!"), 400
 
         if name and country and city and street and zipcode and phone:
             dao = SupplierDAO()
             cant_add = self.supplier_data_exists(name, phone, dao).get('Error')
-            if cant_add: return jsonify(cant_add), 404
+            if cant_add: return jsonify(Error=cant_add), 404
             sid = dao.insertSupplier(name, country, city, street, zipcode, phone)
             data['sid'] = sid
             return jsonify(data), 201
         else:
-            return jsonify("Unexpected attribute values."), 400
+            return jsonify(Error="Unexpected attribute values."), 400
 
     def searchByID(self, sid):
         dao = SupplierDAO()
@@ -81,31 +81,29 @@ class SupplierHandler:
         if res:
             return jsonify(self.mapToDict(res))
         else:
-            return jsonify("Did not find a supplier with id:", sid), 404
+            return jsonify(f"Did not find a supplier with id: {sid}"), 404
 
     def deleteByID(self, sid):
         dao = SupplierDAO()
 
         supplies_parts = dao.suppliesParts(sid)
         if supplies_parts:
-            print("test2")
-            return jsonify("Cannot delete this supplier, since it currently supplies parts."), 400
+            return jsonify(Error="Cannot delete this supplier, since it currently supplies parts."), 400
 
         # Can't delete a part that is being referenced in a transaction
         in_transaction = dao.inTransaction(sid)
         if in_transaction:
-            print("test1")
-            return jsonify("Cannot delete this supplier, since it is being referenced in a past transaction."), 400
+            return jsonify(Error="Cannot delete this supplier, since it is being referenced in a past transaction."), 400
 
         res = dao.deleteByID(sid)
         if res:
             return jsonify(f'Deleted supplier with id: {sid}'), 200
         else:
-            return jsonify("Did not find a supplier with id:", sid), 404
+            return jsonify(Error=f"Did not find a supplier with id: {sid}"), 404
 
     def updateByID(self, sid, data):
         if len(data) != 6 and len(data) != 7:
-            return jsonify("Did not receive the correct amount of information needed for a Supplier record."), 400
+            return jsonify(Error="Did not receive the correct amount of information needed for a Supplier record."), 400
 
         try:
             name = data['name']
@@ -115,29 +113,29 @@ class SupplierHandler:
             zipcode = data['zipcode']
             phone = data['phone']
         except:
-            return jsonify("Error: Invalid argument names!"), 400
+            return jsonify(Error="Invalid argument names!"), 400
 
         if not isinstance(name, str):
-            return jsonify(f"Error: The inputted name '{name}' is not a string!"), 400
+            return jsonify(Error=f"The inputted name '{name}' is not a string!"), 400
         if not isinstance(country, str):
-            return jsonify(f"Error: The inputted country '{country}' is not a string!"), 400
+            return jsonify(Error=f"The inputted country '{country}' is not a string!"), 400
         if not isinstance(city, str):
-            return jsonify(f"Error: The inputted city '{city}' is not a string!"), 400
+            return jsonify(Error=f"The inputted city '{city}' is not a string!"), 400
         if not isinstance(street, str):
-            return jsonify(f"Error: The inputted street name '{street}' is not a string!"), 400
+            return jsonify(Error=f"The inputted street name '{street}' is not a string!"), 400
         if not isinstance(zipcode, str):
-            return jsonify(f"Error: The inputted zipcode '{zipcode}' is not a string!"), 400
+            return jsonify(Error=f"The inputted zipcode '{zipcode}' is not a string!"), 400
         if not isinstance(phone, str):
-            return jsonify(f"Error: The inputted phone number '{phone}' is not a string!"), 400
+            return jsonify(Error=f"The inputted phone number '{phone}' is not a string!"), 400
 
         if sid and name and country and city and street and zipcode and phone:
             dao = SupplierDAO()
             cant_update = self.supplier_data_exists(name, phone, dao).get('Error')
-            if cant_update: return jsonify(cant_update), 404
+            if cant_update: return jsonify(Error=cant_update), 404
             flag = dao.updateByID(sid, name, country, city, street, zipcode, phone)
             if flag:
                 return jsonify(data), 200
             else:
-                return jsonify("Did not find a supplier with id:", sid), 404
+                return jsonify(Error=f"Did not find a supplier with id: {sid}"), 404
         else:
-            return jsonify("Unexpected attribute values."), 400
+            return jsonify(Error="Unexpected attribute values."), 400

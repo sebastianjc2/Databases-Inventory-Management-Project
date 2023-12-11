@@ -7,11 +7,11 @@ class CustomerDAO(DAO):
                                    columns=("cid", "cfname", "clname", "czipcode", "cphone"))
 
     def searchByPhone(self, cphone):
-        cur = self.conn.cursor()
-        query = """SELECT cid FROM customer WHERE cphone = %s;"""
-        cur.execute(query, (cphone,))
-        res = cur.fetchone()
-        return res
+        with self.conn.cursor() as cur:
+            query = """SELECT cid FROM customer WHERE cphone = %s;"""
+            cur.execute(query, (cphone,))
+            res = cur.fetchone()
+            return res
 
     def getCustomerById(self, cid):
         return self._getEntryByID(table_name="customer",
