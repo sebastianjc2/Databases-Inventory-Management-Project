@@ -443,6 +443,7 @@ class WarehouseDAO(DAO):
     
     def getAllWarehouseParts(self,wid:int):
         query = """
-        select pid,pname,pcolor,pmaterial,msrp from stored_in natural inner join parts
+        select pid,pname,pcolor,pmaterial,msrp,parts_qty
+        from stored_in natural inner join parts
         where wid = %s """
         return self._generic_retrieval_query(query, substitutions=(wid,))
