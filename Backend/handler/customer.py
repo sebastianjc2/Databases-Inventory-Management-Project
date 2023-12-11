@@ -13,9 +13,9 @@ class CustomerHandler:
         return my_dict
 
     @staticmethod
-    def customer_exists(cphone, dao=CustomerDAO()):
+    def customer_exists(cphone, cid=None, dao=CustomerDAO()):
         # Can't insert/update a customer with an existing phone #
-        existing_phone = dao.searchByPhone(cphone) is not None
+        existing_phone = dao.searchByPhone(cphone, cid=cid) is not None
         if existing_phone:
             return {"Error": f"Error: The customer phone number '{cphone}' already exists!"}
         return {}
@@ -29,7 +29,7 @@ class CustomerHandler:
                 result.append(self.mapToDict(tup))
             return jsonify(result)
         else:
-            return jsonify("Internal Server Error: Failed to load customers"), 500
+            return jsonify(Error="Internal Server Error: Failed to load customers"), 500
 
 
     def addCustomer(self, data):
@@ -39,15 +39,15 @@ class CustomerHandler:
             zipcode = data["Zipcode"]
             phone = data["Phone"]
         except KeyError as e:
-            return jsonify({"Unexpected attribute values": e.args}), 400
+            return jsonify(Error={"Unexpected attribute values": e.args}), 400
 
         for attr in (fname, lname, zipcode, phone):
             if not isinstance(attr, str):
-                return jsonify(f"Error: Invalid attribute for type 'str': {attr}."), 400
+                return jsonify(Error=f"Error: Invalid attribute for type 'str': {attr}."), 400
 
         if fname and lname and zipcode and phone:
             dao = CustomerDAO()
-            cant_add = self.customer_exists(phone, dao).get("Error")
+            cant_add = self.customer_exists(phone, dao=dao).get("Error")
             if cant_add: return jsonify(cant_add), 404
             cid = dao.addCustomer(fname, lname, zipcode, phone)
             if cid:
@@ -57,7 +57,7 @@ class CustomerHandler:
                 return jsonify("Internal Server Error: Failed to add customer"), 500
         else:
             # TODO: add validation and error handling and map to dict 
-            return jsonify("Unexpected attribute values."), 400
+            return jsonify(Error="Unexpected attribute values."), 400
     
 
 
@@ -70,7 +70,7 @@ class CustomerHandler:
                 result.append(self.mapToDict(tup))
             return jsonify(result)
         else:
-            return jsonify("Internal Server Error: Could not find matching customer"), 500
+            return jsonify(Error="Customer does not exist"), 500
 
 
     def modifyCustomerById(self, cid, data):
@@ -88,7 +88,7 @@ class CustomerHandler:
 
         if fname and lname and zipcode and phone:
             dao = CustomerDAO()
-            cant_update = self.customer_exists(phone, dao).get("Error")
+            cant_update = self.customer_exists(phone, cid=cid, dao=dao).get("Error")
             if cant_update: return jsonify(cant_update), 404
             count = dao.modifyCustomerById(fname, lname, zipcode, phone, cid)
             if count == 0:

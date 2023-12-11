@@ -21,7 +21,6 @@ class DAO:
         Selects the given attributes from the given table.
         Returns the list of tuples returned from the query or None if the operation failed.
         """
-        cursor = self.conn.cursor()
         query = f"SELECT {', '.join(columns)} FROM {table_name}"
         return self._generic_retrieval_query(query)
     
@@ -34,7 +33,6 @@ class DAO:
         Selects the given attributes that match the given id.
         Returns the matching entries or None if the operation failed.
         """
-        cursor = self.conn.cursor()
         query = f"""
         SELECT {', '.join(columns)}
         FROM {table_name}
@@ -48,20 +46,21 @@ class DAO:
         Inserts a tuple with the given attributes.
         Returns the auto-generated id or None if the operation failed.
         """
-        cursor = self.conn.cursor()
-        query = f"""
-        INSERT INTO {table_name}({', '.join(columns)})
-        VALUES ({('%s,'*len(values)).rstrip(',')})
-        RETURNING {id_name};
-        """
-        try:
-            cursor.execute(query, values)
-            entry_id = cursor.fetchone()[0]
-            self.conn.commit()
-            return entry_id
-        except psycopg2.errors.Error as e:
-            print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
-            return None
+        
+        with self.conn.cursor() as cursor:
+            query = f"""
+            INSERT INTO {table_name}({', '.join(columns)})
+            VALUES ({('%s,'*len(values)).rstrip(',')})
+            RETURNING {id_name};
+            """
+            try:
+                cursor.execute(query, values)
+                entry_id = cursor.fetchone()[0]
+                self.conn.commit()
+                return entry_id
+            except psycopg2.errors.Error as e:
+                print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
+                return None
     
 
     def _modifyEntryByID(self, table_name: str, id_name: str, id_value: str, columns: list, values: list) -> int | None:
@@ -69,19 +68,19 @@ class DAO:
         Modifies the tuple with the given id.
         Returns the number of rows affected by the operation or None if the operation failed.
         """
-        cursor = self.conn.cursor()
-        set_statement = "SET"
-        for column in columns:
-            set_statement += f" {column} = %s,"
-        query = f"UPDATE {table_name} {set_statement.rstrip(',')} WHERE {id_name} = %s;"
-        try:
-            cursor.execute(query, (*values, id_value))
-            count = cursor.rowcount
-            self.conn.commit()
-            return count
-        except psycopg2.errors.Error as e:
-            print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
-            return None
+        with self.conn.cursor() as cursor:
+            set_statement = "SET"
+            for column in columns:
+                set_statement += f" {column} = %s,"
+            query = f"UPDATE {table_name} {set_statement.rstrip(',')} WHERE {id_name} = %s;"
+            try:
+                cursor.execute(query, (*values, id_value))
+                count = cursor.rowcount
+                self.conn.commit()
+                return count
+            except psycopg2.errors.Error as e:
+                print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
+                return None
     
 
     def _deleteEntryByID(self, table_name: str, id_name: str, id_value: str) -> int | None:
@@ -89,16 +88,16 @@ class DAO:
         Deletes the tuple with the given id.
         Returns the number of rows affected by the operation or None if the operation failed.
         """
-        cursor = self.conn.cursor()
-        query = f"DELETE FROM {table_name} WHERE {id_name} = %s"
-        try:
-            cursor.execute(query, (id_value,))
-            count = cursor.rowcount
-            self.conn.commit()
-            return count
-        except psycopg2.errors.Error as e:
-            print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
-            return None
+        with self.conn.cursor() as cursor:
+            query = f"DELETE FROM {table_name} WHERE {id_name} = %s"
+            try:
+                cursor.execute(query, (id_value,))
+                count = cursor.rowcount
+                self.conn.commit()
+                return count
+            except psycopg2.errors.Error as e:
+                print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
+                return None
 
 
     def _generic_retrieval_query(self, query: str, substitutions=()) -> Iterable | None:
@@ -107,14 +106,14 @@ class DAO:
         Useful for custom queries requiring joins or None if the operation failed.
         Returns the tuples matched by the query or None if the operation failed.
         """
-        cursor = self.conn.cursor()
-        if not isinstance(substitutions, Iterable): substitutions = (substitutions,)
-        try:
-            cursor.execute(query, substitutions)
-            res = []
-            for row in cursor:
-                res.append(row)
-            return res
-        except psycopg2.errors.Error as e:
-            print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
-            return None
+        with self.conn.cursor() as cursor:
+            if not isinstance(substitutions, Iterable): substitutions = (substitutions,)
+            try:
+                cursor.execute(query, substitutions)
+                res = []
+                for row in cursor:
+                    res.append(row)
+                return res
+            except psycopg2.errors.Error as e:
+                print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
+                return None

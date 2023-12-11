@@ -26,16 +26,16 @@ class SuppliesDao(DAO):
         WARNING: If delta is negative or 0, will return None and not execute any operations.
         """
         if delta <= 0: return None
-        cursor = self.conn.cursor()
-        query = "UPDATE supplies SET stock = stock-%s WHERE pid = %s AND sid = %s AND stock >= %s"
-        try:
-            cursor.execute(query, (delta, pid, sid, delta))
-            count = cursor.rowcount
-            self.conn.commit()
-            return count
-        except psycopg2.errors.Error as e:
-            print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
-            return None 
+        with self.conn.cursor() as cursor:
+            query = "UPDATE supplies SET stock = stock-%s WHERE pid = %s AND sid = %s AND stock >= %s"
+            try:
+                cursor.execute(query, (delta, pid, sid, delta))
+                count = cursor.rowcount
+                self.conn.commit()
+                return count
+            except psycopg2.errors.Error as e:
+                print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
+                return None 
 
 
     def delete_entry(self, pid, sid):
@@ -43,16 +43,16 @@ class SuppliesDao(DAO):
         Deletes entires with the given pid and sid, if it exists, and return the number of affected rows.
         Otherwise, return None.
         """
-        cursor = self.conn.cursor()
-        query = "DELETE FROM supplies WHERE pid = %s AND sid = %s"
-        try:
-            cursor.execute(query, (pid, sid))
-            count = cursor.rowcount
-            self.conn.commit()
-            return count
-        except psycopg2.errors.Error as e:
-            print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
-            return None
+        with self.conn.cursor() as cursor:
+            query = "DELETE FROM supplies WHERE pid = %s AND sid = %s"
+            try:
+                cursor.execute(query, (pid, sid))
+                count = cursor.rowcount
+                self.conn.commit()
+                return count
+            except psycopg2.errors.Error as e:
+                print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
+                return None
 
     def get_parts_supplied(self, sid):
         query = """

@@ -25,32 +25,32 @@ class StoredInDAO(DAO):
         If the entry did not previously exist, it is inserted.
         Returns the new number of affected rows.
         """
-        cursor = self.conn.cursor()
-        if self.get_quantity(wid, pid, rid): # check if entry exists
-            query = """
-            UPDATE stored_in
-            SET parts_qty = %s
-            WHERE wid = %s
-            AND pid = %s
-            AND rid = %s
-            """
-            values = (new_quantity, wid, pid, rid)
-        elif rid: # can't insert w/o an rid
-            query = """
-            INSERT INTO stored_in (wid, pid, rid, parts_qty)
-            VALUES (%s, %s, %s, %s)
-            """
-            values = (wid, pid, rid, new_quantity)
-        else: # no rid, no insertion
-            return None
-        try:
-            cursor.execute(query, values)
-            count = cursor.rowcount
-            self.conn.commit()
-            return count
-        except psycopg2.errors.Error as e:
-            print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
-            return None
+        with self.conn.cursor() as cursor:
+            if self.get_quantity(wid, pid, rid): # check if entry exists
+                query = """
+                UPDATE stored_in
+                SET parts_qty = %s
+                WHERE wid = %s
+                AND pid = %s
+                AND rid = %s
+                """
+                values = (new_quantity, wid, pid, rid)
+            elif rid: # can't insert w/o an rid
+                query = """
+                INSERT INTO stored_in (wid, pid, rid, parts_qty)
+                VALUES (%s, %s, %s, %s)
+                """
+                values = (wid, pid, rid, new_quantity)
+            else: # no rid, no insertion
+                return None
+            try:
+                cursor.execute(query, values)
+                count = cursor.rowcount
+                self.conn.commit()
+                return count
+            except psycopg2.errors.Error as e:
+                print(f"\n\nError in file: {__file__}\n{e.pgerror}\n\n")
+                return None
 
     def isPartInWarehouse(self, pid, wid):
         result = self._generic_retrieval_query(query="""

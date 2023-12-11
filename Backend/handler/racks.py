@@ -23,21 +23,21 @@ class RackHandler:
 
     def addRack(self, data):
         if len(data) != 2:
-            return jsonify("Did not receive the correct amount of information needed for a Rack record. Need the "
+            return jsonify(Error="Did not receive the correct amount of information needed for a Rack record. Need the "
                            "following data: rack name (name), capacity"), 400
 
         try:
             name = data["Name"]
             capacity = data["Capacity"]
         except:
-            return jsonify("Error: Invalid argument names!"), 400
+            return jsonify(Error="Invalid argument names!"), 400
 
         if not isinstance(name, str):
-            return jsonify(f"Error: The inputted name '{name}' is not a string!"), 400
+            return jsonify(Error=f"The inputted name '{name}' is not a string!"), 400
         if not isinstance(capacity, int):
-            return jsonify(f"Error: The inputted capacity '{capacity}' is not a valid integer!"), 400
+            return jsonify(Error=f"The inputted capacity '{capacity}' is not a valid integer!"), 400
         if capacity <= 0:
-            return jsonify(f"Error: The rack must have a capacity bigger than 0."), 400
+            return jsonify(Error=f"The rack must have a capacity bigger than 0."), 400
 
         if name and capacity:
             dao = RackDAO()
@@ -46,7 +46,7 @@ class RackHandler:
             data['rid'] = rid
             return jsonify(data), 201
         else:
-            return jsonify("Unexpected attribute values."), 400
+            return jsonify(Error="Unexpected attribute values."), 400
 
     def getRackByID(self, rid):
         dao = RackDAO()
@@ -54,24 +54,24 @@ class RackHandler:
         if tups:
             return jsonify(self.mapToDict(tups))
         else:
-            return jsonify(f"Could not find a rack with id: {rid}"), 404
+            return jsonify(Error=f"Could not find a rack with id: {rid}"), 404
 
     def deleteByID(self, rid):
         dao = RackDAO()
 
         stores_parts = dao.stores_parts(rid)
         if stores_parts:
-            return jsonify("Cannot delete this rack, since it is currently storing parts in it."), 400
+            return jsonify(Error="Cannot delete this rack, since it is currently storing parts in it."), 400
 
         in_transaction = dao.in_incoming_transaction(rid)
         if in_transaction:
-            return jsonify("Cannot delete this rack, since it is being referenced in a transaction."), 400
+            return jsonify(Error="Cannot delete this rack, since it is being referenced in a transaction."), 400
 
         res = dao.deleteRackById(rid)
         if res:
-            return jsonify(f'Deleted rack with id: {rid}'), 200
+            return jsonify(Error=f'Deleted rack with id: {rid}'), 200
         else:
-            return jsonify(f"Could not find a rack with rack id: {rid}"), 404
+            return jsonify(Error=f"Could not find a rack with rack id: {rid}"), 404
 
     def updateByID(self, rid, data):
         if len(data) != 3 and len(data) != 2:
@@ -81,21 +81,21 @@ class RackHandler:
             name = data['Name']
             capacity = data['Capacity']
         except:
-            return jsonify("Error: Invalid argument names!"), 400
+            return jsonify(Error="Invalid argument names!"), 400
 
         if not isinstance(name, str):
-            return jsonify(f"Error: The inputted name '{name}' is not a string!"), 400
+            return jsonify(Error=f"The inputted name '{name}' is not a string!"), 400
         if not isinstance(capacity, int):
-            return jsonify(f"Error: The inputted capacity '{capacity}' is not an integer!"), 400
+            return jsonify(Error=f"The inputted capacity '{capacity}' is not an integer!"), 400
 
         # check if capacity is valid
         if capacity <= 0:
-            return jsonify(f"Error: The rack must have a capacity bigger than 0."), 400
+            return jsonify(Error=f"The rack must have a capacity bigger than 0."), 400
 
         # check how many parts is this rack currently holding (if it is in stored in. If it's not, qty will be 0)
         qty = StoredInDAO().get_qty_with_rid(rid)
         if capacity < qty:
-            return jsonify(f"Error: Cannot update capacity since this new capacity ({capacity}) is less than the amount"
+            return jsonify(Error=f"Cannot update capacity since this new capacity ({capacity}) is less than the amount"
                            f" of parts that this rack is currently holding ({qty}). New capacity must be more than "
                            f"{qty}."), 400
 
@@ -105,6 +105,6 @@ class RackHandler:
             if flag:
                 return jsonify(data), 200
             else:
-                return jsonify(f"Could not find a rack with rack id: {rid}"), 404
+                return jsonify(Error=f"Could not find a rack with rack id: {rid}"), 404
         else:
-            return jsonify("Unexpected attribute values."), 400
+            return jsonify(Error="Unexpected attribute values."), 400
