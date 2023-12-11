@@ -17,13 +17,18 @@ class SupplierHandler:
 
 
     @staticmethod
-    def supplier_data_exists(sname, sphone, dao=SupplierDAO()):
-        # Can't insert/update a supplier with an existing phone # or name
-        existing_name = dao.searchByName(sname) is not None
-        existing_phone = dao.searchByPhone(sphone) is not None
+    def supplier_name_exists(sname, sid=None, dao=SupplierDAO()):
+        # Can't insert/update a supplier with an existing name
+
+        existing_name = dao.searchByName(sname, sid=sid)
         if existing_name:
             return {"Error": f"Error: The supplier name '{sname}' already exists!"}
+        return {}
 
+    @staticmethod
+    def supplier_phone_exists(sphone, sid=None, dao=SupplierDAO()):
+        # Can't insert/update a supplier with an existing phone #
+        existing_phone = dao.searchByPhone(sphone, sid=sid) is not None
         if existing_phone:
             return {"Error": f"Error: The supplier phone number '{sphone}' already exists!"}
         return {}
@@ -67,8 +72,10 @@ class SupplierHandler:
 
         if name and country and city and street and zipcode and phone:
             dao = SupplierDAO()
-            cant_add = self.supplier_data_exists(name, phone, dao).get('Error')
-            if cant_add: return jsonify(cant_add), 404
+            name_exists = self.supplier_name_exists(name, dao=dao).get('Error')
+            if name_exists: return jsonify(name_exists), 404
+            phone_exists = self.supplier_phone_exists(phone, dao=dao).get('Error')
+            if phone_exists: return jsonify(phone_exists), 404
             sid = dao.insertSupplier(name, country, city, street, zipcode, phone)
             data['sid'] = sid
             return jsonify(data), 201
@@ -132,8 +139,10 @@ class SupplierHandler:
 
         if sid and name and country and city and street and zipcode and phone:
             dao = SupplierDAO()
-            cant_update = self.supplier_data_exists(name, phone, dao).get('Error')
-            if cant_update: return jsonify(cant_update), 404
+            name_exists = self.supplier_name_exists(name, sid=sid, dao=dao).get('Error')
+            if name_exists: return jsonify(name_exists), 404
+            phone_exists = self.supplier_phone_exists(phone, sid=sid, dao=dao).get('Error')
+            if phone_exists: return jsonify(phone_exists), 404
             flag = dao.updateByID(sid, name, country, city, street, zipcode, phone)
             if flag:
                 return jsonify(data), 200

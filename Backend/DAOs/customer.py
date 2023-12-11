@@ -6,10 +6,14 @@ class CustomerDAO(DAO):
         return self._getAllEntries(table_name="customer",
                                    columns=("cid", "cfname", "clname", "czipcode", "cphone"))
 
-    def searchByPhone(self, cphone):
+    def searchByPhone(self, cphone, cid=None):
         cur = self.conn.cursor()
-        query = """SELECT cid FROM customer WHERE cphone = %s;"""
-        cur.execute(query, (cphone,))
+        if cid:
+            query = """SELECT cid FROM customer WHERE cphone = %s and cid != %s;"""
+            cur.execute(query, (cphone,cid))
+        else:
+            query = """SELECT cid FROM customer WHERE cphone = %s;"""
+            cur.execute(query, (cphone,))
         res = cur.fetchone()
         return res
 
