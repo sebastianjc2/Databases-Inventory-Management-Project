@@ -453,7 +453,7 @@ class WarehouseHandler:
             else:
                 result = []
                 for tup in all_parts:
-                    result.append(self.parts_handler.mapToDict(tup)) 
+                    result.append(self.parts_handler.mapToDictAllParts(tup)) 
                 return jsonify(WarehouseParts=result), 200
 
     # Voila

@@ -27,6 +27,19 @@ class PartHandler:
         my_dict['Material'] = tup[3]
         my_dict['msrp'] = tup[4]
         return my_dict
+    
+    def mapToDictAllParts(self, tup):
+        # this is kind of getting hardcoded, because we have to know the order in which we want the query
+        # tuples are every record, so this just maps the records into dictionaries
+        # if the query changes, we have to change mapToDict. We have to have a constructor for each class
+        my_dict = {}
+        my_dict['id'] = tup[0]
+        my_dict['Name'] = tup[1]
+        my_dict['Color'] = tup[2]
+        my_dict['Material'] = tup[3]
+        my_dict['msrp'] = tup[4]
+        my_dict['Part Quantity'] = tup[5]
+        return my_dict
 
     def getAllParts(self):
         dao = PartDAO()
